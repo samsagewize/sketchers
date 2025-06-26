@@ -86,6 +86,20 @@
         transform-origin: top center;
       }
     }
+
+    /* BUTTON STYLING */
+    .buttons a {
+      margin: 0 .5rem;
+      padding: .5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border: 2px solid #000;
+      background: #FFF;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+    }
   </style>
 </head>
 <body>
@@ -111,7 +125,8 @@
         </div>
         <div class="buttons">
           <button id="randomize-btn">Randomize!</button>
-          <button id="download-btn">Download Layers</button>
+          <a href="https://www.scatter.art/collection/sketchymilios-by-mymilio" target="_blank">MINT</a>
+          <a href="https://x.com/sketchymilios" target="_blank">Twitter</a>
         </div>
       </div>
     </div>
@@ -179,20 +194,6 @@
       });
     }
 
-    // Download each layer separately
-    function downloadLayers() {
-      layers.forEach(layer => {
-        const url = document.getElementById(`layer-${layer}`).src;
-        if (!url) return;
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = url.split('/').pop();
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       const audio = new Audio('/static/song1.mp3');
       audio.loop = true;
@@ -214,7 +215,6 @@
       };
 
       document.getElementById('randomize-btn').onclick = randomizeCombo;
-      document.getElementById('download-btn').onclick   = downloadLayers;
 
       // Audio controls
       document.getElementById('play-btn').onclick     = () => audio.play();
