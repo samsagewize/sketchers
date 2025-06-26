@@ -12,8 +12,8 @@
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow-x: hidden; /* Prevent horizontal scrollbar */
-      overflow-y: auto; /* Allow vertical scrollbar */
+      overflow-x: hidden;
+      overflow-y: auto;
     }
     body {
       margin: 0;
@@ -190,18 +190,58 @@
       margin-bottom: 8px;
     }
 
-    /* Audio Controls */
-    #audio-controls {
+    /* Custom Audio Player */
+    #audio-player {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      display: none;
-      gap: 8px;
+      background: #C0C0C0;
+      border: 3px solid #000080;
+      border-top: 3px solid #FFFFFF;
+      border-left: 3px solid #FFFFFF;
+      border-bottom: 3px solid #808080;
+      border-right: 3px solid #808080;
+      padding: 8px;
+      box-shadow: 4px 4px 0 #000;
       z-index: 999;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      width: clamp(200px, 50vw, 300px);
     }
-    #audio-controls .btn {
+    #audio-player .title-bar {
+      font-size: clamp(10px, 2.5vw, 12px);
       padding: 6px;
-      font-size: clamp(14px, 3vw, 16px);
+    }
+    #audio-player .player-body {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: #E0E0E0;
+      padding: 8px;
+      border: 2px inset #808080;
+    }
+    #audio-player .song-title {
+      font-size: clamp(10px, 2.5vw, 12px);
+      color: #000080;
+      text-align: center;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    #audio-player .timer {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      text-align: center;
+    }
+    #audio-player .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+    #audio-player .btn {
+      padding: 6px;
+      font-size: clamp(10px, 2.5vw, 12px);
     }
 
     /* Playlist */
@@ -210,6 +250,7 @@
       margin: 20px 0;
       text-align: center;
       width: 100%;
+      display: none; /* Hidden by default (for mobile) */
     }
     #playlist-title {
       font-size: clamp(12px, 3vw, 14px);
@@ -246,6 +287,14 @@
       }
       #combo-container {
         max-width: 450px;
+      }
+      #playlist-container {
+        display: block; /* Show playlist on desktop */
+      }
+    }
+    @media (max-width: 767px) {
+      #playlist-container {
+        display: none; /* Hide playlist on mobile */
       }
     }
   </style>
@@ -294,20 +343,26 @@
     </div>
   </div>
 
-  <!-- Audio Controls -->
-  <div id="audio-controls">
-    <button class="btn" id="play-btn">▶️</button>
-    <button class="btn" id="stop-btn">⏹️</button>
-    <button class="btn" id="mute-btn">🔇</button>
-    <button class="btn" id="vol-down-btn">🔉</button>
-    <button class="btn" id="vol-up-btn">🔊</button>
+  <!-- Custom Audio Player -->
+  <div id="audio-player">
+    <div class="title-bar">Audio Player</div>
+    <div class="player-body">
+      <div class="song-title">No Song Playing</div>
+      <div class="timer">0:00 / 0:00</div>
+      <div class="controls">
+        <button class="btn" id="prev-btn">⏮️</button>
+        <button class="btn" id="play-pause-btn">▶️</button>
+        <button class="btn" id="stop-btn">⏹️</button>
+        <button class="btn" id="next-btn">⏭️</button>
+      </div>
+    </div>
   </div>
 
   <script>
     const layerFiles = {{ layer_files | tojson }};
     const layers = {{ layers | tojson }};
 
-    // randomizeCombo: pick new layer images, rasterize + add 50% noise
+    // Randomize Combo Function
     function randomizeCombo() {
       const validLayers = layers.filter(l => (layerFiles[l] || []).length);
       let loadedCount = 0;
@@ -341,41 +396,108 @@
       });
     }
 
+    // Format time in MM:SS
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = Math.floor(seconds % 60);
+      return `${min}:${sec.toString().padStart(2, '0')}`;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       const audio = new Audio('/static/song1.mp3');
-      audio.loop = true;
+      audio.loop = false; // Disable looping to allow song switching
       audio.volume = 0.5;
 
       const popup = document.getElementById('entry-popup');
-      const controls = document.getElementById('audio-controls');
+      const player = document.getElementById('audio-player');
+      const playPauseBtn = document.getElementById('play-pause-btn');
+      const stopBtn = document.getElementById('stop-btn');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const songTitle = document.querySelector('#audio-player .song-title');
+      const timer = document.querySelector('#audio-player .timer');
 
+      // Playlist data
+      const playlist = [
+        { src: '/static/song1.mp3', title: 'Song1' },
+        { src: '/static/song2.mp3', title: 'Song2' },
+        { src: '/static/song3.mp3', title: 'Song3' }
+      ];
+      let currentSongIndex = 0;
+
+      // Update song info
+      function updateSongInfo() {
+        audio.src = playlist[currentSongIndex].src;
+        songTitle.textContent = playlist[currentSongIndex].title;
+        timer.textContent = '0:00 / 0:00';
+        playPauseBtn.textContent = audio.paused ? '▶️' : '⏸️';
+      }
+
+      // Update timer
+      audio.addEventListener('timeupdate', () => {
+        if (!isNaN(audio.duration)) {
+          timer.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+        }
+      });
+
+      // Reset on song end
+      audio.addEventListener('ended', () => {
+        currentSongIndex = (currentSongIndex + 1) % playlist.length;
+        updateSongInfo();
+        audio.play();
+      });
+
+      // Popup buttons
       document.getElementById('enter-yes').onclick = () => {
         popup.style.display = 'none';
-        controls.style.display = 'flex';
+        player.style.display = 'flex';
         randomizeCombo();
+        updateSongInfo();
         audio.play();
       };
       document.getElementById('enter-no').onclick = () => {
         popup.style.display = 'none';
-        controls.style.display = 'flex';
+        player.style.display = 'flex';
         randomizeCombo();
       };
 
-      document.getElementById('randomize-btn').onclick = randomizeCombo;
-
-      document.getElementById('play-btn').onclick = () => audio.play();
-      document.getElementById('stop-btn').onclick = () => { audio.pause(); audio.currentTime = 0; };
-      document.getElementById('mute-btn').onclick = () => audio.muted = !audio.muted;
-      document.getElementById('vol-down-btn').onclick = () => audio.volume = Math.max(0, audio.volume - 0.1);
-      document.getElementById('vol-up-btn').onclick = () => audio.volume = Math.min(1, audio.volume + 0.1);
-
-      document.querySelectorAll('#playlist li').forEach(li => {
-        li.onclick = () => {
+      // Audio controls
+      playPauseBtn.onclick = () => {
+        if (audio.paused) {
+          audio.play();
+          playPauseBtn.textContent = '⏸️';
+        } else {
           audio.pause();
-          audio.src = li.dataset.src;
+          playPauseBtn.textContent = '▶️';
+        }
+      };
+      stopBtn.onclick = () => {
+        audio.pause();
+        audio.currentTime = 0;
+        playPauseBtn.textContent = '▶️';
+      };
+      prevBtn.onclick = () => {
+        currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+        updateSongInfo();
+        audio.play();
+      };
+      nextBtn.onclick = () => {
+        currentSongIndex = (currentSongIndex + 1) % playlist.length;
+        updateSongInfo();
+        audio.play();
+      };
+
+      // Playlist clicking (for desktop)
+      document.querySelectorAll('#playlist li').forEach((li, index) => {
+        li.onclick = () => {
+          currentSongIndex = index;
+          updateSongInfo();
           audio.play();
         };
       });
+
+      // Randomize button
+      document.getElementById('randomize-btn').onclick = randomizeCombo;
     });
   </script>
 </body>
