@@ -38,6 +38,12 @@
       border: 2px solid #000;
       background: #FFF;
       border-radius: 8px;
+      font-family: 'Press Start 2P', monospace;
+      transition: background 0.3s, transform 0.1s;
+    }
+    #entry-popup button:hover {
+      background: #E0E0E0;
+      transform: scale(1.05);
     }
 
     /* AUDIO CONTROLS */
@@ -87,10 +93,23 @@
       }
     }
 
+    /* WINDOW BODY */
+    .window-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+
     /* BUTTON STYLING */
-    .buttons a {
-      margin: 0 .5rem;
-      padding: .5rem 1rem;
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .buttons button, .buttons a {
+      padding: 0.75rem 1.5rem;
       font-size: 1rem;
       cursor: pointer;
       border: 2px solid #000;
@@ -99,6 +118,22 @@
       text-decoration: none;
       color: #000;
       font-family: 'Press Start 2P', monospace;
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      transition: background 0.3s, transform 0.1s;
+    }
+    .buttons button:hover, .buttons a:hover {
+      background: #E0E0E0;
+      transform: scale(1.05);
+    }
+
+    /* MINT INFO TEXT */
+    .mint-info {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.9rem;
+      text-align: center;
+      margin: 1rem 0;
+      color: #000;
+      max-width: 80%;
     }
   </style>
 </head>
@@ -122,6 +157,9 @@
           {% for layer in layers %}
           <img id="layer-{{layer}}" src="" alt="" />
           {% endfor %}
+        </div>
+        <div class="mint-info">
+          Holding a SketchyMilio grants exclusive access to mint and receive airdrops for all MyMilio projects!
         </div>
         <div class="buttons">
           <button id="randomize-btn">Randomize!</button>
@@ -214,7 +252,7 @@
         randomizeCombo();
       };
 
-      document.getElementById('randomize-btn').onclick = randomizeCombo;
+      document.getElementById bile('randomize-btn').onclick = randomizeCombo;
 
       // Audio controls
       document.getElementById('play-btn').onclick     = () => audio.play();
