@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mymillios</title>
+  <title>MyMilio</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     /* Reset and Base Styles */
@@ -192,9 +192,6 @@
 
     /* Custom Audio Player */
     #audio-player {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
       background: #C0C0C0;
       border: 3px solid #000080;
       border-top: 3px solid #FFFFFF;
@@ -208,6 +205,7 @@
       flex-direction: column;
       gap: 8px;
       width: clamp(200px, 50vw, 300px);
+      margin: 20px 0;
     }
     #audio-player .title-bar {
       font-size: clamp(10px, 2.5vw, 12px);
@@ -291,10 +289,28 @@
       #playlist-container {
         display: block; /* Show playlist on desktop */
       }
+      #audio-player {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        margin: 0; /* Override margin for fixed positioning */
+      }
     }
     @media (max-width: 767px) {
       #playlist-container {
         display: none; /* Hide playlist on mobile */
+      }
+      #audio-player {
+        position: static; /* Place in normal flow on mobile */
+        width: clamp(150px, 80vw, 250px); /* Smaller width on mobile */
+      }
+      #audio-player .song-title,
+      #audio-player .btn,
+      #audio-player .title-bar {
+        font-size: clamp(8px, 2vw, 10px); /* Smaller font on mobile */
+      }
+      #audio-player .timer {
+        font-size: clamp(7px, 1.8vw, 9px);
       }
     }
   </style>
@@ -306,7 +322,7 @@
   <!-- Entry Popup -->
   <div id="entry-popup">
     <div class="popup-modal">
-      <h2>Enter Sketch Wrld?</h2>
+      <h2>Enter SketchyMilio Wrld?</h2>
       <button class="btn" id="enter-yes">Yes</button>
       <button class="btn" id="enter-no">No</button>
     </div>
@@ -314,9 +330,9 @@
 
   <!-- Main Content -->
   <div class="main-container">
-    <h1 id="site-title">My<span>m</span>illios</h1>
+    <h1 id="site-title">My<span>M</span>ilio</h1>
     <div class="window">
-      <div class="title-bar">mymillio generatooor</div>
+      <div class="title-bar">mymilio generatooor</div>
       <div class="window-body">
         <div id="combo-container">
           {% for layer in layers %}
@@ -334,26 +350,26 @@
 
     <!-- Playlist -->
     <div id="playlist-container">
-      <div id="playlist-title">Sketchymillio EP1</div>
+      <div id="playlist-title">SketchyMilio EP1</div>
       <ul id="playlist">
         <li data-src="/static/song1.mp3">Song1</li>
         <li data-src="/static/song2.mp3">Song2</li>
         <li data-src="/static/song3.mp3">Song3</li>
       </ul>
     </div>
-  </div>
 
-  <!-- Custom Audio Player -->
-  <div id="audio-player">
-    <div class="title-bar">Audio Player</div>
-    <div class="player-body">
-      <div class="song-title">No Song Playing</div>
-      <div class="timer">0:00 / 0:00</div>
-      <div class="controls">
-        <button class="btn" id="prev-btn">⏮️</button>
-        <button class="btn" id="play-pause-btn">▶️</button>
-        <button class="btn" id="stop-btn">⏹️</button>
-        <button class="btn" id="next-btn">⏭️</button>
+    <!-- Custom Audio Player -->
+    <div id="audio-player">
+      <div class="title-bar">Audio Player</div>
+      <div class="player-body">
+        <div class="song-title">No Song Playing</div>
+        <div class="timer">0:00 / 0:00</div>
+        <div class="controls">
+          <button class="btn" id="prev-btn">⏮️</button>
+          <button class="btn" id="play-pause-btn">▶️</button>
+          <button class="btn" id="stop-btn">⏹️</button>
+          <button class="btn" id="next-btn">⏭️</button>
+        </div>
       </div>
     </div>
   </div>
@@ -392,20 +408,23 @@
           imgEl.src = canvas.toDataURL();
           loadedCount++;
         };
+        temp.onerror = () => {
+          console.error(`Failed to load image: /static/${layer}/${pick}`);
+        };
         temp.src = `/static/${layer}/${pick}`;
       });
     }
 
     // Format time in MM:SS
     function formatTime(seconds) {
+      if (isNaN(seconds)) return '0:00';
       const min = Math.floor(seconds / 60);
       const sec = Math.floor(seconds % 60);
       return `${min}:${sec.toString().padStart(2, '0')}`;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const audio = new Audio('/static/song1.mp3');
-      audio.loop = false; // Disable looping to allow song switching
+      const audio = new Audio();
       audio.volume = 0.5;
 
       const popup = document.getElementById('entry-popup');
@@ -440,11 +459,18 @@
         }
       });
 
+      // Handle load errors
+      audio.addEventListener('error', () => {
+        console.error(`Failed to load audio: ${audio.src}`);
+        songTitle.textContent = 'Error Loading Song';
+        timer.textContent = '0:00 / 0:00';
+      });
+
       // Reset on song end
       audio.addEventListener('ended', () => {
         currentSongIndex = (currentSongIndex + 1) % playlist.length;
         updateSongInfo();
-        audio.play();
+        audio.play().catch(err => console.error('Playback failed:', err));
       });
 
       // Popup buttons
@@ -452,19 +478,22 @@
         popup.style.display = 'none';
         player.style.display = 'flex';
         randomizeCombo();
-        updateSongInfo();
-        audio.play();
+        updateSongInfo(); // Set initial song but don't play
       };
       document.getElementById('enter-no').onclick = () => {
         popup.style.display = 'none';
         player.style.display = 'flex';
         randomizeCombo();
+        updateSongInfo(); // Set initial song but don't play
       };
 
       // Audio controls
       playPauseBtn.onclick = () => {
         if (audio.paused) {
-          audio.play();
+          audio.play().catch(err => {
+            console.error('Playback failed:', err);
+            songTitle.textContent = 'Error Playing Song';
+          });
           playPauseBtn.textContent = '⏸️';
         } else {
           audio.pause();
@@ -479,12 +508,12 @@
       prevBtn.onclick = () => {
         currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
         updateSongInfo();
-        audio.play();
+        audio.play().catch(err => console.error('Playback failed:', err));
       };
       nextBtn.onclick = () => {
         currentSongIndex = (currentSongIndex + 1) % playlist.length;
         updateSongInfo();
-        audio.play();
+        audio.play().catch(err => console.error('Playback failed:', err));
       };
 
       // Playlist clicking (for desktop)
@@ -492,7 +521,7 @@
         li.onclick = () => {
           currentSongIndex = index;
           updateSongInfo();
-          audio.play();
+          audio.play().catch(err => console.error('Playback failed:', err));
         };
       });
 
