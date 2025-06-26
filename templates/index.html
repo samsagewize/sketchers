@@ -7,6 +7,38 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/xp.css">
   <style>
+    /* General Reset and Layout */
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      background: #008080; /* Retro teal background */
+      font-family: 'Press Start 2P', monospace;
+      color: #000;
+    }
+
+    /* Main Container */
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 800px;
+      padding: 1rem;
+    }
+
+    /* Site Title */
+    #site-title {
+      font-size: 2rem;
+      text-align: center;
+      margin: 1rem 0;
+      color: #000080;
+      text-shadow: 2px 2px #C0C0C0;
+    }
+
     /* ENTRY POPUP */
     #entry-popup {
       position: fixed;
@@ -23,27 +55,33 @@
       border: 4px solid #000080;
       padding: 2rem;
       text-align: center;
-      font-family: 'Press Start 2P', monospace;
-      color: #000;
+      box-shadow: 4px 4px 0 #000;
     }
     #entry-popup h2 {
       margin-bottom: 1.5rem;
       font-size: 1.25rem;
     }
-    #entry-popup button {
-      margin: 0 .5rem;
-      padding: .5rem 1rem;
+
+    /* Button Styling (Unified) */
+    .btn {
+      margin: 0.5rem;
+      padding: 0.75rem 1.5rem;
       font-size: 1rem;
       cursor: pointer;
       border: 2px solid #000;
-      background: #FFF;
+      background: #C0C0C0;
       border-radius: 8px;
       font-family: 'Press Start 2P', monospace;
-      transition: background 0.3s, transform 0.1s;
+      color: #000;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
     }
-    #entry-popup button:hover {
-      background: #E0E0E0;
-      transform: scale(1.05);
+    .btn:hover {
+      background: #A0A0A0;
+      transform: translateY(-2px);
+    }
+    .btn:active {
+      transform: translateY(0);
     }
 
     /* AUDIO CONTROLS */
@@ -51,31 +89,33 @@
       position: fixed;
       bottom: 1rem; right: 1rem;
       display: none;
-      gap: .5rem;
+      gap: 0.5rem;
       z-index: 999;
     }
-    #audio-controls button {
-      font-size: 2rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: .2rem;
+    #audio-controls .btn {
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      background: #C0C0C0;
+      border: 2px solid #000;
+      border-radius: 8px;
     }
 
     /* PLAYLIST */
     #playlist-container {
-      font-family: 'Press Start 2P', monospace;
       font-size: 0.75rem;
-      margin: 1rem auto;
+      margin: 1rem 0;
       text-align: center;
+      width: 100%;
     }
     #playlist-title {
       cursor: default;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
     }
     #playlist {
       list-style: none;
       padding: 0.5rem;
-      margin: 0.5rem 0 0;
+      margin: 0;
       display: flex;
       justify-content: center;
       gap: 1rem;
@@ -83,6 +123,58 @@
     #playlist li {
       cursor: pointer;
       text-decoration: underline;
+      color: #000080;
+    }
+    #playlist li:hover {
+      color: #0000FF;
+    }
+
+    /* WINDOW STYLING */
+    .window {
+      width: 100%;
+      max-width: 500px;
+      margin: 1rem 0;
+    }
+    .title-bar {
+      background: #000080;
+      color: #FFF;
+      padding: 0.5rem;
+      font-size: 1rem;
+      text-align: center;
+    }
+    .window-body {
+      background: #C0C0C0;
+      padding: 1rem;
+      border: 2px solid #000;
+      border-top: none;
+    }
+    #combo-container {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      height: 300px; /* Adjust as needed */
+    }
+    #combo-container img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Button Container */
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .nft-text {
+      font-size: 0.9rem;
+      text-align: center;
+      max-width: 80%;
+      color: #000080;
     }
 
     /* DESKTOP SCALING */
@@ -91,49 +183,9 @@
         transform: scale(1.25);
         transform-origin: top center;
       }
-    }
-
-    /* WINDOW BODY */
-    .window-body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 1rem;
-    }
-
-    /* BUTTON STYLING */
-    .buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .buttons button, .buttons a {
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-      border: 2px solid #000;
-      background: #FFF;
-      border-radius: 8px;
-      text-decoration: none;
-      color: #000;
-      font-family: 'Press Start 2P', monospace;
-      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      transition: background 0.3s, transform 0.1s;
-    }
-    .buttons button:hover, .buttons a:hover {
-      background: #E0E0E0;
-      transform: scale(1.05);
-    }
-
-    /* MINT INFO TEXT */
-    .mint-info {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.9rem;
-      text-align: center;
-      margin: 1rem 0;
-      color: #000;
-      max-width: 80%;
+      #site-title {
+        font-size: 2.5rem;
+      }
     }
   </style>
 </head>
@@ -142,8 +194,8 @@
   <div id="entry-popup">
     <div class="popup-modal">
       <h2>Enter Sketch Wrld?</h2>
-      <button id="enter-yes">Yes</button>
-      <button id="enter-no">No</button>
+      <button class="btn" id="enter-yes">Yes</button>
+      <button class="btn" id="enter-no">No</button>
     </div>
   </div>
 
@@ -158,13 +210,11 @@
           <img id="layer-{{layer}}" src="" alt="" />
           {% endfor %}
         </div>
-        <div class="mint-info">
-          Holding a SketchyMilio grants exclusive access to mint and receive airdrops for all MyMilio projects!
-        </div>
         <div class="buttons">
-          <button id="randomize-btn">Randomize!</button>
-          <a href="https://www.scatter.art/collection/sketchymilios-by-mymilio" target="_blank">MINT</a>
-          <a href="https://x.com/sketchymilios" target="_blank">Twitter</a>
+          <div class="nft-text">Holding a SketchyMilio gives you access to mint and receive airdrops for all things MyMilio!</div>
+          <button class="btn" id="randomize-btn">Randomize!</button>
+          <a href="https://www.scatter.art/collection/sketchymilios-by-mymilio" target="_blank" class="btn">MINT</a>
+          <a href="https://x.com/sketchymilios" target="_blank" class="btn">Twitter</a>
         </div>
       </div>
     </div>
@@ -182,11 +232,11 @@
 
   <!-- Audio Controls -->
   <div id="audio-controls">
-    <button id="play-btn">▶️</button>
-    <button id="stop-btn">⏹️</button>
-    <button id="mute-btn">🔇</button>
-    <button id="vol-down-btn">🔉</button>
-    <button id="vol-up-btn">🔊</button>
+    <button class="btn" id="play-btn">▶️</button>
+    <button class="btn" id="stop-btn">⏹️</button>
+    <button class="btn" id="mute-btn">🔇</button>
+    <button class="btn" id="vol-down-btn">🔉</button>
+    <button class="btn" id="vol-up-btn">🔊</button>
   </div>
 
   <script>
@@ -195,7 +245,6 @@
 
     // randomizeCombo: pick new layer images, rasterize + add 50% noise
     function randomizeCombo() {
-      // only layers with available files
       const validLayers = layers.filter(l => (layerFiles[l] || []).length);
       let loadedCount = 0;
 
@@ -204,7 +253,6 @@
         const pick = opts[Math.floor(Math.random() * opts.length)];
         const imgEl = document.getElementById(`layer-${layer}`);
 
-        // load into temp image, then draw to canvas + noise
         const temp = new Image();
         temp.crossOrigin = 'anonymous';
         temp.onload = () => {
@@ -213,19 +261,16 @@
           canvas.width = w; canvas.height = h;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(temp, 0, 0);
-          // pixel noise
           const id = ctx.getImageData(0, 0, w, h);
           const d = id.data;
           for (let i = 0; i < d.length; i += 4) {
-            const noise = (Math.random() - 0.2) * 255 * 0.2; // ±50% intensity
-            d[i]   = d[i]   + noise; // R
-            d[i+1] = d[i+1] + noise; // G
-            d[i+2] = d[i+2] + noise; // B
+            const noise = (Math.random() - 0.2) * 255 * 0.2;
+            d[i]   = d[i]   + noise;
+            d[i+1] = d[i+1] + noise;
+            d[i+2] = d[i+2] + noise;
           }
           ctx.putImageData(id, 0, 0);
-          // update visible <img>
           imgEl.src = canvas.toDataURL();
-
           loadedCount++;
         };
         temp.src = `/static/${layer}/${pick}`;
@@ -252,16 +297,14 @@
         randomizeCombo();
       };
 
-      document.getElementById bile('randomize-btn').onclick = randomizeCombo;
+      document.getElementById('randomize-btn').onclick = randomizeCombo;
 
-      // Audio controls
       document.getElementById('play-btn').onclick     = () => audio.play();
       document.getElementById('stop-btn').onclick     = () => { audio.pause(); audio.currentTime = 0; };
       document.getElementById('mute-btn').onclick     = () => audio.muted = !audio.muted;
       document.getElementById('vol-down-btn').onclick = () => audio.volume = Math.max(0, audio.volume - 0.1);
       document.getElementById('vol-up-btn').onclick   = () => audio.volume = Math.min(1, audio.volume + 0.1);
 
-      // Playlist switching
       document.querySelectorAll('#playlist li').forEach(li => {
         li.onclick = () => {
           audio.pause();
