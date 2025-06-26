@@ -5,46 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mymillios</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/xp.css">
   <style>
-    /* General Reset and Layout */
+    /* Reset and Base Styles */
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden; /* Prevent horizontal scrollbar */
+      overflow-y: auto; /* Allow vertical scrollbar */
+    }
     body {
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       min-height: 100vh;
-      background: #008080; /* Retro teal background */
-      font-family: 'Press Start 2P', monospace;
+      background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
+      font-family: 'Press Start 2P', cursive;
       color: #000;
+      display: flex;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    /* Background Floating Elements */
+    #background-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .bg-float {
+      position: absolute;
+      opacity: 0.15;
+      pointer-events: none;
     }
 
     /* Main Container */
     .main-container {
+      position: relative;
+      z-index: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
       max-width: 800px;
-      padding: 1rem;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     /* Site Title */
     #site-title {
-      font-size: 2rem;
+      font-size: clamp(24px, 6vw, 36px);
+      margin: 20px 0;
+      color: #FFFFFF;
+      text-shadow: 2px 2px 0 #000080, 4px 4px 0 #000;
       text-align: center;
-      margin: 1rem 0;
-      color: #000080;
-      text-shadow: 2px 2px #C0C0C0;
+    }
+    #site-title span {
+      color: #FF0055;
     }
 
-    /* ENTRY POPUP */
+    /* Entry Popup */
     #entry-popup {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -52,144 +80,180 @@
     }
     #entry-popup .popup-modal {
       background: #C0C0C0;
-      border: 4px solid #000080;
+      border: 3px solid #000080;
+      border-top: 3px solid #FFFFFF;
+      border-left: 3px solid #FFFFFF;
+      border-bottom: 3px solid #808080;
+      border-right: 3px solid #808080;
       padding: 2rem;
       text-align: center;
       box-shadow: 4px 4px 0 #000;
     }
     #entry-popup h2 {
       margin-bottom: 1.5rem;
-      font-size: 1.25rem;
-    }
-
-    /* Button Styling (Unified) */
-    .btn {
-      margin: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      cursor: pointer;
-      border: 2px solid #000;
-      background: #C0C0C0;
-      border-radius: 8px;
-      font-family: 'Press Start 2P', monospace;
-      color: #000;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn:hover {
-      background: #A0A0A0;
-      transform: translateY(-2px);
-    }
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    /* AUDIO CONTROLS */
-    #audio-controls {
-      position: fixed;
-      bottom: 1rem; right: 1rem;
-      display: none;
-      gap: 0.5rem;
-      z-index: 999;
-    }
-    #audio-controls .btn {
-      font-size: 1.5rem;
-      padding: 0.5rem;
-      background: #C0C0C0;
-      border: 2px solid #000;
-      border-radius: 8px;
-    }
-
-    /* PLAYLIST */
-    #playlist-container {
-      font-size: 0.75rem;
-      margin: 1rem 0;
-      text-align: center;
-      width: 100%;
-    }
-    #playlist-title {
-      cursor: default;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-    #playlist {
-      list-style: none;
-      padding: 0.5rem;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
-    #playlist li {
-      cursor: pointer;
-      text-decoration: underline;
+      font-size: clamp(14px, 3vw, 16px);
       color: #000080;
     }
-    #playlist li:hover {
-      color: #0000FF;
+
+    /* Unified Button Styling */
+    .btn {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 2px solid #000;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      padding: 8px 16px;
+      font-size: clamp(10px, 2.5vw, 12px);
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      color: #000080;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0 #000;
+    }
+    .btn:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .btn:active {
+      border: 2px inset #808080;
+      transform: translate(1px, 1px);
+      box-shadow: none;
     }
 
-    /* WINDOW STYLING */
+    /* Window Styling */
     .window {
-      width: 100%;
-      max-width: 500px;
-      margin: 1rem 0;
+      background: #C0C0C0;
+      border: 3px solid #000080;
+      border-top: 3px solid #FFFFFF;
+      border-left: 3px solid #FFFFFF;
+      border-bottom: 3px solid #808080;
+      border-right: 3px solid #808080;
+      width: clamp(300px, 80vw, 500px);
+      box-shadow: 4px 4px 0 #000;
+      margin: 20px 0;
     }
     .title-bar {
-      background: #000080;
-      color: #FFF;
-      padding: 0.5rem;
-      font-size: 1rem;
+      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+      color: #FFFFFF;
+      padding: 8px;
+      font-size: clamp(12px, 3vw, 14px);
       text-align: center;
+      border-bottom: 2px solid #000080;
     }
     .window-body {
-      background: #C0C0C0;
-      padding: 1rem;
-      border: 2px solid #000;
-      border-top: none;
-    }
-    #combo-container {
+      background: #E0E0E0;
+      padding: 12px;
+      border: 2px inset #808080;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Combo Container (Image Display) */
+    #combo-container {
       position: relative;
       width: 100%;
-      height: 300px; /* Adjust as needed */
+      aspect-ratio: 1;
+      max-width: clamp(200px, 60vw, 400px);
+      margin-bottom: 12px;
+      border: 2px inset #808080;
+      background: #000;
+      overflow: hidden;
     }
     #combo-container img {
       position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: contain;
+      user-select: none;
     }
 
-    /* Button Container */
+    /* Buttons and NFT Text */
     .buttons {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
-      margin-top: 1rem;
+      gap: 12px;
+      width: 100%;
     }
     .nft-text {
-      font-size: 0.9rem;
-      text-align: center;
-      max-width: 80%;
+      font-size: clamp(10px, 2.5vw, 12px);
       color: #000080;
+      text-align: center;
+      max-width: 90%;
+      text-shadow: 1px 1px 0 #FFFFFF;
+      margin-bottom: 8px;
     }
 
-    /* DESKTOP SCALING */
+    /* Audio Controls */
+    #audio-controls {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      gap: 8px;
+      z-index: 999;
+    }
+    #audio-controls .btn {
+      padding: 6px;
+      font-size: clamp(14px, 3vw, 16px);
+    }
+
+    /* Playlist */
+    #playlist-container {
+      font-size: clamp(10px, 2.5vw, 12px);
+      margin: 20px 0;
+      text-align: center;
+      width: 100%;
+    }
+    #playlist-title {
+      font-size: clamp(12px, 3vw, 14px);
+      color: #000080;
+      text-shadow: 1px 1px 0 #FFFFFF;
+      margin-bottom: 8px;
+      cursor: default;
+    }
+    #playlist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    #playlist li {
+      cursor: pointer;
+      color: #000080;
+      text-decoration: underline;
+    }
+    #playlist li:hover {
+      color: #FF0055;
+    }
+
+    /* Responsive Adjustments */
     @media (min-width: 768px) {
       .window {
-        transform: scale(1.25);
+        transform: scale(1.2);
         transform-origin: top center;
       }
       #site-title {
-        font-size: 2.5rem;
+        font-size: clamp(28px, 6vw, 40px);
+      }
+      #combo-container {
+        max-width: 450px;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Background Container -->
+  <div id="background-container"></div>
+
   <!-- Entry Popup -->
   <div id="entry-popup">
     <div class="popup-modal">
@@ -241,7 +305,7 @@
 
   <script>
     const layerFiles = {{ layer_files | tojson }};
-    const layers     = {{ layers | tojson }};
+    const layers = {{ layers | tojson }};
 
     // randomizeCombo: pick new layer images, rasterize + add 50% noise
     function randomizeCombo() {
@@ -265,7 +329,7 @@
           const d = id.data;
           for (let i = 0; i < d.length; i += 4) {
             const noise = (Math.random() - 0.2) * 255 * 0.2;
-            d[i]   = d[i]   + noise;
+            d[i] = d[i] + noise;
             d[i+1] = d[i+1] + noise;
             d[i+2] = d[i+2] + noise;
           }
@@ -282,28 +346,28 @@
       audio.loop = true;
       audio.volume = 0.5;
 
-      const popup    = document.getElementById('entry-popup');
+      const popup = document.getElementById('entry-popup');
       const controls = document.getElementById('audio-controls');
 
       document.getElementById('enter-yes').onclick = () => {
-        popup.style.display    = 'none';
+        popup.style.display = 'none';
         controls.style.display = 'flex';
         randomizeCombo();
         audio.play();
       };
       document.getElementById('enter-no').onclick = () => {
-        popup.style.display    = 'none';
+        popup.style.display = 'none';
         controls.style.display = 'flex';
         randomizeCombo();
       };
 
       document.getElementById('randomize-btn').onclick = randomizeCombo;
 
-      document.getElementById('play-btn').onclick     = () => audio.play();
-      document.getElementById('stop-btn').onclick     = () => { audio.pause(); audio.currentTime = 0; };
-      document.getElementById('mute-btn').onclick     = () => audio.muted = !audio.muted;
+      document.getElementById('play-btn').onclick = () => audio.play();
+      document.getElementById('stop-btn').onclick = () => { audio.pause(); audio.currentTime = 0; };
+      document.getElementById('mute-btn').onclick = () => audio.muted = !audio.muted;
       document.getElementById('vol-down-btn').onclick = () => audio.volume = Math.max(0, audio.volume - 0.1);
-      document.getElementById('vol-up-btn').onclick   = () => audio.volume = Math.min(1, audio.volume + 0.1);
+      document.getElementById('vol-up-btn').onclick = () => audio.volume = Math.min(1, audio.volume + 0.1);
 
       document.querySelectorAll('#playlist li').forEach(li => {
         li.onclick = () => {
