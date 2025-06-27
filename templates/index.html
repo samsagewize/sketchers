@@ -33,22 +33,49 @@
       inset: 0;
       z-index: 1;
       pointer-events: none;
+      overflow: hidden;
     }
     .bg-float {
       position: absolute;
       opacity: 0.15;
       pointer-events: none;
-      animation: float 15s ease-in-out infinite;
-      max-width: 100px; /* Smaller floating images */
+      max-width: 170px; /* 70% larger than 100px */
+      animation: float-circle 20s linear infinite;
+      transform-origin: center;
     }
-    .bg-float:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-    .bg-float:nth-child(2) { top: 20%; right: 15%; animation-delay: 3s; }
-    .bg-float:nth-child(3) { bottom: 15%; left: 20%; animation-delay: 6s; }
-    .bg-float:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 9s; }
+    .bg-float:nth-child(1) {
+      animation-duration: 22s;
+      animation-delay: 0s;
+    }
+    .bg-float:nth-child(2) {
+      animation-duration: 25s;
+      animation-delay: 3s;
+    }
+    .bg-float:nth-child(3) {
+      animation-duration: 28s;
+      animation-delay: 6s;
+    }
+    .bg-float:nth-child(4) {
+      animation-duration: 23s;
+      animation-delay: 9s;
+    }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(2deg); }
-      50% { transform: translateY(-20px) rotate(-2deg); }
+    @keyframes float-circle {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20vw, 20vh) rotate(90deg);
+      }
+      50% {
+        transform: translate(40vw, 0) rotate(180deg);
+      }
+      75% {
+        transform: translate(20vw, -20vh) rotate(270deg);
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
     }
 
     /* Main Container */
@@ -59,14 +86,15 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 600px; /* Reduced max-width for compactness */
+      max-width: 600px;
       padding: 10px;
+      padding-bottom: 50px; /* Space for license text */
       box-sizing: border-box;
     }
 
     /* Site Title */
     #site-title {
-      font-size: clamp(16px, 4vw, 20px); /* Smaller title */
+      font-size: clamp(16px, 4vw, 20px);
       margin: 15px 0;
       color: #FFFFFF;
       text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
@@ -99,11 +127,11 @@
       padding: 1rem;
       text-align: center;
       box-shadow: 2px 2px 0 #000;
-      border-radius: 4px; /* Slight rounding for cuteness */
+      border-radius: 4px;
     }
     #entry-popup h2 {
       margin-bottom: 1rem;
-      font-size: clamp(10px, 2.5vw, 12px); /* Smaller popup text */
+      font-size: clamp(10px, 2.5vw, 12px);
       color: #000080;
     }
 
@@ -115,15 +143,15 @@
       border-left: 1px solid #FFFFFF;
       border-bottom: 1px solid #808080;
       border-right: 1px solid #808080;
-      padding: 4px 8px; /* Smaller padding */
-      font-size: clamp(8px, 2vw, 10px); /* Smaller button text */
+      padding: 4px 8px;
+      font-size: clamp(8px, 2vw, 10px);
       cursor: pointer;
       font-family: 'Press Start 2P', cursive;
       color: #000080;
       text-decoration: none;
       transition: background 0.2s, transform 0.1s;
       border-radius: 3px;
-      box-shadow: 1px 1px 0 #000; /* Smaller shadow */
+      box-shadow: 1px 1px 0 #000;
     }
     .btn:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
@@ -142,17 +170,17 @@
       border-top: 2px solid #FFFFFF;
       border-left: 2px solid #FFFFFF;
       border-bottom: 2px solid #808080;
-      border-right: 2px solid #808080;
-      width: clamp(200px, 60vw, 300px); /* Smaller window */
+      border¹³¹³border-right: 2px solid #808080;
+      width: clamp(200px, 60vw, 300px);
       box-shadow: 2px 2px 0 #000;
       margin: 10px 0;
-      border-radius: 4px; /* Slight rounding */
+      border-radius: 4px;
     }
     .title-bar {
       background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
       color: #FFFFFF;
       padding: 4px;
-      font-size: clamp(8px, 2vw, 10px); /* Smaller title bar text */
+      font-size: clamp(8px, 2vw, 10px);
       text-align: center;
       border-bottom: 1px solid #000080;
     }
@@ -170,12 +198,12 @@
       position: relative;
       width: 100%;
       aspect-ratio: 1;
-      max-width: clamp(150px, 50vw, 250px); /* Smaller image generator */
+      max-width: clamp(150px, 50vw, 250px);
       margin-bottom: 8px;
       border: 1px inset #808080;
       background: #000;
       overflow: hidden;
-      border-radius: 4px; /* Slight rounding */
+      border-radius: 4px;
     }
     #combo-container img {
       position: absolute;
@@ -196,7 +224,7 @@
       width: 100%;
     }
     .nft-text {
-      font-size: clamp(8px, 2vw, 10px); /* Smaller NFT text */
+      font-size: clamp(8px, 2vw, 10px);
       color: #000080;
       text-align: center;
       max-width: 90%;
@@ -218,12 +246,12 @@
       display: none;
       flex-direction: column;
       gap: 6px;
-      width: clamp(150px, 40vw, 200px); /* Smaller audio player */
+      width: clamp(150px, 40vw, 200px);
       margin: 10px 0;
       border-radius: 4px;
     }
     #audio-player .title-bar {
-      font-size: clamp(8px, 2vw, 10px); /* Smaller title bar text */
+      font-size: clamp(8px, 2vw, 10px);
       padding: 4px;
     }
     #audio-player .player-body {
@@ -235,7 +263,7 @@
       border: 1px inset #808080;
     }
     #audio-player .song-title {
-      font-size: clamp(8px, 2vw, 10px); /* Smaller song title */
+      font-size: clamp(8px, 2vw, 10px);
       color: #000080;
       text-align: center;
       text-overflow: ellipsis;
@@ -243,7 +271,7 @@
       white-space: nowrap;
     }
     #audio-player .timer {
-      font-size: clamp(7px, 1.8vw, 9px); /* Smaller timer */
+      font-size: clamp(7px, 1.8vw, 9px);
       color: #000080;
       text-align: center;
     }
@@ -254,19 +282,19 @@
     }
     #audio-player .btn {
       padding: 4px;
-      font-size: clamp(8px, 2vw, 10px); /* Smaller button text */
+      font-size: clamp(8pxTMP, 2vw, 10px);
     }
 
     /* Playlist */
     #playlist-container {
-      font-size: clamp(8px, 2vw, 10px); /* Smaller playlist text */
+      font-size: clamp(8px, 2vw, 10px);
       margin: 10px 0;
       text-align: center;
       width: 100%;
       display: none;
     }
     #playlist-title {
-      font-size: clamp(10px, 2.5vw, 12px); /* Smaller playlist title */
+      font-size: clamp(10px, 2.5vw, 12px);
       color: #000080;
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       margin-bottom: 6px;
@@ -289,17 +317,37 @@
       color: #FF0055;
     }
 
+    /* License Text */
+    #license {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      z-index: 2;
+      font-size: clamp(7px, 1.8vw, 9px);
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 #000080;
+    }
+    #license a {
+      color: #FFFFFF;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    #license a:hover {
+      color: #FF0055;
+    }
+
     /* Responsive Adjustments */
     @media (min-width: 768px) {
       .window {
-        transform: scale(1.1); /* Slightly smaller scale */
+        transform: scale(1.1);
         transform-origin: top center;
       }
       #site-title {
         font-size: clamp(18px, 4vw, 22px);
       }
       #combo-container {
-        max-width: 300px; /* Slightly larger for desktop */
+        max-width: 300px;
       }
       #playlist-container {
         display: block;
@@ -317,7 +365,7 @@
       }
       #audio-player {
         position: static;
-        width: clamp(120px, 70vw, 180px); /* Even smaller on mobile */
+        width: clamp(120px, 70vw, 180px);
       }
       #audio-player .song-title,
       #audio-player .btn,
@@ -325,6 +373,9 @@
         font-size: clamp(7px, 1.8vw, 9px);
       }
       #audio-player .timer {
+        font-size: clamp(6px, 1.6vw, 8px);
+      }
+      #license {
         font-size: clamp(6px, 1.6vw, 8px);
       }
     }
@@ -392,6 +443,11 @@
         </div>
       </div>
     </div>
+
+    <!-- License Text -->
+    <div id="license">
+      <a href="https://viralpubliclicense.org/" target="_blank">© Viral Public License - All Rights Reserved - MyMilio inc</a>
+    </div>
   </div>
 
   <script>
@@ -443,7 +499,22 @@
       return `${min}:${sec.toString().padStart(2, '0')}`;
     }
 
+    // Randomize floating image positions and directions
     document.addEventListener('DOMContentLoaded', () => {
+      const floats = document.querySelectorAll('.bg-float');
+      floats.forEach((float, index) => {
+        // Randomize starting position
+        const maxX = window.innerWidth - 170;
+        const maxY = window.innerHeight - 170;
+        const startX = Math.random() * maxX;
+        const startY = Math.random() * maxY;
+        float.style.left = `${startX}px`;
+        float.style.top = `${startY}px`;
+
+        // Randomize animation direction
+        float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+      });
+
       const audio = new Audio();
       audio.volume = 0.5;
 
