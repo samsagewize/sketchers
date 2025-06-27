@@ -38,6 +38,17 @@
       position: absolute;
       opacity: 0.15;
       pointer-events: none;
+      animation: float 15s ease-in-out infinite;
+      max-width: 100px; /* Smaller floating images */
+    }
+    .bg-float:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+    .bg-float:nth-child(2) { top: 20%; right: 15%; animation-delay: 3s; }
+    .bg-float:nth-child(3) { bottom: 15%; left: 20%; animation-delay: 6s; }
+    .bg-float:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 9s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(2deg); }
+      50% { transform: translateY(-20px) rotate(-2deg); }
     }
 
     /* Main Container */
@@ -48,17 +59,17 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 800px;
-      padding: 20px;
+      max-width: 600px; /* Reduced max-width for compactness */
+      padding: 10px;
       box-sizing: border-box;
     }
 
     /* Site Title */
     #site-title {
-      font-size: clamp(24px, 6vw, 36px);
-      margin: 20px 0;
+      font-size: clamp(16px, 4vw, 20px); /* Smaller title */
+      margin: 15px 0;
       color: #FFFFFF;
-      text-shadow: 2px 2px 0 #000080, 4px 4px 0 #000;
+      text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
       text-align: center;
     }
     #site-title span {
@@ -80,45 +91,46 @@
     }
     #entry-popup .popup-modal {
       background: #C0C0C0;
-      border: 3px solid #000080;
-      border-top: 3px solid #FFFFFF;
-      border-left: 3px solid #FFFFFF;
-      border-bottom: 3px solid #808080;
-      border-right: 3px solid #808080;
-      padding: 2rem;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      padding: 1rem;
       text-align: center;
-      box-shadow: 4px 4px 0 #000;
+      box-shadow: 2px 2px 0 #000;
+      border-radius: 4px; /* Slight rounding for cuteness */
     }
     #entry-popup h2 {
-      margin-bottom: 1.5rem;
-      font-size: clamp(14px, 3vw, 16px);
+      margin-bottom: 1rem;
+      font-size: clamp(10px, 2.5vw, 12px); /* Smaller popup text */
       color: #000080;
     }
 
     /* Unified Button Styling */
     .btn {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
-      border: 2px solid #000;
-      border-top: 2px solid #FFFFFF;
-      border-left: 2px solid #FFFFFF;
-      border-bottom: 2px solid #808080;
-      border-right: 2px solid #808080;
-      padding: 8px 16px;
-      font-size: clamp(10px, 2.5vw, 12px);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px 8px; /* Smaller padding */
+      font-size: clamp(8px, 2vw, 10px); /* Smaller button text */
       cursor: pointer;
       font-family: 'Press Start 2P', cursive;
       color: #000080;
       text-decoration: none;
       transition: background 0.2s, transform 0.1s;
-      border-radius: 4px;
-      box-shadow: 2px 2px 0 #000;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000; /* Smaller shadow */
     }
     .btn:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
       transform: translate(-1px, -1px);
     }
     .btn:active {
-      border: 2px inset #808080;
+      border: 1px inset #808080;
       transform: translate(1px, 1px);
       box-shadow: none;
     }
@@ -126,27 +138,28 @@
     /* Window Styling */
     .window {
       background: #C0C0C0;
-      border: 3px solid #000080;
-      border-top: 3px solid #FFFFFF;
-      border-left: 3px solid #FFFFFF;
-      border-bottom: 3px solid #808080;
-      border-right: 3px solid #808080;
-      width: clamp(300px, 80vw, 500px);
-      box-shadow: 4px 4px 0 #000;
-      margin: 20px 0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      width: clamp(200px, 60vw, 300px); /* Smaller window */
+      box-shadow: 2px 2px 0 #000;
+      margin: 10px 0;
+      border-radius: 4px; /* Slight rounding */
     }
     .title-bar {
       background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
       color: #FFFFFF;
-      padding: 8px;
-      font-size: clamp(12px, 3vw, 14px);
+      padding: 4px;
+      font-size: clamp(8px, 2vw, 10px); /* Smaller title bar text */
       text-align: center;
-      border-bottom: 2px solid #000080;
+      border-bottom: 1px solid #000080;
     }
     .window-body {
       background: #E0E0E0;
-      padding: 12px;
-      border: 2px inset #808080;
+      padding: 8px;
+      border: 1px inset #808080;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -157,11 +170,12 @@
       position: relative;
       width: 100%;
       aspect-ratio: 1;
-      max-width: clamp(200px, 60vw, 400px);
-      margin-bottom: 12px;
-      border: 2px inset #808080;
+      max-width: clamp(150px, 50vw, 250px); /* Smaller image generator */
+      margin-bottom: 8px;
+      border: 1px inset #808080;
       background: #000;
       overflow: hidden;
+      border-radius: 4px; /* Slight rounding */
     }
     #combo-container img {
       position: absolute;
@@ -178,49 +192,50 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       width: 100%;
     }
     .nft-text {
-      font-size: clamp(10px, 2.5vw, 12px);
+      font-size: clamp(8px, 2vw, 10px); /* Smaller NFT text */
       color: #000080;
       text-align: center;
       max-width: 90%;
-      text-shadow: 1px 1px 0 #FFFFFF;
-      margin-bottom: 8px;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      margin-bottom: 6px;
     }
 
     /* Custom Audio Player */
     #audio-player {
       background: #C0C0C0;
-      border: 3px solid #000080;
-      border-top: 3px solid #FFFFFF;
-      border-left: 3px solid #FFFFFF;
-      border-bottom: 3px solid #808080;
-      border-right: 3px solid #808080;
-      padding: 8px;
-      box-shadow: 4px 4px 0 #000;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      padding: 6px;
+      box-shadow: 2px 2px 0 #000;
       z-index: 999;
       display: none;
       flex-direction: column;
-      gap: 8px;
-      width: clamp(200px, 50vw, 300px);
-      margin: 20px 0;
+      gap: 6px;
+      width: clamp(150px, 40vw, 200px); /* Smaller audio player */
+      margin: 10px 0;
+      border-radius: 4px;
     }
     #audio-player .title-bar {
-      font-size: clamp(10px, 2.5vw, 12px);
-      padding: 6px;
+      font-size: clamp(8px, 2vw, 10px); /* Smaller title bar text */
+      padding: 4px;
     }
     #audio-player .player-body {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       background: #E0E0E0;
-      padding: 8px;
-      border: 2px inset #808080;
+      padding: 6px;
+      border: 1px inset #808080;
     }
     #audio-player .song-title {
-      font-size: clamp(10px, 2.5vw, 12px);
+      font-size: clamp(8px, 2vw, 10px); /* Smaller song title */
       color: #000080;
       text-align: center;
       text-overflow: ellipsis;
@@ -228,33 +243,33 @@
       white-space: nowrap;
     }
     #audio-player .timer {
-      font-size: clamp(8px, 2vw, 10px);
+      font-size: clamp(7px, 1.8vw, 9px); /* Smaller timer */
       color: #000080;
       text-align: center;
     }
     #audio-player .controls {
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
     }
     #audio-player .btn {
-      padding: 6px;
-      font-size: clamp(10px, 2.5vw, 12px);
+      padding: 4px;
+      font-size: clamp(8px, 2vw, 10px); /* Smaller button text */
     }
 
     /* Playlist */
     #playlist-container {
-      font-size: clamp(10px, 2.5vw, 12px);
-      margin: 20px 0;
+      font-size: clamp(8px, 2vw, 10px); /* Smaller playlist text */
+      margin: 10px 0;
       text-align: center;
       width: 100%;
-      display: none; /* Hidden by default (for mobile) */
+      display: none;
     }
     #playlist-title {
-      font-size: clamp(12px, 3vw, 14px);
+      font-size: clamp(10px, 2.5vw, 12px); /* Smaller playlist title */
       color: #000080;
-      text-shadow: 1px 1px 0 #FFFFFF;
-      margin-bottom: 8px;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      margin-bottom: 6px;
       cursor: default;
     }
     #playlist {
@@ -263,7 +278,7 @@
       margin: 0;
       display: flex;
       justify-content: center;
-      gap: 16px;
+      gap: 12px;
     }
     #playlist li {
       cursor: pointer;
@@ -277,47 +292,52 @@
     /* Responsive Adjustments */
     @media (min-width: 768px) {
       .window {
-        transform: scale(1.2);
+        transform: scale(1.1); /* Slightly smaller scale */
         transform-origin: top center;
       }
       #site-title {
-        font-size: clamp(28px, 6vw, 40px);
+        font-size: clamp(18px, 4vw, 22px);
       }
       #combo-container {
-        max-width: 450px;
+        max-width: 300px; /* Slightly larger for desktop */
       }
       #playlist-container {
-        display: block; /* Show playlist on desktop */
+        display: block;
       }
       #audio-player {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
-        margin: 0; /* Override margin for fixed positioning */
+        bottom: 15px;
+        right: 15px;
+        margin: 0;
       }
     }
     @media (max-width: 767px) {
       #playlist-container {
-        display: none; /* Hide playlist on mobile */
+        display: none;
       }
       #audio-player {
-        position: static; /* Place in normal flow on mobile */
-        width: clamp(150px, 80vw, 250px); /* Smaller width on mobile */
+        position: static;
+        width: clamp(120px, 70vw, 180px); /* Even smaller on mobile */
       }
       #audio-player .song-title,
       #audio-player .btn,
       #audio-player .title-bar {
-        font-size: clamp(8px, 2vw, 10px); /* Smaller font on mobile */
+        font-size: clamp(7px, 1.8vw, 9px);
       }
       #audio-player .timer {
-        font-size: clamp(7px, 1.8vw, 9px);
+        font-size: clamp(6px, 1.6vw, 8px);
       }
     }
   </style>
 </head>
 <body>
   <!-- Background Container -->
-  <div id="background-container"></div>
+  <div id="background-container">
+    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
+    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
+    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
+    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
+  </div>
 
   <!-- Entry Popup -->
   <div id="entry-popup">
@@ -478,13 +498,13 @@
         popup.style.display = 'none';
         player.style.display = 'flex';
         randomizeCombo();
-        updateSongInfo(); // Set initial song but don't play
+        updateSongInfo();
       };
       document.getElementById('enter-no').onclick = () => {
         popup.style.display = 'none';
         player.style.display = 'flex';
         randomizeCombo();
-        updateSongInfo(); // Set initial song but don't play
+        updateSongInfo();
       };
 
       // Audio controls
