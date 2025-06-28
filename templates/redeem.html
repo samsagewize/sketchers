@@ -1,72 +1,435 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Redeem SketchyMilio</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .error { color: red; }
-        .token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .token-card { border: 1px solid #ccc; padding: 10px; text-align: center; }
-        img { max-width: 100%; height: auto; }
-        form { margin-bottom: 20px; }
-        input[type="text"] { padding: 5px; width: 300px; }
-        button { padding: 5px 10px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MyMilio Rewards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and Base Styles */
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
+      font-family: 'Press Start 2P', cursive;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    /* Background Floating Elements */
+    #background-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-float {
+      position: absolute;
+      opacity: 0.15;
+      pointer-events: none;
+      max-width: 170px;
+      animation: float-circle 20s linear infinite;
+      transform-origin: center;
+    }
+    .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
+    .bg-float:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
+    .bg-float:nth-child(3) { animation-duration: 28s; animation-delay: 6s; }
+    .bg-float:nth-child(4) { animation-duration: 23s; animation-delay: 9s; }
+
+    @keyframes float-circle {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20vw, 20vh) rotate(90deg); }
+      50% { transform: translate(40vw, 0) rotate(180deg); }
+      75% { transform: translate(20vw, -20vh) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+
+    /* Main Container */
+    .main-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      padding: 10px;
+      padding-bottom: 50px;
+      box-sizing: border-box;
+    }
+
+    /* Home Button */
+    .home-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .home-btn:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .home-btn:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
+    }
+    .home-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #000080;
+    }
+
+    /* Site Title */
+    #site-title {
+      font-size: clamp(16px, 4vw, 20px);
+      margin: 15px 0;
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
+      text-align: center;
+    }
+    #site-title span {
+      color: #FF0055;
+    }
+
+    /* Window Styling */
+    .window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      width: clamp(200px, 80vw, 400px);
+      box-shadow: 2px 2px 0 #000;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .title-bar {
+      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+      color: #FFFFFF;
+      padding: 4px;
+      font-size: clamp(8px, 2vw, 10px);
+      text-align: center;
+      border-bottom: 1px solid #000080;
+    }
+    .window-body {
+      background: #E0E0E0;
+      padding: 8px;
+      border: 1px inset #808080;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Form Styling */
+    .search-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .search-form label {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+    .search-form input[type="text"] {
+      padding: 4px;
+      width: clamp(150px, 60vw, 300px);
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(7px, 1.8vw, 9px);
+      border: 1px inset #808080;
+      background: #FFFFFF;
+      color: #000080;
+    }
+    .search-form button {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px 8px;
+      font-size: clamp(8px, 2vw, 10px);
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      color: #000080;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .search-form button:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .search-form button:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
+    }
+
+    /* Token Grid */
+    .token-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      width: 100%;
+    }
+    .token-card {
+      background: #E0E0E0;
+      border: 1px inset #808080;
+      padding: 8px;
+      width: clamp(120px, 40vw, 160px);
+      text-align: center;
+      box-shadow: 2px 2px 0 #000;
+      border-radius: 4px;
+    }
+    .token-card img {
+      width: 100%;
+      height: auto;
+      max-height: 120px;
+      object-fit: contain;
+      border: 1px inset #808080;
+      background: linear-gradient(180deg, #FFFFFF, #FFE6E6);
+      border-radius: 4px;
+    }
+    .token-card h3 {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      margin: 4px 0;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+    .token-card p {
+      font-size: clamp(7px, 1.8vw, 9px);
+      color: #000080;
+      margin: 4px 0;
+    }
+
+    /* Error Message */
+    .error {
+      color: #FF0055;
+      font-size: clamp(8px, 2vw, 10px);
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      display: none;
+    }
+    .loading-window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0 #000;
+      text-align: center;
+    }
+    .loading-window img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 8px;
+    }
+    .loading-window p {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+
+    /* Responsive Adjustments */
+    @media (min-width: 768px) {
+      .window { transform: scale(1.1); transform-origin: top center; }
+      #site-title { font-size: clamp(18px, 4vw, 22px); }
+      .token-card img { max-height: 140px; }
+    }
+    @media (max-width: 767px) {
+      .token-card { width: clamp(100px, 35vw, 140px); }
+      .token-card img { max-height: 100px; }
+      .search-form input[type="text"],
+      .search-form button,
+      .token-card h3,
+      .error { font-size: clamp(7px, 1.8vw, 9px); }
+      .home-btn { width: 28px; height: 28px; }
+      .home-btn svg { width: 16px; height: 16px; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Redeem Your SketchyMilio NFTs</h1>
-    <p id="error" class="error" style="display: none;"></p>
-    <form id="token-form">
-        <label for="owner">Wallet Address:</label>
-        <input type="text" id="owner" name="owner" placeholder="0x..." required>
-        <button type="submit">Fetch Tokens</button>
-    </form>
-    <h2 id="token-count" style="display: none;">Your Tokens</h2>
-    <div id="token-grid" class="token-grid"></div>
+  <!-- Background Container -->
+  <div id="background-container">
+    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
+    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
+    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
+    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
+  </div>
 
-    <script>
-        const form = document.getElementById("token-form");
-        const errorEl = document.getElementById("error");
-        const tokenCountEl = document.getElementById("token-count");
-        const tokenGrid = document.getElementById("token-grid");
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-window">
+      <img src="/static/loading.gif" alt="Loading">
+      <p>Loading Tokens...</p>
+    </div>
+  </div>
 
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const owner = document.getElementById("owner").value;
-            errorEl.style.display = "none";
-            tokenGrid.innerHTML = "";
-            tokenCountEl.style.display = "none";
+  <!-- Main Content -->
+  <div class="main-container">
+    <a href="/" class="home-btn" title="Back to Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3l10 9h-3v9h-7v-6h-2v6H3v-9H0l12-9z"/>
+      </svg>
+    </a>
+    <h1 id="site-title">My<span>M</span>ilio Rewards</h1>
+    <div class="window">
+      <div class="title-bar">Search Tokens</div>
+      <div class="window-body">
+        <form id="token-form" class="search-form">
+          <label for="owner">Wallet Address:</label>
+          <input type="text" id="owner" name="owner" placeholder="0x..." required>
+          <button type="submit">Fetch Tokens</button>
+        </form>
+        <p id="error" class="error" style="display: none;"></p>
+        <h2 id="token-count" style="display: none;">Your Tokens</h2>
+        <div id="token-grid" class="token-grid"></div>
+      </div>
+    </div>
+  </div>
 
-            try {
-                const response = await fetch("https://sketchy-n6u8.onrender.com/api/tokens", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: `owner=${encodeURIComponent(owner)}`
-                });
-                const data = await response.json();
-                if (data.error) {
-                    errorEl.textContent = `🚨 ${data.error}`;
-                    errorEl.style.display = "block";
-                    return;
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Randomize floating image positions and directions
+      const floats = document.querySelectorAll('.bg-float');
+      floats.forEach((float, index) => {
+        const maxX = window.innerWidth - 170;
+        const maxY = window.innerHeight - 170;
+        const startX = Math.random() * maxX;
+        const startY = Math.random() * maxY;
+        float.style.left = `${startX}px`;
+        float.style.top = `${startY}px`;
+        float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+      });
+
+      const form = document.getElementById("token-form");
+      const errorEl = document.getElementById("error");
+      const tokenCountEl = document.getElementById("token-count");
+      const tokenGrid = document.getElementById("token-grid");
+      const loadingOverlay = document.getElementById("loading-overlay");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const owner = document.getElementById("owner").value;
+        errorEl.style.display = "none";
+        tokenGrid.innerHTML = "";
+        tokenCountEl.style.display = "none";
+        loadingOverlay.style.display = "flex";
+
+        try {
+          // Fetch token IDs from backend
+          const response = await fetch("https://sketchy-n6u8.onrender.com/api/tokens", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `owner=${encodeURIComponent(owner)}`
+          });
+          const data = await response.json();
+          loadingOverlay.style.display = "none";
+
+          if (data.error) {
+            errorEl.textContent = `🚨 ${data.error}`;
+            errorEl.style.display = "block";
+            return;
+          }
+
+          if (data.tokens && data.tokens.length > 0) {
+            tokenCountEl.textContent = `Your Tokens (${data.tokens.length})`;
+            tokenCountEl.style.display = "block";
+
+            // Fetch metadata for each token
+            for (const tokenId of data.tokens) {
+              try {
+                const metadataResponse = await fetch(`/static/metadata/${tokenId}`);
+                if (!metadataResponse.ok) {
+                  throw new Error(`Metadata for token ${tokenId} not found`);
                 }
-                if (data.tokens && data.tokens.length > 0) {
-                    tokenCountEl.textContent = `Your Tokens (${data.tokens.length})`;
-                    tokenCountEl.style.display = "block";
-                    data.tokens.forEach(tokenId => {
-                        const card = document.createElement("div");
-                        card.className = "token-card";
-                        card.innerHTML = `<h3>Token #${tokenId}</h3><p>Metadata not available</p>`;
-                        tokenGrid.appendChild(card);
-                    });
-                } else {
-                    tokenCountEl.textContent = "No tokens found.";
-                    tokenCountEl.style.display = "block";
-                }
-            } catch (err) {
-                errorEl.textContent = `🚨 Failed to fetch tokens: ${err.message}`;
-                errorEl.style.display = "block";
+                const metadata = await metadataResponse.json();
+                const imageUrl = metadata.image.replace(
+                  'ipfs://',
+                  'https://gateway.lighthouse.storage/ipfs/'
+                );
+
+                const card = document.createElement("div");
+                card.className = "token-card";
+                card.innerHTML = `
+                  <img src="${imageUrl}" alt="Token #${tokenId}" onerror="this.src='/static/placeholder.png'; this.onerror=null;">
+                  <h3>Token #${tokenId}</h3>
+                  <p>${metadata.name}</p>
+                `;
+                tokenGrid.appendChild(card);
+              } catch (err) {
+                console.warn(`Failed to load metadata for token ${tokenId}:`, err.message);
+                const card = document.createElement("div");
+                card.className = "token-card";
+                card.innerHTML = `
+                  <img src="/static/placeholder.png" alt="Token #${tokenId}">
+                  <h3>Token #${tokenId}</h3>
+                  <p>Metadata unavailable</p>
+                `;
+                tokenGrid.appendChild(card);
+              }
             }
-        });
-    </script>
+          } else {
+            tokenCountEl.textContent = "No tokens found.";
+            tokenCountEl.style.display = "block";
+          }
+        } catch (err) {
+          loadingOverlay.style.display = "none";
+          errorEl.textContent = `🚨 Failed to fetch tokens: ${err.message}`;
+          errorEl.style.display = "block";
+        }
+      });
+    });
+  </script>
 </body>
 </html>
