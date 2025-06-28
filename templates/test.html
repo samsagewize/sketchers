@@ -92,6 +92,44 @@
       box-sizing: border-box;
     }
 
+    /* Home Button */
+    .home-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .home-btn:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .home-btn:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
+    }
+    .home-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #000080;
+    }
+
     /* Site Title */
     #site-title {
       font-size: clamp(16px, 4vw, 20px);
@@ -250,12 +288,12 @@
       color: #FFFFFF;
       text-shadow: 1px 1px 0 #000080;
     }
-    #license a {
+    .license a {
       color: #FFFFFF;
       text-decoration: none;
       transition: color 0.2s;
     }
-    #license a:hover {
+    .license a:hover {
       color: #FF0055;
     }
 
@@ -281,9 +319,17 @@
       .trait-info {
         font-size: clamp(7px, 1.8vw, 9px);
       }
-      .tab-btn, .sort-btn {
+      .tab-btn, .sort-btn, .home-btn {
         font-size: clamp(7px, 1.8vw, 9px);
         padding: 3px 6px;
+      }
+      .home-btn {
+        width: 28px;
+        height: 28px;
+      }
+      .home-btn svg {
+        width: 16px;
+        height: 16px;
       }
       #license {
         font-size: clamp(6px, 1.6vw, 8px);
@@ -302,6 +348,11 @@
 
   <!-- Main Content -->
   <div class="main-container">
+    <a href="/" class="home-btn" title="Back to Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3l10 9h-3v9h-7v-6h-2v6H3v-9H0l12-9z"/>
+      </svg>
+    </a>
     <h1 id="site-title">My<span>M</span>ilio Traits</h1>
     <div class="tab-nav" id="tab-nav"></div>
     <div class="sort-controls">
@@ -312,7 +363,7 @@
     <div id="traits-container"></div>
 
     <!-- License Text -->
-    <div id="license">
+    <div id="license" class="license">
       <a href="https://viralpubliclicense.org/" target="_blank">© Viral Public License - All Rights Reserved - MyMilio inc</a>
     </div>
   </div>
@@ -391,7 +442,7 @@
 
         const windowDiv = document.createElement('div');
         windowDiv.className = 'window';
-        const title = currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
+        const title = currentCategory.charAt(0).toUpperCase() + category.slice(1);
         windowDiv.innerHTML = `
           <div class="title-bar">${title} Traits</div>
           <div class="window-body"></div>
@@ -434,7 +485,7 @@
       document.querySelectorAll('.sort-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentSort = btn.dataset.sort;
-          document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.sort-btn').forEach(b => btn.classList.remove('active'));
           btn.classList.add('active');
           renderTraits();
         });
