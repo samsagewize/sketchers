@@ -228,10 +228,6 @@
       margin-right: 12px;
       border-radius: 4px;
     }
-    .trait-image.mouth {
-      transform: scale(2);
-      transform-origin: center;
-    }
 
     .trait-info {
       flex: 1;
@@ -419,9 +415,8 @@
           const traitItem = document.createElement('div');
           traitItem.className = 'trait-item';
           const imageFolder = currentCategory === 'hair2' ? 'hairs' : currentCategory;
-          const isMouth = currentCategory === 'mouth' ? ' mouth' : '';
           traitItem.innerHTML = `
-            <img src="/static/${imageFolder}/${filename}" class="trait-image${isMouth}" alt="${name}"
+            <img src="/static/${imageFolder}/${filename}" class="trait-image" alt="${name}"
                  onerror="this.src='/static/backup/${filename}'; this.onerror=null;">
             <div class="trait-info">
               <p><strong>Name:</strong> ${name}</p>
