@@ -288,12 +288,12 @@
       color: #FFFFFF;
       text-shadow: 1px 1px 0 #000080;
     }
-    .license a {
+    #license a {
       color: #FFFFFF;
       text-decoration: none;
       transition: color 0.2s;
     }
-    .license a:hover {
+    #license a:hover {
       color: #FF0055;
     }
 
@@ -363,7 +363,7 @@
     <div id="traits-container"></div>
 
     <!-- License Text -->
-    <div id="license" class="license">
+    <div id="license">
       <a href="https://viralpubliclicense.org/" target="_blank">© Viral Public License - All Rights Reserved - MyMilio inc</a>
     </div>
   </div>
@@ -388,22 +388,30 @@
       const tabNav = document.getElementById('tab-nav');
 
       // Check for error in report data
-      if (report.error) {
-        console.error('Error:', report.error);
-        traitsContainer.innerHTML = '<p style="color: #FF0055; text-align: center;">' + report.error + '</p>';
+      if (report.error || !report.traits) {
+        console.error('Error:', report.error || 'No traits data available');
+        traitsContainer.innerHTML = '<p style="color: #FF0055; text-align: center;">No traits data available. Please try again later.</p>';
         return;
       }
 
       const traits = report.traits;
-      // Set default category to the first non-heads category
-      let currentCategory = Object.keys(traits).filter(cat => cat !== 'heads')[0] || '';
+      // Set default category to the first non-heads category with traits
+      let currentCategory = Object.keys(traits).filter(cat => cat !== 'heads' && Object.keys(traits[cat]).length > 0)[0] || '';
       let currentSort = 'rarity'; // Default sort
+
+      // Debug: Log available categories
+      console.log('Available categories:', Object.keys(traits).filter(cat => cat !== 'heads'));
 
       // Create tabs for each category, excluding heads
       const createTabs = () => {
         tabNav.innerHTML = '';
+        if (Object.keys(traits).length === 0) {
+          console.error('No categories available');
+          traitsContainer.innerHTML = '<p style="color: #FF0055; text-align: center;">No trait categories found.</p>';
+          return;
+        }
         for (const category in traits) {
-          if (traits.hasOwnProperty(category) && category !== 'heads') {
+          if (traits.hasOwnProperty(category) && category !== 'heads' && Object.keys(traits[category]).length > 0) {
             const tabBtn = document.createElement('button');
             tabBtn.className = 'tab-btn';
             tabBtn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
@@ -413,12 +421,17 @@
             }
             tabBtn.addEventListener('click', () => {
               currentCategory = category;
+              console.log('Selected category:', category);
               document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
               tabBtn.classList.add('active');
               renderTraits();
             });
             tabNav.appendChild(tabBtn);
           }
+        }
+        // If no valid category is selected, show a message
+        if (!currentCategory) {
+          traitsContainer.innerHTML = '<p style="color: #FF0055; text-align: center;">No valid trait categories available.</p>';
         }
       };
 
@@ -438,11 +451,17 @@
       // Render traits for the current category
       const renderTraits = () => {
         traitsContainer.innerHTML = '';
-        if (!currentCategory || !traits[currentCategory]) return;
+        if (!currentCategory || !traits[currentCategory]) {
+          console.warn('No traits for category:', currentCategory);
+          traitsContainer.innerHTML = '<p style="color: #FF0055; text-align: center;">No traits available for this category.</p>';
+          return;
+        }
+
+        console.log('Rendering traits for:', currentCategory, 'Traits:', Object.keys(traits[currentCategory]));
 
         const windowDiv = document.createElement('div');
         windowDiv.className = 'window';
-        const title = currentCategory.charAt(0).toUpperCase() + category.slice(1);
+        const title = currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1);
         windowDiv.innerHTML = `
           <div class="title-bar">${title} Traits</div>
           <div class="window-body"></div>
@@ -459,6 +478,15 @@
               traitsArray.push({ filename, trait, name: traitName });
             }
           }
+        }
+
+        // Debug: Log traits array
+        console.log('Traits array:', traitsArray);
+
+        if (traitsArray.length === 0) {
+          console.warn('No valid traits (excluding "None") for category:', currentCategory);
+          traitsContainer.innerHTML = '<p style="color: #FF0055; text-align: center;">No valid traits in this category.</p>';
+          return;
         }
 
         // Sort and render traits
@@ -485,7 +513,8 @@
       document.querySelectorAll('.sort-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentSort = btn.dataset.sort;
-          document.querySelectorAll('.sort-btn').forEach(b => btn.classList.remove('active'));
+          console.log('Selected sort:', currentSort);
+          document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           renderTraits();
         });
