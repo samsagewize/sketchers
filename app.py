@@ -58,6 +58,10 @@ def traits():
         report=report_data
     )
 
+@app.route('/redeem')
+def redeem():
+    return render_template('redeem.html')
+
 # Serve static files
 @app.route('/static/<path:path>')
 def static_proxy(path):
