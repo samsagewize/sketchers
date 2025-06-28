@@ -1,4 +1,4 @@
-<!-- templates/redeempoints.html -->
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +32,7 @@
     <div class="results">
       {% if user_toks %}
         <p>🔑 You hold {{ user_toks|length }} token{{ '' if user_toks|length==1 else 's' }}:</p>
-        <p><strong>{{ user_toks| organizations, join(', ') }}</strong></p>
+        <p><strong>{{ user_toks|join(', ') }}</strong></p>
       {% else %}
         <p>❌ You don’t hold any tokens.</p>
       {% endif %}
