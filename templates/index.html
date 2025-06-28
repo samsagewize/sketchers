@@ -39,7 +39,7 @@
       position: absolute;
       opacity: 0.15;
       pointer-events: none;
-      max-width: 170px; /* 70% larger than 100px */
+      max-width: 170px;
       animation: float-circle 20s linear infinite;
       transform-origin: center;
     }
@@ -88,8 +88,46 @@
       width: 100%;
       max-width: 600px;
       padding: 10px;
-      padding-bottom: 50px; /* Space for license text */
+      padding-bottom: 50px;
       box-sizing: border-box;
+    }
+
+    /* Traits Button */
+    .traits-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .traits-btn:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .traits-btn:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
+    }
+    .traits-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #000080;
     }
 
     /* Site Title */
@@ -102,37 +140,6 @@
     }
     #site-title span {
       color: #FF0055;
-    }
-
-    /* Entry Popup */
-    #entry-popup {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    #entry-popup .popup-modal {
-      background: #C0C0C0;
-      border: 2px solid #000080;
-      border-top: 2px solid #FFFFFF;
-      border-left: 2px solid #FFFFFF;
-      border-bottom: 2px solid #808080;
-      border-right: 2px solid #808080;
-      padding: 1rem;
-      text-align: center;
-      box-shadow: 2px 2px 0 #000;
-      border-radius: 4px;
-    }
-    #entry-popup h2 {
-      margin-bottom: 1rem;
-      font-size: clamp(10px, 2.5vw, 12px);
-      color: #000080;
     }
 
     /* Unified Button Styling */
@@ -170,7 +177,7 @@
       border-top: 2px solid #FFFFFF;
       border-left: 2px solid #FFFFFF;
       border-bottom: 2px solid #808080;
-      border¹³¹³border-right: 2px solid #808080;
+      border-right: 2px solid #808080;
       width: clamp(200px, 60vw, 300px);
       box-shadow: 2px 2px 0 #000;
       margin: 10px 0;
@@ -243,7 +250,7 @@
       padding: 6px;
       box-shadow: 2px 2px 0 #000;
       z-index: 999;
-      display: none;
+      display: flex;
       flex-direction: column;
       gap: 6px;
       width: clamp(150px, 40vw, 200px);
@@ -282,7 +289,7 @@
     }
     #audio-player .btn {
       padding: 4px;
-      font-size: clamp(8pxTMP, 2vw, 10px);
+      font-size: clamp(8px, 2vw, 10px);
     }
 
     /* Playlist */
@@ -358,6 +365,14 @@
         right: 15px;
         margin: 0;
       }
+      .traits-btn {
+        width: 36px;
+        height: 36px;
+      }
+      .traits-btn svg {
+        width: 24px;
+        height: 24px;
+      }
     }
     @media (max-width: 767px) {
       #playlist-container {
@@ -378,6 +393,14 @@
       #license {
         font-size: clamp(6px, 1.6vw, 8px);
       }
+      .traits-btn {
+        width: 28px;
+        height: 28px;
+      }
+      .traits-btn svg {
+        width: 16px;
+        height: 16px;
+      }
     }
   </style>
 </head>
@@ -390,17 +413,13 @@
     <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
   </div>
 
-  <!-- Entry Popup -->
-  <div id="entry-popup">
-    <div class="popup-modal">
-      <h2>Enter SketchyMilio Wrld?</h2>
-      <button class="btn" id="enter-yes">Yes</button>
-      <button class="btn" id="enter-no">No</button>
-    </div>
-  </div>
-
   <!-- Main Content -->
   <div class="main-container">
+    <a href="/traits" class="traits-btn" title="View Traits">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 4h16v2H4V4zm0 7h16v2H4v-2zm0 7h16v2H4v-2z"/>
+      </svg>
+    </a>
     <h1 id="site-title">My<span>M</span>ilio</h1>
     <div class="window">
       <div class="title-bar">mymilio generatooor</div>
@@ -499,26 +518,23 @@
       return `${min}:${sec.toString().padStart(2, '0')}`;
     }
 
-    // Randomize floating image positions and directions
+    // Initialize page
     document.addEventListener('DOMContentLoaded', () => {
+      // Randomize floating image positions and directions
       const floats = document.querySelectorAll('.bg-float');
       floats.forEach((float, index) => {
-        // Randomize starting position
         const maxX = window.innerWidth - 170;
         const maxY = window.innerHeight - 170;
         const startX = Math.random() * maxX;
         const startY = Math.random() * maxY;
         float.style.left = `${startX}px`;
         float.style.top = `${startY}px`;
-
-        // Randomize animation direction
         float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
       });
 
       const audio = new Audio();
       audio.volume = 0.5;
 
-      const popup = document.getElementById('entry-popup');
       const player = document.getElementById('audio-player');
       const playPauseBtn = document.getElementById('play-pause-btn');
       const stopBtn = document.getElementById('stop-btn');
@@ -564,19 +580,10 @@
         audio.play().catch(err => console.error('Playback failed:', err));
       });
 
-      // Popup buttons
-      document.getElementById('enter-yes').onclick = () => {
-        popup.style.display = 'none';
-        player.style.display = 'flex';
-        randomizeCombo();
-        updateSongInfo();
-      };
-      document.getElementById('enter-no').onclick = () => {
-        popup.style.display = 'none';
-        player.style.display = 'flex';
-        randomizeCombo();
-        updateSongInfo();
-      };
+      // Show audio player and randomize combo on load
+      player.style.display = 'flex';
+      randomizeCombo();
+      updateSongInfo();
 
       // Audio controls
       playPauseBtn.onclick = () => {
