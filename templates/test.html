@@ -224,10 +224,15 @@
       height: 80px;
       object-fit: contain;
       border: 1px inset #808080;
-      background: #000;
+      background: linear-gradient(180deg, #FFFFFF, #FFE6E6);
       margin-right: 12px;
       border-radius: 4px;
     }
+    .trait-image.mouth {
+      transform: scale(2);
+      transform-origin: center;
+    }
+
     .trait-info {
       flex: 1;
       font-size: clamp(8px, 2vw, 10px);
@@ -343,14 +348,15 @@
       }
 
       const traits = report.traits;
-      let currentCategory = Object.keys(traits)[0] || '';
+      // Set default category to the first non-heads category
+      let currentCategory = Object.keys(traits).filter(cat => cat !== 'heads')[0] || '';
       let currentSort = 'rarity'; // Default sort
 
-      // Create tabs for each category
+      // Create tabs for each category, excluding heads
       const createTabs = () => {
         tabNav.innerHTML = '';
         for (const category in traits) {
-          if (traits.hasOwnProperty(category)) {
+          if (traits.hasOwnProperty(category) && category !== 'heads') {
             const tabBtn = document.createElement('button');
             tabBtn.className = 'tab-btn';
             tabBtn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
@@ -396,13 +402,15 @@
         `;
         const windowBody = windowDiv.querySelector('.window-body');
 
-        // Prepare traits array for sorting
+        // Prepare traits array for sorting, excluding "None"
         const traitsArray = [];
         for (const filename in traits[currentCategory]) {
           if (traits[currentCategory].hasOwnProperty(filename)) {
             const trait = traits[currentCategory][filename];
             const traitName = filename.replace('.png', '').split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-            traitsArray.push({ filename, trait, name: traitName });
+            if (traitName.toLowerCase() !== 'none') {
+              traitsArray.push({ filename, trait, name: traitName });
+            }
           }
         }
 
@@ -410,8 +418,11 @@
         sortTraits(traitsArray).forEach(({ filename, trait, name }) => {
           const traitItem = document.createElement('div');
           traitItem.className = 'trait-item';
+          const imageFolder = currentCategory === 'hair2' ? 'hairs' : currentCategory;
+          const isMouth = currentCategory === 'mouth' ? ' mouth' : '';
           traitItem.innerHTML = `
-            <img src="/static/${currentCategory}/${filename}" class="trait-image" alt="${name}">
+            <img src="/static/${imageFolder}/${filename}" class="trait-image${isMouth}" alt="${name}"
+                 onerror="this.src='/static/backup/${filename}'; this.onerror=null;">
             <div class="trait-info">
               <p><strong>Name:</strong> ${name}</p>
               <p><strong>Count:</strong> ${trait.count}</p>
