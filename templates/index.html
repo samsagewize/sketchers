@@ -413,7 +413,7 @@
     <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
   </div>
 
-  <!-- Main Content -->
+  ><!-- Main Content -->
   <div class="main-container">
     <a href="/traits" class="traits-btn" title="View Traits">
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -469,9 +469,21 @@
     </div>
   </div>
 
+  <!-- Vercel Analytics -->
+  <script src="/_vercel/insights/script.js" defer></script>
+
   <script>
     const layerFiles = {{ layer_files | tojson }};
     const layers = {{ layers | tojson }};
+
+    // Function to log custom events to Vercel Analytics
+    function logVercelEvent(eventName, eventData = {}) {
+      if (window?.vercel?.analytics?.track) {
+        window.vercel.analytics.track(eventName, eventData);
+      } else {
+        console.warn('Vercel Analytics not loaded');
+      }
+    }
 
     // Randomize Combo Function
     function randomizeCombo() {
@@ -623,8 +635,12 @@
         };
       });
 
-      // Randomize button
-      document.getElementById('randomize-btn').onclick = randomizeCombo;
+      // Randomize button with analytics tracking
+      const randomizeBtn = document.getElementById('randomize-btn');
+      randomizeBtn.onclick = () => {
+        randomizeCombo();
+        logVercelEvent('RandomizeButtonClick', { page: window.location.pathname });
+      };
     });
   </script>
 </body>
