@@ -1,0 +1,42 @@
+<!-- templates/redeempoints.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SketchyMilio Holdings</title>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    input { font-size: 1em; padding: 0.3em; width: 350px; }
+    button { padding: 0.4em 1em; }
+    .error { color: crimson; }
+    .results { margin-top: 1.5em; }
+  </style>
+</head>
+<body>
+  <h1>Your SketchyMilio (#08533…) Holdings</h1>
+  <form method="post">
+    <div>
+      <label>Your Wallet Address:</label><br>
+      <input name="owner" placeholder="0xYourAddress…" required>
+    </div>
+    <div style="margin-top:1em;">
+      <button type="submit">Check My Tokens</button>
+    </div>
+  </form>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  {% if user_toks is not none %}
+    <div class="results">
+      {% if user_toks %}
+        <p>🔑 You hold {{ user_toks|length }} token{{ '' if user_toks|length==1 else 's' }}:</p>
+        <p><strong>{{ user_toks| organizations, join(', ') }}</strong></p>
+      {% else %}
+        <p>❌ You don’t hold any tokens.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</body>
+</html>
