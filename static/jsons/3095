@@ -1,0 +1,71 @@
+{
+  "name": "SketchyMilio #931",
+  "description": "SketchyMilio By MyMilio on Abstract.",
+  "image": "ipfs://bafybeic3oyymhrcaasuha2adny4xrnoap46llgempizo65x3zn34b3lnzm/generated_23_14F__8_3292_409__d1e4781e_4672.png",
+  "attributes": [
+    {
+      "trait_type": "background",
+      "value": "donald2.png"
+    },
+    {
+      "trait_type": "accessories2",
+      "value": "None"
+    },
+    {
+      "trait_type": "bodies",
+      "value": "chrome-hearted.png"
+    },
+    {
+      "trait_type": "mouth",
+      "value": "frown.png"
+    },
+    {
+      "trait_type": "eyes",
+      "value": "yellow.png"
+    },
+    {
+      "trait_type": "hair2",
+      "value": "None"
+    },
+    {
+      "trait_type": "niqab",
+      "value": "None"
+    },
+    {
+      "trait_type": "hairs",
+      "value": "blue-bang.png"
+    },
+    {
+      "trait_type": "glasses",
+      "value": "None"
+    },
+    {
+      "trait_type": "earrings",
+      "value": "cleopatra-serpent.png"
+    },
+    {
+      "trait_type": "shirts",
+      "value": "lv-black-button-shirt.png"
+    },
+    {
+      "trait_type": "accessories",
+      "value": "f10-sword.png"
+    },
+    {
+      "trait_type": "hats",
+      "value": "None"
+    },
+    {
+      "trait_type": "health",
+      "value": "x-health.png"
+    },
+    {
+      "trait_type": "toys",
+      "value": "deku.png"
+    },
+    {
+      "trait_type": "heads",
+      "value": "None"
+    }
+  ]
+}

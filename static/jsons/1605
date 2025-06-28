@@ -1,0 +1,71 @@
+{
+  "name": "SketchyMilio #771",
+  "description": "SketchyMilio By MyMilio on Abstract.",
+  "image": "ipfs://bafybeic3oyymhrcaasuha2adny4xrnoap46llgempizo65x3zn34b3lnzm/generated_20_0A1__W_135__226__8cae2631_6260.png",
+  "attributes": [
+    {
+      "trait_type": "background",
+      "value": "cyberpunk.png"
+    },
+    {
+      "trait_type": "accessories2",
+      "value": "None"
+    },
+    {
+      "trait_type": "bodies",
+      "value": "basic.png"
+    },
+    {
+      "trait_type": "mouth",
+      "value": "smile.png"
+    },
+    {
+      "trait_type": "eyes",
+      "value": "blue.png"
+    },
+    {
+      "trait_type": "hair2",
+      "value": "None"
+    },
+    {
+      "trait_type": "niqab",
+      "value": "None"
+    },
+    {
+      "trait_type": "hairs",
+      "value": "whatever-dark.png"
+    },
+    {
+      "trait_type": "glasses",
+      "value": "None"
+    },
+    {
+      "trait_type": "earrings",
+      "value": "chrome-cross.png"
+    },
+    {
+      "trait_type": "shirts",
+      "value": "supreme-red.png"
+    },
+    {
+      "trait_type": "accessories",
+      "value": "None"
+    },
+    {
+      "trait_type": "hats",
+      "value": "None"
+    },
+    {
+      "trait_type": "health",
+      "value": "energy-bar.png"
+    },
+    {
+      "trait_type": "toys",
+      "value": "music-television.png"
+    },
+    {
+      "trait_type": "heads",
+      "value": "None"
+    }
+  ]
+}

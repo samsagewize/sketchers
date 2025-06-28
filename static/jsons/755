@@ -1,0 +1,71 @@
+{
+  "name": "SketchyMilio #1930",
+  "description": "SketchyMilio By MyMilio on Abstract.",
+  "image": "ipfs://bafybeic3oyymhrcaasuha2adny4xrnoap46llgempizo65x3zn34b3lnzm/generated_414016__I_0399_208__ef796ec0_8524.png",
+  "attributes": [
+    {
+      "trait_type": "background",
+      "value": "japan-road.png"
+    },
+    {
+      "trait_type": "accessories2",
+      "value": "wingsblue.png"
+    },
+    {
+      "trait_type": "bodies",
+      "value": "basic.png"
+    },
+    {
+      "trait_type": "mouth",
+      "value": "advil-pm.png"
+    },
+    {
+      "trait_type": "eyes",
+      "value": "cross.png"
+    },
+    {
+      "trait_type": "hair2",
+      "value": "None"
+    },
+    {
+      "trait_type": "niqab",
+      "value": "None"
+    },
+    {
+      "trait_type": "hairs",
+      "value": "pink-bangless.png"
+    },
+    {
+      "trait_type": "glasses",
+      "value": "None"
+    },
+    {
+      "trait_type": "earrings",
+      "value": "7.png"
+    },
+    {
+      "trait_type": "shirts",
+      "value": "white-dot-jacket.png"
+    },
+    {
+      "trait_type": "accessories",
+      "value": "none.png"
+    },
+    {
+      "trait_type": "hats",
+      "value": "None"
+    },
+    {
+      "trait_type": "health",
+      "value": "energy-bar.png"
+    },
+    {
+      "trait_type": "toys",
+      "value": "cult.png"
+    },
+    {
+      "trait_type": "heads",
+      "value": "None"
+    }
+  ]
+}

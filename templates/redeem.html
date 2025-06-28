@@ -1,42 +1,60 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>SketchyMilio Holdings</title>
-  <style>
-    body { font-family: sans-serif; margin: 2em; }
-    input { font-size: 1em; padding: 0.3em; width: 350px; }
-    button { padding: 0.4em 1em; }
-    .error { color: crimson; }
-    .results { margin-top: 1.5em; }
-  </style>
+    <title>Redeem SketchyMilio</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .error { color: red; }
+        .token-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .token-card { border: 1px solid #ccc; padding: 10px; text-align: center; }
+        img { max-width: 100%; height: auto; }
+        form { margin-bottom: 20px; }
+        input[type="text"] { padding: 5px; width: 300px; }
+        button { padding: 5px 10px; }
+    </style>
 </head>
 <body>
-  <h1>Your SketchyMilio (#08533…) Holdings</h1>
-  <form method="post">
-    <div>
-      <label>Your Wallet Address:</label><br>
-      <input name="owner" placeholder="0xYourAddress…" required>
-    </div>
-    <div style="margin-top:1em;">
-      <button type="submit">Check My Tokens</button>
-    </div>
-  </form>
-
-  {% if error %}
-    <p class="error">{{ error }}</p>
-  {% endif %}
-
-  {% if user_toks is not none %}
-    <div class="results">
-      {% if user_toks %}
-        <p>🔑 You hold {{ user_toks|length }} token{{ '' if user_toks|length==1 else 's' }}:</p>
-        <p><strong>{{ user_toks|join(', ') }}</strong></p>
-      {% else %}
-        <p>❌ You don’t hold any tokens.</p>
-      {% endif %}
-    </div>
-  {% endif %}
+    <h1>Redeem Your SketchyMilio NFTs</h1>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+    <form method="POST">
+        <label for="owner">Wallet Address:</label>
+        <input type="text" id="owner" name="owner" placeholder="0x..." required>
+        <button type="submit">Fetch Tokens</button>
+    </form>
+    {% if user_toks %}
+        <h2>Your Tokens ({{ user_toks|length }})</h2>
+        <div class="token-grid">
+            {% for token_id in user_toks %}
+                <div class="token-card">
+                    <h3>{{ metadata[token_id].name or 'Token #' + token_id }}</h3>
+                    {% if metadata[token_id].error %}
+                        <p class="error">{{ metadata[token_id].error }}</p>
+                    {% else %}
+                        <img src="{{ metadata[token_id].image }}" alt="Token {{ token_id }}" onerror="this.src='/static/placeholder.png'">
+                        <ul>
+                            {% for layer in layers %}
+                                {% if metadata[token_id].traits[layer] %}
+                                    <li>{{ layer }}: {{ metadata[token_id].traits[layer] }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Enter a wallet address to see owned tokens.</p>
+    {% endif %}
+    <h2>Available Layers</h2>
+    {% for layer in layers %}
+        <h3>{{ layer }}</h3>
+        <ul>
+            {% for file in layer_files[layer] %}
+                <li>{{ file }}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
 </body>
 </html>
