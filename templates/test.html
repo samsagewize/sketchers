@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MyMilio Traits</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    /* Reset and Base Styles */
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
+      font-family: 'Press Start 2P', cursive;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    /* Background Floating Elements */
+    #background-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-float {
+      position: absolute;
+      opacity: 0.15;
+      pointer-events: none;
+      max-width: 170px;
+      animation: float-circle 20s linear infinite;
+      transform-origin: center;
+    }
+    .bg-float:nth-child(1) {
+      animation-duration: 22s;
+      animation-delay: 0s;
+    }
+    .bg-float:nth-child(2) {
+      animation-duration: 25s;
+      animation-delay: 3s;
+    }
+    .bg-float:nth-child(3) {
+      animation-duration: 28s;
+      animation-delay: 6s;
+    }
+    .bg-float:nth-child(4) {
+      animation-duration: 23s;
+      animation-delay: 9s;
+    }
+
+    @keyframes float-circle {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20vw, 20vh) rotate(90deg);
+      }
+      50% {
+        transform: translate(40vw, 0) rotate(180deg);
+      }
+      75% {
+        transform: translate(20vw, -20vh) rotate(270deg);
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
+    }
+
+    /* Main Container */
+    .main-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      padding: 10px;
+      padding-bottom: 50px;
+      box-sizing: border-box;
+    }
+
+    /* Site Title */
+    #site-title {
+      font-size: clamp(16px, 4vw, 20px);
+      margin: 15px 0;
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
+      text-align: center;
+    }
+    #site-title span {
+      color: #FF0055;
+    }
+
+    /* Window Styling */
+    .window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      width: clamp(200px, 80vw, 400px);
+      box-shadow: 2px 2px 0 #000;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .title-bar {
+      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+      color: #FFFFFF;
+      padding: 4px;
+      font-size: clamp(8px, 2vw, 10px);
+      text-align: center;
+      border-bottom: 1px solid #000080;
+    }
+    .window-body {
+      background: #E0E0E0;
+      padding: 8px;
+      border: 1px inset #808080;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Trait Item Styling */
+    .trait-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 8px;
+      border-bottom: 1px solid #808080;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      background: #E0E0E0;
+    }
+    .trait-item:last-child {
+      border-bottom: none;
+    }
+    .trait-image {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      border: 1px inset #808080;
+      background: #000;
+      margin-right: 12px;
+      border-radius: 4px;
+    }
+    .trait-info {
+      flex: 1;
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+    .trait-info p {
+      margin: 4px 0;
+    }
+
+    /* License Text */
+    #license {
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      z-index: 2;
+      font-size: clamp(7px, 1.8vw, 9px);
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 #000080;
+    }
+    #license a {
+      color: #FFFFFF;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    #license a:hover {
+      color: #FF0055;
+    }
+
+    /* Responsive Adjustments */
+    @media (min-width: 768px) {
+      .window {
+        transform: scale(1.1);
+        transform-origin: top center;
+      }
+      #site-title {
+        font-size: clamp(18px, 4vw, 22px);
+      }
+      .trait-image {
+        width: 100px;
+        height: 100px;
+      }
+    }
+    @media (max-width: 767px) {
+      .trait-image {
+        width: 60px;
+        height: 60px;
+      }
+      .trait-info {
+        font-size: clamp(7px, 1.8vw, 9px);
+      }
+      #license {
+        font-size: clamp(6px, 1.6vw, 8px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Container -->
+  <div id="background-container">
+    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
+    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
+    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
+    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <h1 id="site-title">My<span>M</span>ilio Traits</h1>
+    <div id="traits-container"></div>
+
+    <!-- License Text -->
+    <div id="license">
+      <a href="https://viralpubliclicense.org/" target="_blank">© Viral Public License - All Rights Reserved - MyMilio inc</a>
+    </div>
+  </div>
+
+  <script>
+    // Randomize floating image positions and directions
+    document.addEventListener('DOMContentLoaded', () => {
+      const floats = document.querySelectorAll('.bg-float');
+      floats.forEach((float, index) => {
+        const maxX = window.innerWidth - 170;
+        const maxY = window.innerHeight - 170;
+        const startX = Math.random() * maxX;
+        const startY = Math.random() * maxY;
+        float.style.left = `${startX}px`;
+        float.style.top = `${startY}px`;
+        float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+      });
+
+      // Fetch and display traits from report.json
+      fetch('/static/report.json')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to load report.json');
+          }
+          return response.json();
+        })
+        .then(data => {
+          const traitsContainer = document.getElementById('traits-container');
+          const traits = data.traits;
+
+          // Iterate over each trait category (e.g., background, hair, hair2)
+          for (const category in traits) {
+            if (traits.hasOwnProperty(category)) {
+              // Create a window for each category
+              const windowDiv = document.createElement('div');
+              windowDiv.className = 'window';
+
+              // Capitalize category name for title
+              const title = category.charAt(0).toUpperCase() + category.slice(1);
+              windowDiv.innerHTML = `
+                <div class="title-bar">${title} Traits</div>
+                <div class="window-body"></div>
+              `;
+              const windowBody = windowDiv.querySelector('.window-body');
+
+              // Iterate over each trait in the category
+              for (const filename in traits[category]) {
+                if (traits[category].hasOwnProperty(filename)) {
+                  const trait = traits[category][filename];
+                  const traitItem = document.createElement('div');
+                  traitItem.className = 'trait-item';
+
+                  // Format the trait name (remove .png and capitalize)
+                  const traitName = filename.replace('.png', '').split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+                  traitItem.innerHTML = `
+                    <img src="/static/${category}/${filename}" class="trait-image" alt="${traitName}">
+                    <div class="trait-info">
+                      <p><strong>Name:</strong> ${traitName}</p>
+                      <p><strong>Count:</strong> ${trait.count}</p>
+                      <p><strong>Percentage:</strong> ${trait.percentage}%</p>
+                    </div>
+                  `;
+                  windowBody.appendChild(traitItem);
+                }
+              }
+
+              traitsContainer.appendChild(windowDiv);
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error loading traits:', error);
+          const traitsContainer = document.getElementById('traits-container');
+          traitsContainer.innerHTML = '<p style="color: #FF0055; text-align: center;">Error loading traits. Please try again later.</p>';
+        });
+    });
+  </script>
+</body>
+</html>
