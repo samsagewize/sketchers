@@ -39,21 +39,43 @@
       position: absolute;
       opacity: 0.15;
       pointer-events: none;
-      max-width: 170px;
+      max-width: 170px; /* 70% larger than 100px */
       animation: float-circle 20s linear infinite;
       transform-origin: center;
     }
-    .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
-    .bg-float:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
-    .bg-float:nth-child(3) { animation-duration: 28s; animation-delay: 6s; }
-    .bg-float:nth-child(4) { animation-duration: 23s; animation-delay: 9s; }
+    .bg-float:nth-child(1) {
+      animation-duration: 22s;
+      animation-delay: 0s;
+    }
+    .bg-float:nth-child(2) {
+      animation-duration: 25s;
+      animation-delay: 3s;
+    }
+    .bg-float:nth-child(3) {
+      animation-duration: 28s;
+      animation-delay: 6s;
+    }
+    .bg-float:nth-child(4) {
+      animation-duration: 23s;
+      animation-delay: 9s;
+    }
 
     @keyframes float-circle {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(20vw, 20vh) rotate(90deg); }
-      50% { transform: translate(40vw, 0) rotate(180deg); }
-      75% { transform: translate(20vw, -20vh) rotate(270deg); }
-      100% { transform: translate(0, 0) rotate(360deg); }
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20vw, 20vh) rotate(90deg);
+      }
+      50% {
+        transform: translate(40vw, 0) rotate(180deg);
+      }
+      75% {
+        transform: translate(20vw, -20vh) rotate(270deg);
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
     }
 
     /* Main Container */
@@ -66,7 +88,7 @@
       width: 100%;
       max-width: 600px;
       padding: 10px;
-      padding-bottom: 50px;
+      padding-bottom: 50px; /* Space for license text */
       box-sizing: border-box;
     }
 
@@ -95,7 +117,7 @@
       justify-content: center;
       z-index: 1000;
     }
-    .popup-modal {
+    #entry-popup .popup-modal {
       background: #C0C0C0;
       border: 2px solid #000080;
       border-top: 2px solid #FFFFFF;
@@ -119,7 +141,7 @@
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
       border-left: 1px solid #FFFFFF;
-      border-bottom: 1px solid #808(org);
+      border-bottom: 1px solid #808080;
       border-right: 1px solid #808080;
       padding: 4px 8px;
       font-size: clamp(8px, 2vw, 10px);
@@ -148,7 +170,7 @@
       border-top: 2px solid #FFFFFF;
       border-left: 2px solid #FFFFFF;
       border-bottom: 2px solid #808080;
-      border-right: 2px solid #808080;
+      border¹³¹³border-right: 2px solid #808080;
       width: clamp(200px, 60vw, 300px);
       box-shadow: 2px 2px 0 #000;
       margin: 10px 0;
@@ -169,76 +191,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-
-    /* Traits Modal */
-    #traits-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1001;
-    }
-    #traits-modal .traits-window {
-      background: #C0C0C0;
-      border: 2px solid #000080;
-      border-top: 2px solid #FFFFFF;
-      border-left: 2px solid #FFFFFF;
-      border-bottom: 2px solid #808080;
-      border-right: 2px solid #808080;
-      width: clamp(300px, 80vw, 500px);
-      max-height: 80vh;
-      box-shadow: 2px 2px 0 #000;
-      border-radius: 4px;
-      display: flex;
-      flex-direction: column;
-    }
-    #traits-modal .title-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    #traits-modal .title-bar .btn {
-      padding: 2px 6px;
-      font-size: clamp(7px, 1.8vw, 9px);
-    }
-    #traits-modal .traits-body {
-      background: #E0E0E0;
-      padding: 8px;
-      border: 1px inset #808080;
-      overflow-y: auto;
-      flex: 1;
-    }
-    #traits-modal .category {
-      margin-bottom: 12px;
-    }
-    #traits-modal .category h3 {
-      font-size: clamp(10px, 2.5vw, 12px);
-      color: #000080;
-      margin: 8px 0 4px;
-      border-bottom: 1px solid #000080;
-    }
-    #traits-modal .trait {
-      display: flex;
-      align-items: center;
-      font-size: clamp(8px, 2vw, 10px);
-      color: #000080;
-      margin: 4px 0;
-    }
-    #traits-modal .trait img {
-      width: 20px;
-      height: 20px;
-      margin-right: 8px;
-      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-      border: 1px solid #808080;
-    }
-    #traits-modal .trait img.error {
-      background: #FF0000;
     }
 
     /* Combo Container (Image Display) */
@@ -330,7 +282,7 @@
     }
     #audio-player .btn {
       padding: 4px;
-      font-size: clamp(8px, 2vw, 10px);
+      font-size: clamp(8pxTMP, 2vw, 10px);
     }
 
     /* Playlist */
@@ -413,7 +365,7 @@
       }
       #audio-player {
         position: static;
-        width: clamp: (120px, 70vw, 180px);
+        width: clamp(120px, 70vw, 180px);
       }
       #audio-player .song-title,
       #audio-player .btn,
@@ -425,9 +377,6 @@
       }
       #license {
         font-size: clamp(6px, 1.6vw, 8px);
-      }
-      #traits-modal .traits-window {
-        width: clamp(250px, 90vw, 400px);
       }
     }
   </style>
@@ -450,23 +399,8 @@
     </div>
   </div>
 
-  <!-- Traits Modal -->
-  <div id="traits-modal">
-    <div class="traits-window">
-      <div class="title-bar">
-        <span>Traits Rarity Report</span>
-        <button class="btn" id="close-traits">Close</button>
-      </div>
-      <div class="traits-body">
-        <div id="traits-loading">Loading report...</div>
-        <div id="traits-error" style="display: none; color: #FF0000;">Failed to load report.</div>
-      </div>
-    </div>
-  </div>
-
   <!-- Main Content -->
   <div class="main-container">
-    <button class="btn" id="traits-btn">Traits</button>
     <h1 id="site-title">My<span>M</span>ilio</h1>
     <div class="window">
       <div class="title-bar">mymilio generatooor</div>
@@ -480,29 +414,120 @@
           <div class="nft-text">Holding a SketchyMilio gives you access to mint and receive airdrops for all things MyMilio!</div>
           <button class="btn" id="randomize-btn">Randomize!</button>
           <a href="https://www.scatter.art/collection/sketchymilios-by-mymilio" target="_blank" class="btn">MINT</a>
-_vol = document.getElementById('enter-yes');
-      noBtn = document.getElementById('enter-no');
-      randomizeBtn = document.getElementById('randomize-btn');
-      playPauseBtn = document.getElementById('play-pause-btn');
-      stopBtn = document.getElementById('stop-btn');
-      prevBtn = document.getElementById('prev-btn');
-      nextBtn = document.getElementById('next-btn');
+          <a href="https://x.com/sketchymilios" target="_blank" class="btn">Twitter</a>
+        </div>
+      </div>
+    </div>
 
-      // Randomize floating image positions and directions
+    <!-- Playlist -->
+    <div id="playlist-container">
+      <div id="playlist-title">SketchyMilio EP1</div>
+      <ul id="playlist">
+        <li data-src="/static/song1.mp3">Song1</li>
+        <li data-src="/static/song2.mp3">Song2</li>
+        <li data-src="/static/song3.mp3">Song3</li>
+      </ul>
+    </div>
+
+    <!-- Custom Audio Player -->
+    <div id="audio-player">
+      <div class="title-bar">Audio Player</div>
+      <div class="player-body">
+        <div class="song-title">No Song Playing</div>
+        <div class="timer">0:00 / 0:00</div>
+        <div class="controls">
+          <button class="btn" id="prev-btn">⏮️</button>
+          <button class="btn" id="play-pause-btn">▶️</button>
+          <button class="btn" id="stop-btn">⏹️</button>
+          <button class="btn" id="next-btn">⏭️</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- License Text -->
+    <div id="license">
+      <a href="https://viralpubliclicense.org/" target="_blank">© Viral Public License - All Rights Reserved - MyMilio inc</a>
+    </div>
+  </div>
+
+  <script>
+    const layerFiles = {{ layer_files | tojson }};
+    const layers = {{ layers | tojson }};
+
+    // Randomize Combo Function
+    function randomizeCombo() {
+      const validLayers = layers.filter(l => (layerFiles[l] || []).length);
+      let loadedCount = 0;
+
+      validLayers.forEach(layer => {
+        const opts = layerFiles[layer];
+        const pick = opts[Math.floor(Math.random() * opts.length)];
+        const imgEl = document.getElementById(`layer-${layer}`);
+
+        const temp = new Image();
+        temp.crossOrigin = 'anonymous';
+        temp.onload = () => {
+          const w = temp.width, h = temp.height;
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(temp, 0, 0);
+          const id = ctx.getImageData(0, 0, w, h);
+          const d = id.data;
+          for (let i = 0; i < d.length; i += 4) {
+            const noise = (Math.random() - 0.2) * 255 * 0.2;
+            d[i] = d[i] + noise;
+            d[i+1] = d[i+1] + noise;
+            d[i+2] = d[i+2] + noise;
+          }
+          ctx.putImageData(id, 0, 0);
+          imgEl.src = canvas.toDataURL();
+          loadedCount++;
+        };
+        temp.onerror = () => {
+          console.error(`Failed to load image: /static/${layer}/${pick}`);
+        };
+        temp.src = `/static/${layer}/${pick}`;
+      });
+    }
+
+    // Format time in MM:SS
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return '0:00';
+      const min = Math.floor(seconds / 60);
+      const sec = Math.floor(seconds % 60);
+      return `${min}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    // Randomize floating image positions and directions
+    document.addEventListener('DOMContentLoaded', () => {
       const floats = document.querySelectorAll('.bg-float');
       floats.forEach((float, index) => {
+        // Randomize starting position
         const maxX = window.innerWidth - 170;
         const maxY = window.innerHeight - 170;
         const startX = Math.random() * maxX;
         const startY = Math.random() * maxY;
         float.style.left = `${startX}px`;
         float.style.top = `${startY}px`;
+
+        // Randomize animation direction
         float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
       });
 
-      // Audio setup
       const audio = new Audio();
       audio.volume = 0.5;
+
+      const popup = document.getElementById('entry-popup');
+      const player = document.getElementById('audio-player');
+      const playPauseBtn = document.getElementById('play-pause-btn');
+      const stopBtn = document.getElementById('stop-btn');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const songTitle = document.querySelector('#audio-player .song-title');
+      const timer = document.querySelector('#audio-player .timer');
+
+      // Playlist data
       const playlist = [
         { src: '/static/song1.mp3', title: 'Song1' },
         { src: '/static/song2.mp3', title: 'Song2' },
@@ -518,19 +543,21 @@ _vol = document.getElementById('enter-yes');
         playPauseBtn.textContent = audio.paused ? '▶️' : '⏸️';
       }
 
-      // Audio events
+      // Update timer
       audio.addEventListener('timeupdate', () => {
         if (!isNaN(audio.duration)) {
           timer.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
         }
       });
 
+      // Handle load errors
       audio.addEventListener('error', () => {
         console.error(`Failed to load audio: ${audio.src}`);
         songTitle.textContent = 'Error Loading Song';
         timer.textContent = '0:00 / 0:00';
       });
 
+      // Reset on song end
       audio.addEventListener('ended', () => {
         currentSongIndex = (currentSongIndex + 1) % playlist.length;
         updateSongInfo();
@@ -538,13 +565,13 @@ _vol = document.getElementById('enter-yes');
       });
 
       // Popup buttons
-      yesBtn.onclick = () => {
+      document.getElementById('enter-yes').onclick = () => {
         popup.style.display = 'none';
         player.style.display = 'flex';
         randomizeCombo();
         updateSongInfo();
       };
-      noBtn.onclick = () => {
+      document.getElementById('enter-no').onclick = () => {
         popup.style.display = 'none';
         player.style.display = 'flex';
         randomizeCombo();
@@ -580,7 +607,7 @@ _vol = document.getElementById('enter-yes');
         audio.play().catch(err => console.error('Playback failed:', err));
       };
 
-      // Playlist clicking
+      // Playlist clicking (for desktop)
       document.querySelectorAll('#playlist li').forEach((li, index) => {
         li.onclick = () => {
           currentSongIndex = index;
@@ -590,32 +617,7 @@ _vol = document.getElementById('enter-yes');
       });
 
       // Randomize button
-      randomizeBtn.onclick = randomizeCombo;
-
-      // Traits modal handling
-      traitsBtn.onclick = () => {
-        traitsModal.style.display = 'flex';
-      };
-      closeTraitsBtn.onclick = () => {
-        traitsModal.style.display = 'none';
-      };
-
-      // Load and parse report.txt
-      fetch('/report.txt')
-        .then(response => {
-          if (!response.ok) throw new Error('Failed to load report.txt');
-          return response.text();
-        })
-        .then(data => {
-          const traitsData = parseReport(data);
-          populateTraitsModal(traitsData);
-          traitsLoading.style.display = 'none';
-        })
-        .catch(err => {
-          console.error('Error loading report:', err);
-          traitsLoading.style.display = 'none';
-          traitsError.style.display = 'block';
-        });
+      document.getElementById('randomize-btn').onclick = randomizeCombo;
     });
   </script>
 </body>
