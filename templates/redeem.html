@@ -6,7 +6,7 @@
   <title>MyMilio Rewards</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    /* Reset and Base Styles */
+    /* Same CSS as provided (omitted for brevity) */
     html {
       margin: 0;
       padding: 0;
@@ -26,8 +26,6 @@
       justify-content: center;
       box-sizing: border-box;
     }
-
-    /* Background Floating Elements */
     #background-container {
       position: fixed;
       inset: 0;
@@ -47,7 +45,6 @@
     .bg-float:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
     .bg-float:nth-child(3) { animation-duration: 28s; animation-delay: 6s; }
     .bg-float:nth-child(4) { animation-duration: 23s; animation-delay: 9s; }
-
     @keyframes float-circle {
       0% { transform: translate(0, 0) rotate(0deg); }
       25% { transform: translate(20vw, 20vh) rotate(90deg); }
@@ -55,8 +52,6 @@
       75% { transform: translate(20vw, -20vh) rotate(270deg); }
       100% { transform: translate(0, 0) rotate(360deg); }
     }
-
-    /* Main Container */
     .main-container {
       position: relative;
       z-index: 2;
@@ -69,8 +64,6 @@
       padding-bottom: 50px;
       box-sizing: border-box;
     }
-
-    /* Home Button */
     .home-btn {
       position: absolute;
       top: 10px;
@@ -107,8 +100,6 @@
       height: 20px;
       fill: #000080;
     }
-
-    /* Site Title */
     #site-title {
       font-size: clamp(16px, 4vw, 20px);
       margin: 15px 0;
@@ -119,8 +110,6 @@
     #site-title span {
       color: #FF0055;
     }
-
-    /* Window Styling */
     .window {
       background: #C0C0C0;
       border: 2px solid #000080;
@@ -149,8 +138,6 @@
       flex-direction: column;
       align-items: center;
     }
-
-    /* Form Styling */
     .search-form {
       width: 100%;
       display: flex;
@@ -198,8 +185,6 @@
       box-shadow: none;
       border: 1px inset #808080;
     }
-
-    /* Token Grid */
     .token-grid {
       display: flex;
       flex-wrap: wrap;
@@ -236,8 +221,6 @@
       color: #000080;
       margin: 4px 0;
     }
-
-    /* Error Message */
     .error {
       color: #FF0055;
       font-size: clamp(8px, 2vw, 10px);
@@ -245,8 +228,6 @@
       text-align: center;
       margin: 10px 0;
     }
-
-    /* Loading Overlay */
     .loading-overlay {
       position: fixed;
       inset: 0;
@@ -279,8 +260,6 @@
       color: #000080;
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
     }
-
-    /* Responsive Adjustments */
     @media (min-width: 768px) {
       .window { transform: scale(1.1); transform-origin: top center; }
       #site-title { font-size: clamp(18px, 4vw, 22px); }
@@ -373,10 +352,12 @@
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `owner=${encodeURIComponent(owner)}`
           });
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
           const data = await response.json();
-          loadingOverlay.style.display = "none";
-
           if (data.error) {
+            loadingOverlay.style.display = "none";
             errorEl.textContent = `🚨 ${data.error}`;
             errorEl.style.display = "block";
             return;
@@ -404,7 +385,7 @@
                 card.innerHTML = `
                   <img src="${imageUrl}" alt="Token #${tokenId}" onerror="this.src='/static/placeholder.png'; this.onerror=null;">
                   <h3>Token #${tokenId}</h3>
-                  <p>${metadata.name}</p>
+                  <p>${metadata.name || 'No name'}</p>
                 `;
                 tokenGrid.appendChild(card);
               } catch (err) {
@@ -424,9 +405,10 @@
             tokenCountEl.style.display = "block";
           }
         } catch (err) {
-          loadingOverlay.style.display = "none";
           errorEl.textContent = `🚨 Failed to fetch tokens: ${err.message}`;
           errorEl.style.display = "block";
+        } finally {
+          loadingOverlay.style.display = "none";
         }
       });
     });
