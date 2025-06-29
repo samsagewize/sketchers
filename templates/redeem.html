@@ -504,19 +504,24 @@
             body: `owner=${encodeURIComponent(currentOwner)}`
           });
           if (!response.ok) {
+            if (response.status === 429) {
+              errorEl.textContent = "😶‍🌫️ All tokens are on 24-hour cooldown. Try again later.";
+              errorEl.style.display = "block";
+              return;
+            }
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
           const data = await response.json();
 
           if (data.success) {
-            successEl.textContent = `✅ Claimed ${data.points} points!`;
+            successEl.textContent = `✅ Claimed ${data.points} points! Total: ${data.total_points}`;
             successEl.style.display = "block";
           } else {
             errorEl.textContent = `🚨 ${data.error}`;
             errorEl.style.display = "block";
           }
         } catch (err) {
-          errorEl.textContent = `😶‍🌫️ Only 1 Claim per Day: ${err.message}`;
+          errorEl.textContent = `🚨 Failed to claim points: ${err.message}`;
           errorEl.style.display = "block";
         } finally {
           loadingOverlay.style.display = "none";
