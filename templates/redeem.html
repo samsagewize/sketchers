@@ -158,7 +158,7 @@
       background: #FFFFFF;
       color: #000080;
     }
-    .search-form button, #claim-points-btn {
+    .search-form button, #claim-points-btn, #more-info-btn, #shop-btn {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
@@ -174,15 +174,38 @@
       box-shadow: 1px 1px 0 #000;
       transition: background 0.2s, transform 0.1s;
     }
-    .search-form button:hover, #claim-points-btn:hover {
+    .search-form button:hover, #claim-points-btn:hover, #more-info-btn:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
       transform: translate(-1px, -1px);
     }
-    .search-form button:active, #claim-points-btn:active {
+    .search-form button:active, #claim-points-btn:active, #more-info-btn:active {
       background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
       transform: translate(1px, 1px);
       box-shadow: none;
       border: 1px inset #808080;
+    }
+    #shop-btn {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    #shop-btn:hover {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      transform: none;
+    }
+    #shop-btn:active {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      transform: none;
+      box-shadow: 1px 1px 0 #000;
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+    }
+    .button-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
     }
     .token-grid {
       display: flex;
@@ -228,7 +251,7 @@
     }
     .error { color: #FF0055; }
     .success { color: #008000; }
-    .loading-overlay {
+    .loading-overlay, .info-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.5);
@@ -238,7 +261,7 @@
       z-index: 3;
       display: none;
     }
-    .loading-window {
+    .loading-window, .info-window {
       background: #C0C0C0;
       border: 2px solid #000080;
       border-top: 2px solid #FFFFFF;
@@ -249,16 +272,44 @@
       border-radius: 4px;
       box-shadow: 2px 2px 0 #000;
       text-align: center;
+      width: clamp(200px, 70vw, 400px);
     }
     .loading-window img {
       width: 48px;
       height: 48px;
       margin-bottom: 8px;
     }
-    .loading-window p {
+    .loading-window p, .info-window p {
       font-size: clamp(8px, 2vw, 10px);
       color: #000080;
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      margin: 8px 0;
+    }
+    .info-window button {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border府: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px 8px;
+      font-size: clamp(8px, 2vw, 10px);
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      color: #000080;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .info-window button:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .info-window button:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
     }
     @media (min-width: 768px) {
       .window { transform: scale(1.1); transform-origin: top center; }
@@ -271,8 +322,13 @@
       .search-form input[type="text"],
       .search-form button,
       #claim-points-btn,
+      #more-info-btn,
+      #shop-btn,
       .token-card h3,
-      .error, .success { font-size: clamp(7px, 1.8vw, 9px); }
+      .error,
+      .success,
+      .info-window p,
+      .info-window button { font-size: clamp(7px, 1.8vw, 9px); }
       .home-btn { width: 28px; height: 28px; }
       .home-btn svg { width: 16px; height: 16px; }
     }
@@ -295,6 +351,15 @@
     </div>
   </div>
 
+  <!-- Info Overlay -->
+  <div class="info-overlay" id="info-overlay">
+    <div class="info-window">
+      <p>MyMilio Rewards points are currently in beta and have no monetary value. They are subject to change, modification, or termination at the discretion of the MyMilio team. As a beta feature, points are highly mutable and may be adjusted or reset based on future updates or team decisions.</p>
+      <p>Stack your points to redeem exciting rewards, such as rare MyMilios, potential future token allocations, exclusive merchandise, access to special community events, or unique digital collectibles!</p>
+      <button id="close-info-btn">Close</button>
+    </div>
+  </div>
+
   <!-- Main Content -->
   <div class="main-container">
     <a href="/" class="home-btn" title="Back to Home">
@@ -311,7 +376,11 @@
           <input type="text" id="owner" name="owner" placeholder="0x..." required>
           <button type="submit">Fetch Tokens</button>
         </form>
-        <button id="claim-points-btn" style="display: none; margin-top: 8px;">Claim Points</button>
+        <div class="button-group">
+          <button id="claim-points-btn" style="display: none;">Claim Points</button>
+          <button id="more-info-btn">More Info</button>
+          <button id="shop-btn">Reward Pts. Shop</button>
+        </div>
         <p id="error" class="error" style="display: none;"></p>
         <p id="success" class="success" style="display: none;"></p>
         <h2 id="token-count" style="display: none;">Your Tokens</h2>
@@ -341,7 +410,35 @@
       const tokenGrid = document.getElementById("token-grid");
       const loadingOverlay = document.getElementById("loading-overlay");
       const claimPointsBtn = document.getElementById("claim-points-btn");
+      const moreInfoBtn = document.getElementById("more-info-btn");
+      const shopBtn = document.getElementById("shop-btn");
+      const infoOverlay = document.getElementById("info-overlay");
+      const closeInfoBtn = document.getElementById("close-info-btn");
       let currentOwner = null;
+
+      // More Info Popup
+      moreInfoBtn.addEventListener("click", () => {
+        infoOverlay.style.display = "flex";
+      });
+
+      closeInfoBtn.addEventListener("click", () => {
+        infoOverlay.style.display = "none";
+      });
+
+      infoOverlay.addEventListener("click", (e) => {
+        if (e.target === infoOverlay) {
+          infoOverlay.style.display = "none";
+        }
+      });
+
+      // Shop Button
+      shopBtn.addEventListener("click", () => {
+        errorEl.textContent = "🚨 Reward Pts. Shop Coming Soon!";
+        errorEl.style.display = "block";
+        setTimeout(() => {
+          errorEl.style.display = "none";
+        }, 3000);
+      });
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -449,7 +546,7 @@
             errorEl.style.display = "block";
           }
         } catch (err) {
-          errorEl.textContent = `😶‍🌫️Only 1 Claim per Day: ${err.message}`;
+          errorEl.textContent = `😶‍🌫️ Only 1 Claim per Day: ${err.message}`;
           errorEl.style.display = "block";
         } finally {
           loadingOverlay.style.display = "none";
