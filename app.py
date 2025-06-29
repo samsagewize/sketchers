@@ -62,6 +62,19 @@ def traits():
 def redeem():
     return render_template('redeem.html')
 
+@app.route('/leaderboard')
+def leaderboard():
+    # if you have a static/leaderboard.json, you can load it here:
+    leaderboard_path = os.path.join(STATIC_PATH, 'leaderboard.json')
+    try:
+        with open(leaderboard_path, 'r') as f:
+            entries = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        entries = []
+    # sort by score desc if your JSON has a "score" field
+    entries.sort(key=lambda e: e.get('score', 0), reverse=True)
+    return render_template('leaderboard.html', leaderboard=entries)
+
 # Serve static files
 @app.route('/static/<path:path>')
 def static_proxy(path):
