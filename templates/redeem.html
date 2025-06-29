@@ -449,7 +449,7 @@
             errorEl.style.display = "block";
           }
         } catch (err) {
-          errorEl.textContent = `🚨 Failed to claim points: ${err.message}`;
+          errorEl.textContent = `😶‍🌫️Only 1 Claim per Day: ${err.message}`;
           errorEl.style.display = "block";
         } finally {
           loadingOverlay.style.display = "none";
