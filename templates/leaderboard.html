@@ -253,7 +253,7 @@
     // Initialize Supabase client
     const supabaseUrl = 'https://vkxchgckwyqnxlmirqqu.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreGNoZ2Nrd3lxbnhsbWlycXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExNTMwMDgsImV4cCI6MjA2NjcyOTAwOH0.QPkNrTzccpy7v2Wuhsut-Ra50gy4-mbzxZxtzyJrz80';
-    const supabase = Supabase.createClient(supabaseUrl, supabaseKey);
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
     document.addEventListener('DOMContentLoaded', () => {
       // Randomize floating image positions
