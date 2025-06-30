@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 from flask import Flask, render_template, send_from_directory
 
 app = Flask(__name__)
@@ -64,15 +65,16 @@ def redeem():
 
 @app.route('/leaderboard')
 def leaderboard():
-    # if you have a static/leaderboard.json, you can load it here:
-    leaderboard_path = os.path.join(STATIC_PATH, 'leaderboard.json')
     try:
-        with open(leaderboard_path, 'r') as f:
-            entries = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
+        # Fetch leaderboard data from the backend
+        response = requests.get('https://sketchy-n6u8.onrender.com/api/leaderboard')
+        response.raise_for_status()  # Raise an exception for bad status codes
+        data = response.json()
+        entries = data.get('leaderboard', [])
+        print(f"Leaderboard data fetched: {entries}")  # Debug log
+    except Exception as e:
+        print(f"Error fetching leaderboard: {str(e)}")  # Debug log
         entries = []
-    # sort by score desc if your JSON has a "score" field
-    entries.sort(key=lambda e: e.get('score', 0), reverse=True)
     return render_template('leaderboard.html', leaderboard=entries)
 
 # Serve static files
