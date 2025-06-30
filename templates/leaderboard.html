@@ -266,8 +266,8 @@
       const leaderboardGrid = document.getElementById("leaderboard-grid");
       const loadingOverlay = document.getElementById("loading-overlay");
 
-      // Fetch leaderboard data
-      async function fetchLeaderboard() {
+      // Function to fetch leaderboard with retries
+      async function fetchLeaderboard(attempt = 1, maxAttempts = 3, delayMs = 1000) {
         errorEl.style.display = "none";
         successEl.style.display = "none";
         leaderboardGrid.innerHTML = "";
@@ -279,6 +279,11 @@
             headers: { "Content-Type": "application/json" }
           });
           if (!response.ok) {
+            if (response.status === 503 && attempt < maxAttempts) {
+              // Retry on 503 (Render spin-up delay)
+              await new Promise(resolve => setTimeout(resolve, delayMs));
+              return fetchLeaderboard(attempt + 1, maxAttempts, delayMs * 2);
+            }
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
           const data = await response.json();
@@ -289,20 +294,34 @@
             return;
           }
 
-          if (data.leaderboard && data.leaderboard.length > 0წ
+          if (data.leaderboard && data.leaderboard.length > 0) {
+            data.leaderboard.forEach(entry => {
+              const div = document.createElement("div");
+              div.className = "leaderboard-entry";
+              div.innerHTML = `
+                <p>${entry.wallet.slice(0, 6)}...${entry.wallet.slice(-4)}</p>
+                <p>${entry.points} points</p>
+              `;
+              leaderboardGrid.appendChild(div);
+            });
+            successEl.textContent = "Leaderboard loaded successfully!";
+            successEl.style.display = "block";
+          } else {
+            errorEl.textContent = "No leaderboard data available.";
+            errorEl.style.display = "block";
+          }
+        } catch (error) {
+          console.error("Error fetching leaderboard:", error);
+          errorEl.textContent = `🚨 Error: ${error.message}`;
+          errorEl.style.display = "block";
+        } finally {
+          loadingOverlay.style.display = "none";
+        }
+      }
 
-System: Here's the complete HTML, CSS, and JavaScript code for the `/leaderboard` page, maintaining the same layout and style as the provided reference code. The page displays a "Leaderboards" section with a placeholder for leaderboard data, fetched from the backend via a GET request to `/api/leaderboard`. The leaderboard displays a list of wallet addresses and their points, styled to match the retro aesthetic of the original page. The home button links back to the root (`/`), and the JavaScript handles fetching and displaying the data with loading and error states.
-
-The code assumes the backend API at `https://sketchy-n6u8.onrender.com/api/leaderboard` returns a JSON array of objects (e.g., `[{ wallet: "0x...", points: 123 }, ...]`). Since you mentioned the backend will be updated later, the code uses a placeholder API endpoint consistent with the reference code's structure.
-
-### Next Steps for Backend
-To make this page functional, you'll need to set up the backend route `/api/leaderboard` to return leaderboard data. The expected response format is:
-
-```json
-{
-  "leaderboard": [
-    { "wallet": "0x123...", "points": 100 },
-    { "wallet": "0x456...", "points": 80 },
-    ...
-  ]
-}
+      // Fetch leaderboard on page load
+      fetchLeaderboard();
+    });
+  </script>
+</body>
+</html>
