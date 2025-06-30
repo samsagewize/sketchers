@@ -78,7 +78,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: brachtecenter;
+      justify-content: center; /* Fixed typo: was "brachtecenter" */
       width: 32px;
       height: 32px;
       border-radius: 3px;
@@ -102,7 +102,7 @@
     }
     #site-title {
       font-size: clamp(16px, 4vw, 20px);
-      margin: 15px 0;
+      margin: 50px 0 15px 0; /* Adjusted margin to push title below home button */
       color: #FFFFFF;
       text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
       text-align: center;
@@ -210,107 +210,7 @@
       .leaderboard-entry p { font-size: clamp(6px, 1.6vw, 8px); }
       .home-btn { width: 28px; height: 28px; }
       .home-btn svg { width: 16px; height: 16px; }
-    }
-  </style>
-</head>
-<body>
-  <!-- Background Container -->
-  <div id="background-container">
-    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
-    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
-    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
-    <img src="/static/float4.png" class="bg-shadow: 2px 2px 0 #000;
-      margin: 10px 0;
-      border-radius: 4px;
-    }
-    .title-bar {
-      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
-      color: #FFFFFF;
-      padding: 4px;
-      font-size: clamp(8px, 2vw, 10px);
-      text-align: center;
-      border-bottom: 1px solid #000080;
-    }
-    .window-body {
-      background: #E0E0E0;
-      padding: 8px;
-      border: 1px inset #808080;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .leaderboard-grid {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .leaderboard-entry {
-      background: #E0E0E0;
-      border: 1px inset #808080;
-      padding: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 4px;
-      box-shadow: 1px 1px 0 #000;
-    }
-    .leaderboard-entry p {
-      font-size: clamp(7px, 1.8vw, 9px);
-      color: #000080;
-      margin: 0;
-      text-shadow: 0.5px 0.5px 0 #FFFFFF;
-    }
-    .error, .success {
-      font-size: clamp(8px, 2vw, 10px);
-      text-shadow: 0.5px 0.5px 0 #FFFFFF;
-      text-align: center;
-      margin: 10px 0;
-    }
-    .error { color: #FF0055; }
-    .success { color: #008000; }
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 3;
-      display: none;
-    }
-    .loading-window {
-      background: #C0C0C0;
-      border: 2px solid #000080;
-      border-top: 2px solid #FFFFFF;
-      border-left: 2px solid #FFFFFF;
-      border-bottom: 2px solid #808080;
-      border-right: 2px solid #808080;
-      padding: 10px;
-      border-radius: 4px;
-      box-shadow: 2px 2px 0 #000;
-      text-align: center;
-      width: clamp(200px, 70vw, 400px);
-    }
-    .loading-window img {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 8px;
-    }
-    .loading-window p {
-      font-size: clamp(8px, 2vw, 10px);
-      color: #000080;
-      text-shadow: 0.5px 0.5px 0 #FFFFFF;
-      margin: 8px 0;
-    }
-    @media (min-width: 768px) {
-      .window { transform: scale(1.1); transform-origin: top center; }
-      #site-title { font-size: clamp(18px, 4vw, 22px); }
-    }
-    @media (max-width: 767px) {
-      .leaderboard-entry p { font-size: clamp(6px, 1.6vw, 8px); }
-      .home-btn { width: 28px; height: 28px; }
-      .home-btn svg { width: 16px; height: 16px; }
+      #site-title { margin-top: 45px; } /* Ensure title clears home button on mobile */
     }
   </style>
 </head>
