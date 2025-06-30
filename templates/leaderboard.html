@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MyMilio Rewards - Leaderboards</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
   <style>
     html {
       margin: 0;
@@ -77,7 +78,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: brachtecenter;
       width: 32px;
       height: 32px;
       border-radius: 3px;
@@ -218,6 +219,107 @@
     <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
     <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
     <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
+    <img src="/static/float4.png" class="bg-shadow: 2px 2px 0 #000;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .title-bar {
+      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+      color: #FFFFFF;
+      padding: 4px;
+      font-size: clamp(8px, 2vw, 10px);
+      text-align: center;
+      border-bottom: 1px solid #000080;
+    }
+    .window-body {
+      background: #E0E0E0;
+      padding: 8px;
+      border: 1px inset #808080;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .leaderboard-grid {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .leaderboard-entry {
+      background: #E0E0E0;
+      border: 1px inset #808080;
+      padding: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 4px;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .leaderboard-entry p {
+      font-size: clamp(7px, 1.8vw, 9px);
+      color: #000080;
+      margin: 0;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+    .error, .success {
+      font-size: clamp(8px, 2vw, 10px);
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      text-align: center;
+      margin: 10px 0;
+    }
+    .error { color: #FF0055; }
+    .success { color: #008000; }
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      display: none;
+    }
+    .loading-window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0 #000;
+      text-align: center;
+      width: clamp(200px, 70vw, 400px);
+    }
+    .loading-window img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 8px;
+    }
+    .loading-window p {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      margin: 8px 0;
+    }
+    @media (min-width: 768px) {
+      .window { transform: scale(1.1); transform-origin: top center; }
+      #site-title { font-size: clamp(18px, 4vw, 22px); }
+    }
+    @media (max-width: 767px) {
+      .leaderboard-entry p { font-size: clamp(6px, 1.6vw, 8px); }
+      .home-btn { width: 28px; height: 28px; }
+      .home-btn svg { width: 16px; height: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Container -->
+  <div id="background-container">
+    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
+    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
+    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
     <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
   </div>
 
@@ -253,7 +355,7 @@
     // Initialize Supabase client
     const supabaseUrl = 'https://vkxchgckwyqnxlmirqqu.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreGNoZ2Nrd3lxbnhsbWlycXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExNTMwMDgsImV4cCI6MjA2NjcyOTAwOH0.QPkNrTzccpy7v2Wuhsut-Ra50gy4-mbzxZxtzyJrz80';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     document.addEventListener('DOMContentLoaded', () => {
       // Randomize floating image positions
@@ -282,7 +384,7 @@
 
         try {
           // Fetch data from Supabase 'points' table
-          let { data, error } = await supabase
+          let { data, error } = await supabaseClient
             .from('points')
             .select('address, points')
             .order('points', { ascending: false }); // Order by points descending
