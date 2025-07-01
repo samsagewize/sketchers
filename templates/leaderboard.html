@@ -78,7 +78,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: center; /* Fixed typo: was "brachtecenter" */
       width: 32px;
       height: 32px;
       border-radius: 3px;
@@ -102,7 +102,7 @@
     }
     #site-title {
       font-size: clamp(16px, 4vw, 20px);
-      margin: 50px 0 15px 0;
+      margin: 50px 0 15px 0; /* Adjusted margin to push title below home button */
       color: #FFFFFF;
       text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
       text-align: center;
@@ -210,7 +210,7 @@
       .leaderboard-entry p { font-size: clamp(6px, 1.6vw, 8px); }
       .home-btn { width: 28px; height: 28px; }
       .home-btn svg { width: 16px; height: 16px; }
-      #site-title { margin-top: 45px; }
+      #site-title { margin-top: 45px; } /* Ensure title clears home button on mobile */
     }
   </style>
 </head>
@@ -249,15 +249,13 @@
     </div>
   </div>
 
+  <!-- Include Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // Simulated SQL data (mock data for leaderboard)
-    const mockLeaderboardData = [
-      { address: "0x1234567890abcdef1234567890abcdef12345678", points: 1000 },
-      { address: "0xabcdef1234567890abcdef1234567890abcdef12", points: 850 },
-      { address: "0x7890abcdef1234567890abcdef1234567890abcd", points: 700 },
-      { address: "0x4567890abcdef1234567890abcdef1234567890", points: 500 },
-      { address: "0x0abcdef1234567890abcdef1234567890abcdef1", points: 300 }
-    ];
+    // Initialize Supabase client
+    const supabaseUrl = 'https://vkxchgckwyqnxlmirqqu.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreGNoZ2Nrd3lxbnhsbWlycXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExNTMwMDgsImV4cCI6MjA2NjcyOTAwOH0.QPkNrTzccpy7v2Wuhsut-Ra50gy4-mbzxZxtzyJrz80';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     document.addEventListener('DOMContentLoaded', () => {
       // Randomize floating image positions
@@ -277,19 +275,31 @@
       const leaderboardGrid = document.getElementById("leaderboard-grid");
       const loadingOverlay = document.getElementById("loading-overlay");
 
-      // Function to display leaderboard
-      function displayLeaderboard() {
+      // Function to fetch leaderboard with retries
+      async function fetchLeaderboard(attempt = 1, maxAttempts = 3, delayMs = 1000) {
         errorEl.style.display = "none";
         successEl.style.display = "none";
         leaderboardGrid.innerHTML = "";
         loadingOverlay.style.display = "flex";
 
         try {
-          // Sort mock data by points in descending order
-          const sortedData = mockLeaderboardData.sort((a, b) => b.points - a.points);
+          // Fetch data from Supabase 'points' table
+          let { data, error } = await supabaseClient
+            .from('points')
+            .select('address, points')
+            .order('points', { ascending: false }); // Order by points descending
 
-          if (sortedData.length > 0) {
-            sortedData.forEach(entry => {
+          if (error) {
+            if (attempt < maxAttempts) {
+              // Retry on error
+              await new Promise(resolve => setTimeout(resolve, delayMs));
+              return fetchLeaderboard(attempt + 1, maxAttempts, delayMs * 2);
+            }
+            throw new Error(error.message);
+          }
+
+          if (data && data.length > 0) {
+            data.forEach(entry => {
               const div = document.createElement("div");
               div.className = "leaderboard-entry";
               div.innerHTML = `
@@ -305,7 +315,7 @@
             errorEl.style.display = "block";
           }
         } catch (error) {
-          console.error("Error displaying leaderboard:", error);
+          console.error("Error fetching leaderboard:", error);
           errorEl.textContent = `🚨 Error: ${error.message}`;
           errorEl.style.display = "block";
         } finally {
@@ -313,8 +323,8 @@
         }
       }
 
-      // Display leaderboard on page load
-      displayLeaderboard();
+      // Fetch leaderboard on page load
+      fetchLeaderboard();
     });
   </script>
 </body>
