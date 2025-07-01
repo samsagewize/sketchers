@@ -7,48 +7,223 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
   <style>
-    html { margin:0; padding:0; width:100%; height:100%; overflow-x:hidden; overflow-y:auto; }
-    body { margin:0; padding:0; min-height:100vh; background:linear-gradient(180deg,#008080 0%,#003F3F 100%); font-family:'Press Start 2P',cursive; color:#000; display:flex; justify-content:center; box-sizing:border-box; }
-    #background-container { position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
-    .bg-float { position:absolute; opacity:0.15; pointer-events:none; max-width:170px; animation:float-circle 20s linear infinite; transform-origin:center; }
-    .bg-float:nth-child(1){animation-duration:22s;animation-delay:0s}
-    .bg-float:nth-child(2){animation-duration:25s;animation-delay:3s}
-    .bg-float:nth-child(3){animation-duration:28s;animation-delay:6s}
-    .bg-float:nth-child(4){animation-duration:23s;animation-delay:9s}
-    @keyframes float-circle{0%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(20vw,20vh) rotate(90deg)}50%{transform:translate(40vw,0) rotate(180deg)}75%{transform:translate(20vw,-20vh) rotate(270deg)}100%{transform:translate(0,0) rotate(360deg)}}
-    .main-container{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;width:100%;max-width:600px;padding:10px 10px 50px;box-sizing:border-box;}
-    .home-btn{position:absolute;top:10px;left:10px;background:linear-gradient(180deg,#C0C0C0 0%,#A0A0A0 100%);border:1px solid #000;border-top:1px solid #fff;border-left:1px solid #fff;border-bottom:1px solid #808080;border-right:1px solid #808080;padding:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:3px;box-shadow:1px 1px 0 #000;transition:background .2s,transform .1s;}
-    .home-btn:hover{background:linear-gradient(180deg,#D0D0D0 0%,#B0B0B0 100%);transform:translate(-1px,-1px);}
-    .home-btn:active{background:linear-gradient(180deg,#A0A0A0 0%,#808080 100%);transform:translate(1px,1px);box-shadow:none;border:1px inset #808080;}
-    .home-btn svg{width:20px;height:20px;fill:#000080;}
-    #site-title{font-size:clamp(16px,4vw,20px);margin:50px 0 15px;color:#fff;text-shadow:1px 1px 0 #000080,2px 2px 0 #000;text-align:center;}
-    #site-title span{color:#FF0055;}
-    .window{background:#C0C0C0;border:2px solid #000080;border-top:2px solid #fff;border-left:2px solid #fff;border-bottom:2px solid #808080;border-right:2px solid #808080;width:clamp(200px,80vw,400px);box-shadow:2px 2px 0 #000;margin:10px 0;border-radius:4px;}
-    .title-bar{background:linear-gradient(90deg,#000080 0%,#1084D0 100%);color:#fff;padding:4px;font-size:clamp(8px,2vw,10px);text-align:center;border-bottom:1px solid #000080;}
-    .window-body{background:#E0E0E0;padding:8px;border:1px inset #808080;display:flex;flex-direction:column;align-items:center;}
-    .leaderboard-grid{width:100%;display:flex;flex-direction:column;gap:8px;}
-    .leaderboard-entry{background:#E0E0E0;border:1px inset #808080;padding:8px;display:flex;justify-content:space-between;align-items:center;border-radius:4px;box-shadow:1px 1px 0 #000;}
-    .leaderboard-entry p{font-size:clamp(7px,1.8vw,9px);color:#000080;margin:0;text-shadow:0.5px 0.5px 0 #fff;}
-    .error,.success{font-size:clamp(8px,2vw,10px);text-shadow:0.5px 0.5px 0 #fff;text-align:center;margin:10px 0;}
-    .error{color:#FF0055;} .success{color:#008000;}
-    .loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;justify-content:center;align-items:center;z-index:3;display:none;}
-    .loading-window{background:#C0C0C0;border:2px solid #000080;border-top:2px solid #fff;border-left:2px solid #fff;border-bottom:2px solid #808080;border-right:2px solid #808080;padding:10px;border-radius:4px;box-shadow:2px 2px 0 #000;text-align:center;width:clamp(200px,70vw,400px);}
-    .loading-window img{width:48px;height:48px;margin-bottom:8px;}
-    .loading-window p{font-size:clamp(8px,2vw,10px);color:#000080;text-shadow:0.5px 0.5px 0 #fff;margin:8px 0;}
-    @media (min-width:768px){.window{transform:scale(1.1);transform-origin:top center;}#site-title{font-size:clamp(18px,4vw,22px);}}
-    @media (max-width:767px){.leaderboard-entry p{font-size:clamp(6px,1.6vw,8px);} .home-btn{width:28px;height:28px;} .home-btn svg{width:16px;height:16px;} #site-title{margin-top:45px;}}
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
+      font-family: 'Press Start 2P', cursive;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    #background-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-float {
+      position: absolute;
+      opacity: 0.15;
+      pointer-events: none;
+      max-width: 170px;
+      animation: float-circle 20s linear infinite;
+      transform-origin: center;
+    }
+    .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
+    .bg-float:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
+    .bg-float:nth-child(3) { animation-duration: 28s; animation-delay: 6s; }
+    .bg-float:nth-child(4) { animation-duration: 23s; animation-delay: 9s; }
+    @keyframes float-circle {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20vw, 20vh) rotate(90deg); }
+      50% { transform: translate(40vw, 0) rotate(180deg); }
+      75% { transform: translate(20vw, -20vh) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+    .main-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      padding: 10px;
+      padding-bottom: 50px;
+      box-sizing: border-box;
+    }
+    .home-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Fixed typo: was "brachtecenter" */
+      width: 32px;
+      height: 32px;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .home-btn:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .home-btn:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
+    }
+    .home-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #000080;
+    }
+    #site-title {
+      font-size: clamp(16px, 4vw, 20px);
+      margin: 50px 0 15px 0; /* Adjusted margin to push title below home button */
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
+      text-align: center;
+    }
+    #site-title span {
+      color: #FF0055;
+    }
+    .window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      width: clamp(200px, 80vw, 400px);
+      box-shadow: 2px 2px 0 #000;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .title-bar {
+      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+      color: #FFFFFF;
+      padding: 4px;
+      font-size: clamp(8px, 2vw, 10px);
+      text-align: center;
+      border-bottom: 1px solid #000080;
+    }
+    .window-body {
+      background: #E0E0E0;
+      padding: 8px;
+      border: 1px inset #808080;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .leaderboard-grid {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .leaderboard-entry {
+      background: #E0E0E0;
+      border: 1px inset #808080;
+      padding: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 4px;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .leaderboard-entry p {
+      font-size: clamp(7px, 1.8vw, 9px);
+      color: #000080;
+      margin: 0;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+    .error, .success {
+      font-size: clamp(8px, 2vw, 10px);
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      text-align: center;
+      margin: 10px 0;
+    }
+    .error { color: #FF0055; }
+    .success { color: #008000; }
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      display: none;
+    }
+    .loading-window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0 #000;
+      text-align: center;
+      width: clamp(200px, 70vw, 400px);
+    }
+    .loading-window img {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 8px;
+    }
+    .loading-window p {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      margin: 8px 0;
+    }
+    @media (min-width: 768px) {
+      .window { transform: scale(1.1); transform-origin: top center; }
+      #site-title { font-size: clamp(18px, 4vw, 22px); }
+    }
+    @media (max-width: 767px) {
+      .leaderboard-entry p { font-size: clamp(6px, 1.6vw, 8px); }
+      .home-btn { width: 28px; height: 28px; }
+      .home-btn svg { width: 16px; height: 16px; }
+      #site-title { margin-top: 45px; } /* Ensure title clears home button on mobile */
+    }
   </style>
 </head>
 <body>
-  <!-- Floating background images -->
+  <!-- Background Container -->
   <div id="background-container">
-    <img src="/static/float1.png" class="bg-float" alt="">
-    <img src="/static/float2.png" class="bg-float" alt="">
-    <img src="/static/float3.png" class="bg-float" alt="">
-    <img src="/static/float4.png" class="bg-float" alt="">
+    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
+    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
+    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
+    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
   </div>
 
-  <!-- Loading overlay -->
+  <!-- Loading Overlay -->
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-window">
       <img src="/static/loading.gif" alt="Loading">
@@ -56,76 +231,99 @@
     </div>
   </div>
 
-  <!-- Main container -->
+  <!-- Main Content -->
   <div class="main-container">
     <a href="/" class="home-btn" title="Back to Home">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 9h-3v9h-7v-6h-2v6H3v-9H0l12-9z"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3l10 9h-3v9h-7v-6h-2v6H3v-9H0l12-9z"/>
+      </svg>
     </a>
     <h1 id="site-title">My<span>M</span>ilio Leaderboards</h1>
     <div class="window">
       <div class="title-bar">Leaderboards</div>
       <div class="window-body">
-        <p id="error" class="error" style="display:none;"></p>
-        <p id="success" class="success" style="display:none;"></p>
+        <p id="error" class="error" style="display: none;"></p>
+        <p id="success" class="success" style="display: none;"></p>
         <div id="leaderboard-grid" class="leaderboard-grid"></div>
       </div>
     </div>
   </div>
 
-  <!-- 1) Supabase client -->
+  <!-- Include Supabase Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL = 'https://vkxchgckwyqnxlmirqqu.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreGNoZ2Nrd3lxbnhsbWlycXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExNTMwMDgsImV4cCI6MjA2NjcyOTAwOH0.QPkNrTzccpy7v2Wuhsut-Ra50gy4-mbzxZxtzyJrz80';
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Initialize Supabase client
+    const supabaseUrl = 'https://vkxchgckwyqnxlmirqqu.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreGNoZ2Nrd3lxbnhsbWlycXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExNTMwMDgsImV4cCI6MjA2NjcyOTAwOH0.QPkNrTzccpy7v2Wuhsut-Ra50gy4-mbzxZxtzyJrz80';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     document.addEventListener('DOMContentLoaded', () => {
-      const errorEl = document.getElementById('error');
-      const successEl = document.getElementById('success');
-      const grid = document.getElementById('leaderboard-grid');
-      const loader = document.getElementById('loading-overlay');
+      // Randomize floating image positions
+      const floats = document.querySelectorAll('.bg-float');
+      floats.forEach((float, index) => {
+        const maxX = window.innerWidth - 170;
+        const maxY = window.innerHeight - 170;
+        const startX = Math.random() * maxX;
+        const startY = Math.random() * maxY;
+        float.style.left = `${startX}px`;
+        float.style.top = `${startY}px`;
+        float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+      });
 
-      async function fetchLeaderboard(attempt = 1) {
-        errorEl.style.display = successEl.style.display = 'none';
-        grid.innerHTML = '';
-        loader.style.display = 'flex';
+      const errorEl = document.getElementById("error");
+      const successEl = document.getElementById("success");
+      const leaderboardGrid = document.getElementById("leaderboard-grid");
+      const loadingOverlay = document.getElementById("loading-overlay");
+
+      // Function to fetch leaderboard with retries
+      async function fetchLeaderboard(attempt = 1, maxAttempts = 3, delayMs = 1000) {
+        errorEl.style.display = "none";
+        successEl.style.display = "none";
+        leaderboardGrid.innerHTML = "";
+        loadingOverlay.style.display = "flex";
 
         try {
-          let { data, error } = await supabase
+          // Fetch data from Supabase 'points' table
+          let { data, error } = await supabaseClient
             .from('points')
             .select('address, points')
-            .order('points', { ascending: false })
-            .limit(50);
+            .order('points', { ascending: false }); // Order by points descending
 
-          if (error && attempt < 3) {
-            await new Promise(r => setTimeout(r, 500 * attempt));
-            return fetchLeaderboard(attempt + 1);
+          if (error) {
+            if (attempt < maxAttempts) {
+              // Retry on error
+              await new Promise(resolve => setTimeout(resolve, delayMs));
+              return fetchLeaderboard(attempt + 1, maxAttempts, delayMs * 2);
+            }
+            throw new Error(error.message);
           }
-          if (error) throw error;
 
-          if (data.length) {
-            data.forEach(({ address, points }) => {
-              const div = document.createElement('div');
-              div.className = 'leaderboard-entry';
-              const short = `${address.slice(0,6)}…${address.slice(-4)}`;
-              div.innerHTML = `<p>${short}</p><p>${points} pts</p>`;
-              grid.appendChild(div);
+          if (data && data.length > 0) {
+            data.forEach(entry => {
+              const div = document.createElement("div");
+              div.className = "leaderboard-entry";
+              div.innerHTML = `
+                <p>${entry.address.slice(0, 6)}...${entry.address.slice(-4)}</p>
+                <p>${entry.points} points</p>
+              `;
+              leaderboardGrid.appendChild(div);
             });
-            successEl.textContent = 'Leaderboard Loaded!';
-            successEl.style.display = 'block';
+            successEl.textContent = "MyMilio Rewards Leaderboard";
+            successEl.style.display = "block";
           } else {
-            errorEl.textContent = 'No leaderboard data available.';
-            errorEl.style.display = 'block';
+            errorEl.textContent = "No leaderboard data available.";
+            errorEl.style.display = "block";
           }
-        } catch (err) {
-          console.error(err);
-          errorEl.textContent = `Error: ${err.message}`;
-          errorEl.style.display = 'block';
+        } catch (error) {
+          console.error("Error fetching leaderboard:", error);
+          errorEl.textContent = `🚨 Error: ${error.message}`;
+          errorEl.style.display = "block";
         } finally {
-          loader.style.display = 'none';
+          loadingOverlay.style.display = "none";
         }
       }
 
+      // Fetch leaderboard on page load
       fetchLeaderboard();
     });
   </script>
