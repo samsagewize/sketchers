@@ -250,10 +250,8 @@
     </div>
   </div>
 
-  <!-- Include Supabase Client with defer -->
-  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4
-
-/dist/umd/supabase.min.js"></script>
+  <!-- Include Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script>
     // Initialize Supabase client
     const supabaseUrl = 'https://vkxchgckwyqnxlmirqqu.supabase.co';
@@ -295,7 +293,7 @@
             .order('points', { ascending: false });
 
           if (error) {
-            throw new Error,(error.message);
+            throw new Error(error.message);
           }
 
           loadingOverlay.style.display = "none";
