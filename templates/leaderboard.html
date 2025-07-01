@@ -42,7 +42,7 @@
       transform-origin: center;
     }
     .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
-    .bg-float:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
+    .bg-container:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
     .bg-float:nth-child(3) { animation-duration: 28s; animation-delay: 6s; }
     .bg-float:nth-child(4) { animation-duration: 23s; animation-delay: 9s; }
     @keyframes float-circle {
@@ -286,10 +286,10 @@
         loadingOverlay.style.display = "flex";
 
         try {
-          // Fetch all columns from the 'points' table, ordered by points descending
+          // Fetch only address and points, ordered by points descending
           const { data, error } = await supabaseClient
             .from('points')
-            .select('*')
+            .select('address, points')
             .order('points', { ascending: false });
 
           if (error) {
@@ -302,13 +302,16 @@
             // Show table
             leaderboardTable.style.display = "table";
 
-            // Create table headers dynamically
-            const headers = Object.keys(data[0]);
-            tableHeader.innerHTML = headers.map(header => `<th>${header}</th>`).join('');
+            // Set static table headers
+            tableHeader.innerHTML = `
+              <th>Address</th>
+              <th>Points</th>
+            `;
 
-            // Populate table body
+            // Populate table body with truncated address
             tableBody.innerHTML = data.map(row => {
-              return `<tr>${headers.map(header => `<td>${row[header] ?? ''}</td>`).join('')}</tr>`;
+              const truncatedAddress = `${row.address.slice(0, 6)}...${row.address.slice(-4)}`;
+              return `<tr><td>${truncatedAddress}</td><td>${row.points ?? ''}</td></tr>`;
             }).join('');
 
             successEl.textContent = "MyMilio Rewards Leaderboard";
