@@ -158,7 +158,7 @@
     .leaderboard-table td {
       background: #E0E0E0;
     }
-    .error, .success {
+    .error, .success, .last-updated {
       font-size: clamp(8px, 2vw, 10px);
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       text-align: center;
@@ -166,6 +166,7 @@
     }
     .error { color: #FF0055; }
     .success { color: #008000; }
+    .last-updated { color: #000080; }
     .loading-overlay {
       position: fixed;
       inset: 0;
@@ -242,6 +243,7 @@
       <div class="window-body">
         <p id="error" class="error" style="display: none;"></p>
         <p id="success" class="success" style="display: none;"></p>
+        <p id="last-updated" class="last-updated" style="display: none;"></p>
         <table id="leaderboard-table" class="leaderboard-table" style="display: none;">
           <thead id="tableHeader"></thead>
           <tbody id="tableBody"></tbody>
@@ -250,13 +252,10 @@
     </div>
   </div>
 
-  <!-- Include Supabase Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script>
-    // Initialize Supabase client
-    const supabaseUrl = 'https://vkxchgckwyqnxlmirqqu.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreGNoZ2Nrd3lxbnhsbWlycXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExNTMwMDgsImV4cCI6MjA2NjcyOTAwOH0.QPkNrTzccpy7v2Wuhsut-Ra50gy4-mbzxZxtzyJrz80';
-    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    const PRIMARY_BIN = "https://api.jsonbin.io/v3/b/6866db818960c979a5b69ec5";
+    const BACKUP_BIN = "https://api.jsonbin.io/v3/b/6866db758a456b7966badaf8";
+    const JSONBIN_API_KEY = "$2a$10$tDq1ox.T7Bd3gJYbejwpy.gcXY/Zp8pWsipansW8lbLdHXRyIFcn2";
 
     document.addEventListener('DOMContentLoaded', () => {
       // Randomize floating image positions
@@ -273,52 +272,67 @@
 
       const errorEl = document.getElementById("error");
       const successEl = document.getElementById("success");
+      const lastUpdatedEl = document.getElementById("last-updated");
       const tableHeader = document.getElementById("tableHeader");
       const tableBody = document.getElementById("tableBody");
       const leaderboardTable = document.getElementById("leaderboard-table");
       const loadingOverlay = document.getElementById("loading-overlay");
 
-      // Function to fetch leaderboard data
+      // Function to fetch leaderboard data from JSON bin
       async function fetchLeaderboard() {
         errorEl.style.display = "none";
         successEl.style.display = "none";
+        lastUpdatedEl.style.display = "none";
         tableBody.innerHTML = "";
         loadingOverlay.style.display = "flex";
 
         try {
-          // Fetch only address and points, ordered by points descending
-          const { data, error } = await supabaseClient
-            .from('points')
-            .select('address, points')
-            .order('points', { ascending: false });
+          const headers = {
+            "X-Master-Key": JSONBIN_API_KEY
+          };
 
-          if (error) {
-            throw new Error(error.message);
+          // Try primary bin
+          let response = await fetch(PRIMARY_BIN, { headers });
+          let data = await response.json();
+
+          // If primary bin fails, try backup bin
+          if (!response.ok || !data.record || !data.record.points) {
+            response = await fetch(BACKUP_BIN, { headers });
+            data = await response.json();
           }
 
-          loadingOverlay.style.display = "none";
+          if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+          }
 
-          if (data && data.length > 0) {
+          if (data.record && data.record.points && data.record.points.length > 0) {
+            const points = data.record.points.sort((a, b) => b.points - a.points); // Sort by points descending
+            const lastUpdated = data.record.last_updated;
+
+            loadingOverlay.style.display = "none";
+
             // Show table
             leaderboardTable.style.display = "table";
 
-            // Set static table headers
+            // Set table headers
             tableHeader.innerHTML = `
               <th>Address</th>
               <th>Points</th>
             `;
 
             // Populate table body with truncated address
-            tableBody.innerHTML = data.map(row => {
+            tableBody.innerHTML = points.map(row => {
               const truncatedAddress = `${row.address.slice(0, 6)}...${row.address.slice(-4)}`;
               return `<tr><td>${truncatedAddress}</td><td>${row.points ?? ''}</td></tr>`;
             }).join('');
 
+            // Display last updated and success message
             successEl.textContent = "MyMilio Rewards Leaderboard";
             successEl.style.display = "block";
+            lastUpdatedEl.textContent = `Last updated: ${new Date(lastUpdated).toLocaleString()}`;
+            lastUpdatedEl.style.display = "block";
           } else {
-            errorEl.textContent = "No leaderboard data available.";
-            errorEl.style.display = "block";
+            throw new Error("No leaderboard data available.");
           }
         } catch (error) {
           console.error("Error fetching leaderboard:", error);
