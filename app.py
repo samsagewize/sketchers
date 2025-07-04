@@ -62,6 +62,10 @@ def traits():
 @app.route('/redeem')
 def redeem():
     return render_template('redeem.html')
+    
+@app.route('/pups')
+def redeem():
+    return render_template('pups.html')
 
 @app.route('/leaderboard')
 def leaderboard():
