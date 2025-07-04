@@ -64,7 +64,7 @@ def redeem():
     return render_template('redeem.html')
     
 @app.route('/pups')
-def redeem():
+def pups():
     return render_template('pups.html')
 
 @app.route('/leaderboard')
