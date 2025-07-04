@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MyMilio Rewards - Submit Address</title>
+  <title>BitcoinPuppets WL Address Submission</title>
   <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     html {
       margin: 0;
@@ -19,7 +20,7 @@
       padding: 0;
       min-height: 100vh;
       background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Roboto Mono', monospace, sans-serif;
       color: #000;
       display: flex;
       justify-content: center;
@@ -48,7 +49,9 @@
       20% { transform: translate(calc(20vw + 50px), calc(20vh - 30px)) rotate(72deg); }
       40% { transform: translate(calc(-10vw + 80px), calc(10vh + 50px)) rotate(144deg); }
       60% { transform: translate(calc(30vw - 40px), calc(-15vh + 20px)) rotate(216deg); }
-      80% { transform: translate(calc(-20vw + 60px), calc(25vh - 40px)) rotate(288deg); }
+      80% { transform: translate(calc(- _
+
+20vw + 60px), calc(25vh - 40px)) rotate(288deg); }
       100% { transform: translate(0, 0) rotate(360deg); }
     }
     @keyframes scale-pulse {
@@ -71,6 +74,7 @@
       align-items: center;
       width: 100%;
       max-width: 600px;
+      margin: 0 auto;
       padding: 10px;
       padding-bottom: 50px;
       box-sizing: border-box;
@@ -112,7 +116,7 @@
       fill: #000080;
     }
     #site-title {
-      font-size: clamp(16px, 4vw, 20px);
+      font-size: clamp(18px, 4.5vw, 24px);
       margin: 50px 0 15px 0;
       color: #FFFFFF;
       text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
@@ -137,7 +141,7 @@
       background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
       color: #FFFFFF;
       padding: 4px;
-      font-size: clamp(8px, 2vw, 10px);
+      font-size: clamp(10px, 2.2vw, 12px);
       text-align: center;
       border-bottom: 1px solid #000080;
     }
@@ -154,7 +158,7 @@
       margin-bottom: 10px;
     }
     .form-field label {
-      font-size: clamp(8px, 2vw, 10px);
+      font-size: clamp(10px, 2.2vw, 12px);
       color: #000080;
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       display: block;
@@ -163,8 +167,8 @@
     .form-field input {
       width: 100%;
       padding: 5px;
-      font-family: 'Press Start 2P', cursive;
-      font-size: clamp(7px, 1.8vw, 9px);
+      font-family: 'Roboto Mono', monospace, sans-serif;
+      font-size: clamp(8px, 2vw, 10px);
       background: #FFFFFF;
       border: 1px inset #808080;
       color: #000080;
@@ -178,8 +182,8 @@
       border-bottom: 1px solid #808080;
       border-right: 1px solid #808080;
       padding: 5px 10px;
-      font-family: 'Press Start 2P', cursive;
-      font-size: clamp(8px, 2vw, 10px);
+      font-family: 'Roboto Mono', monospace, sans-serif;
+      font-size: clamp(10px, 2.2vw, 12px);
       color: #000080;
       cursor: pointer;
       box-shadow: 1px 1px 0 #000;
@@ -196,7 +200,7 @@
       border: 1px inset #808080;
     }
     .error, .success {
-      font-size: clamp(8px, 2vw, 10px);
+      font-size: clamp(10px, 2.2vw, 12px);
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       text-align: center;
       margin: 10px 0;
@@ -232,22 +236,23 @@
       margin-bottom: 8px;
     }
     .loading-window p {
-      font-size: clamp(8px, 2vw, 10px);
+      font-family: 'Roboto Mono', monospace, sans-serif;
+      font-size: clamp(10px, 2.2vw, 12px);
       color: #000080;
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       margin: 8px 0;
     }
     @media (min-width: 768px) {
       .window { transform: scale(1.1); transform-origin: top center; }
-      #site-title { font-size: clamp(18px, 4vw, 22px); }
+      #site-title { font-size: clamp(20px, 4.5vw, 26px); }
     }
     @media (max-width: 767px) {
       .form-field label, .form-field input, .submit-btn {
-        font-size: clamp(6px, 1.6vw, 8px);
+        font-size: clamp(8px, 2vw, 10px);
       }
       .home-btn { width: 28px; height: 28px; }
       .home-btn svg { width: 16px; height: 16px; }
-      #site-title { margin-top: 45px; }
+      #site-title { margin-top: 45px; font-size: clamp(16px, 4vw, 22px); }
     }
   </style>
 </head>
