@@ -32,24 +32,36 @@
       pointer-events: none;
       overflow: hidden;
     }
-    .bg-float {
+    .puppet-float {
       position: absolute;
-      opacity: 0.15;
+      opacity: 0;
       pointer-events: none;
       max-width: 170px;
-      animation: float-circle 20s linear infinite;
       transform-origin: center;
+      animation: 
+        erratic-float var(--duration) linear infinite,
+        scale-pulse var(--duration) ease-in-out infinite,
+        fade-in-out var(--duration) linear forwards;
     }
-    .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
-    .bg-float:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
-    .bg-float:nth-child(3) { animation-duration: 28s; animation-delay: 6s; }
-    .bg-float:nth-child(4) { animation-duration: 23s; animation-delay: 9s; }
-    @keyframes float-circle {
+    @keyframes erratic-float {
       0% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(20vw, 20vh) rotate(90deg); }
-      50% { transform: translate(40vw, 0) rotate(180deg); }
-      75% { transform: translate(20vw, -20vh) rotate(270deg); }
+      20% { transform: translate(calc(20vw + 50px), calc(20vh - 30px)) rotate(72deg); }
+      40% { transform: translate(calc(-10vw + 80px), calc(10vh + 50px)) rotate(144deg); }
+      60% { transform: translate(calc(30vw - 40px), calc(-15vh + 20px)) rotate(216deg); }
+      80% { transform: translate(calc(-20vw + 60px), calc(25vh - 40px)) rotate(288deg); }
       100% { transform: translate(0, 0) rotate(360deg); }
+    }
+    @keyframes scale-pulse {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(var(--scale-min)); }
+      50% { transform: scale(var(--scale-max)); }
+      75% { transform: scale(var(--scale-min)); }
+    }
+    @keyframes fade-in-out {
+      0% { opacity: 0; }
+      10% { opacity: 0.15; }
+      90% { opacity: 0.15; }
+      100% { opacity: 0; }
     }
     .main-container {
       position: relative;
@@ -241,12 +253,7 @@
 </head>
 <body>
   <!-- Background Container -->
-  <div id="background-container">
-    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
-    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
-    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
-    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
-  </div>
+  <div id="background-container"></div>
 
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loading-overlay">
@@ -281,27 +288,65 @@
   </div>
 
   <script>
-    const JSONBIN_URL = "https://api.jsonbin.io/v3/b/68676b6c8960c979a5b6d5a7";
-    const JSONBIN_API_KEY = "$2a$10$ABC9Q7tDhjnWmf1cSJ/cJ.j6Kgh6PpsGCvuFdAVGmL/BfDzLUTszq";
+    const JSONBIN_URL = "https://api.jsonbin.io/v3/b/686764378a456b7966bb0f39";
+    const JSONBIN_ACCESS_KEY = "$2a$10$M562cLtP49PHOKoyNDkqEef/Q2khR30mjALfNQxWpsJ2JjsljSAru";
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Randomize floating image positions
-      const floats = document.querySelectorAll('.bg-float');
-      floats.forEach((float, index) => {
-        const maxX = window.innerWidth - 170;
-        const maxY = window.innerHeight - 170;
-        const startX = Math.random() * maxX;
-        const startY = Math.random() * maxY;
-        float.style.left = `${startX}px`;
-        float.style.top = `${startY}px`;
-        float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
-      });
-
+      const backgroundContainer = document.getElementById('background-container');
       const form = document.getElementById('address-form');
       const errorEl = document.getElementById('error');
       const successEl = document.getElementById('success');
       const loadingOverlay = document.getElementById('loading-overlay');
       const ethAddressInput = document.getElementById('eth-address');
+
+      // Function to create a puppet image with random properties
+      function createPuppet(x, y) {
+        const puppet = document.createElement('img');
+        puppet.src = '/static/puppet.png';
+        puppet.className = 'puppet-float';
+        puppet.alt = 'Floating Puppet';
+
+        // Randomize properties
+        const duration = 15 + Math.random() * 10; // 15–25s
+        const scaleMin = 0.5 + Math.random() * 0.5; // 0.5–1.0
+        const scaleMax = 1.0 + Math.random() * 0.5; // 1.0–1.5
+        const direction = Math.random() > 0.5 ? 'normal' : 'reverse';
+
+        // Set initial position
+        puppet.style.left = `${x}px`;
+        puppet.style.top = `${y}px`;
+
+        // Apply CSS custom properties for animations
+        puppet.style.setProperty('--duration', `${duration}s`);
+        puppet.style.setProperty('--scale-min', scaleMin);
+        puppet.style.setProperty('--scale-max', scaleMax);
+        puppet.style.animationDirection = direction;
+
+        // Append to background container
+        backgroundContainer.appendChild(puppet);
+
+        // Remove puppet after animation completes
+        setTimeout(() => {
+          puppet.remove();
+        }, duration * 1000);
+      }
+
+      // Initialize 10 puppets on page load
+      for (let i = 0; i < 10; i++) {
+        const maxX = window.innerWidth - 170;
+        const maxY = window.innerHeight - 170;
+        const startX = Math.random() * maxX;
+        const startY = Math.random() * maxY;
+        createPuppet(startX, startY);
+      }
+
+      // Add new puppet on click
+      document.addEventListener('click', (e) => {
+        // Adjust click position to account for image size
+        const x = e.clientX - 85; // Center the 170px image
+        const y = e.clientY - 85;
+        createPuppet(x, y);
+      });
 
       // Ethereum address validation (basic check for 0x + 40 hex characters)
       function isValidEthAddress(address) {
@@ -327,13 +372,14 @@
         try {
           // Fetch current data
           let response = await fetch(JSONBIN_URL, {
-            headers: { 'X-Access-Key': JSONBIN_API_KEY }
+            headers: { 'X-Access-Key': JSONBIN_ACCESS_KEY }
           });
-          let data = await response.json();
 
           if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
+            throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
           }
+
+          let data = await response.json();
 
           // Initialize addresses array if it doesn't exist
           const addresses = data.record.addresses || [];
@@ -353,14 +399,14 @@
           response = await fetch(JSONBIN_URL, {
             method: 'PUT',
             headers: {
-              'X-Access-Key': JSONBIN_API_KEY,
+              'X-Access-Key': JSONBIN_ACCESS_KEY,
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({ addresses, last_updated: new Date().toISOString() })
           });
 
           if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
+            throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
           }
 
           loadingOverlay.style.display = 'none';
