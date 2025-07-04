@@ -92,88 +92,43 @@
       box-sizing: border-box;
     }
 
-    /* Traits Button */
-    .traits-btn {
+    /* Menu Container */
+    .menu-container {
       position: absolute;
       top: 10px;
       right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 3;
+    }
+    .menu-item {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
       border-left: 1px solid #FFFFFF;
       border-bottom: 1px solid #808080;
       border-right: 1px solid #808080;
-      padding: 4px;
+      padding: 4px 8px;
+      font-size: clamp(8px, 2vw, 10px);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
+      font-family: 'Press Start 2P', cursive;
+      color: #000080;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
       border-radius: 3px;
       box-shadow: 1px 1px 0 #000;
-      transition: background 0.2s, transform 0.1s;
+      text-align: center;
+      width: 100px;
     }
-    .traits-btn:hover {
+    .menu-item:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
       transform: translate(-1px, -1px);
     }
-    .traits-btn:active {
-      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+    .menu-item:active {
+      border: 1px inset #808080;
       transform: translate(1px, 1px);
       box-shadow: none;
-      border: 1px inset #808080;
-    }
-    .traits-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: #000080;
-    }
-
-    /* Popup Menu */
-    .popup-menu {
-      display: none;
-      position: absolute;
-      top: 50px;
-      right: 10px;
-      background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
-      border: 2px solid #000080;
-      border-top: 2px solid #FFFFFF;
-      border-left: 2px solid #FFFFFF;
-      border-bottom: 2px solid #808080;
-      border-right: 2px solid #808080;
-      box-shadow: 2px 2px 0 #000;
-      z-index: 3;
-      width: 120px;
-      border-radius: 4px;
-      padding: 6px;
-    }
-    .popup-menu.active {
-      display: block;
-    }
-    .popup-menu .menu-item {
-      background: #C0C0C0;
-      border: 1px solid #808080;
-      padding: 6px;
-      margin: 4px 0;
-      font-size: clamp(8px, 2vw, 10px);
-      color: #000080;
-      text-align: center;
-      cursor: pointer;
-      border-radius: 3px;
-      transition: background 0.2s;
-    }
-    .popup-menu .menu-item:hover {
-      background: #D0D0D0;
-    }
-    .popup-menu .menu-item:active {
-      background: #A0A0A0;
-      border: 1px inset #808080;
-    }
-    .popup-menu .menu-item a {
-      color: #000080;
-      text-decoration: none;
-      display: block;
     }
 
     /* Site Title */
@@ -411,16 +366,14 @@
         right: 15px;
         margin: 0;
       }
-      .traits-btn {
-        width: 36px;
-        height: 36px;
+      .menu-container {
+        top: 15px;
+        right: 15px;
+        gap: 8px;
       }
-      .traits-btn svg {
-        width: 24px;
-        height: 24px;
-      }
-      .popup-menu {
-        width: 140px;
+      .menu-item {
+        width: 120px;
+        font-size: clamp(9px, 2.2vw, 11px);
       }
     }
     @media (max-width: 767px) {
@@ -442,18 +395,14 @@
       #license {
         font-size: clamp(6px, 1.6vw, 8px);
       }
-      .traits-btn {
-        width: 28px;
-        height: 28px;
-      }
-      .traits-btn svg {
-        width: 16px;
-        height: 16px;
-      }
-      .popup-menu {
-        width: 100px;
-        top: 45px;
+      .menu-container {
+        top: 5px;
         right: 5px;
+        gap: 5px;
+      }
+      .menu-item {
+        width: 90px;
+        font-size: clamp(7px, 1.8vw, 9px);
       }
     }
   </style>
@@ -469,15 +418,10 @@
 
   <!-- Main Content -->
   <div class="main-container">
-    <button class="traits-btn" title="Menu">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 4h16v2H4V4zm0 7h16v2H4v-2zm0 7h16v2H4v-2z"/>
-      </svg>
-    </button>
-    <div class="popup-menu" id="popup-menu">
-      <div class="menu-item"><a href="/traits">Traits</a></div>
-      <div class="menu-item"><a href="/redeem">Rewards</a></div>
-	  <div class="menu-item"><a href="/leaderboard">Leaderboards</a></div>
+    <div class="menu-container">
+      <a href="/traits" class="menu-item">Traits</a>
+      <a href="/redeem" class="menu-item">Rewards</a>
+      <a href="/leaderboard" class="menu-item">Leaderboards</a>
     </div>
     <h1 id="site-title">My<span>M</span>ilio</h1>
     <div class="window">
@@ -613,20 +557,6 @@
       const nextBtn = document.getElementById('next-btn');
       const songTitle = document.querySelector('#audio-player .song-title');
       const timer = document.querySelector('#audio-player .timer');
-      const traitsBtn = document.querySelector('.traits-btn');
-      const popupMenu = document.getElementById('popup-menu');
-
-      // Toggle popup menu
-      traitsBtn.onclick = () => {
-        popupMenu.classList.toggle('active');
-      };
-
-      // Close popup when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!traitsBtn.contains(e.target) && !popupMenu.contains(e.target)) {
-          popupMenu.classList.remove('active');
-        }
-      });
 
       // Playlist data
       const playlist = [
