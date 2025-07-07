@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MyMilio Rewards - Leaderboards</title>
-  <!-- Removed: <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> -->
-  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <title>MyMilio Points Leaderboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     html {
       margin: 0;
@@ -20,37 +19,11 @@
       padding: 0;
       min-height: 100vh;
       background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
-      font-family: 'Press Start 2P', cursive; /* Fallback to cursive if Press Start 2P is not available */
+      font-family: 'Press Start 2P', cursive;
       color: #000;
       display: flex;
       justify-content: center;
       box-sizing: border-box;
-    }
-    #background-container {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    .bg-float {
-      position: absolute;
-      opacity: 0.15;
-      pointer-events: none;
-      max-width: 170px;
-      animation: float-circle 20s linear infinite;
-      transform-origin: center;
-    }
-    .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
-    .bg-container:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
-    .bg-float:nth-child(3) { animation-duration: 28s; animation-delay: 6s; }
-    .bg-float:nth-child(4) { animation-duration: 23s; animation-delay: 9s; }
-    @keyframes float-circle {
-      0% { transform: translate(0, 0) rotate(0deg); }
-      25% { transform: translate(20vw, 20vh) rotate(90deg); }
-      50% { transform: translate(40vw, 0) rotate(180deg); }
-      75% { transform: translate(20vw, -20vh) rotate(270deg); }
-      100% { transform: translate(0, 0) rotate(360deg); }
     }
     .main-container {
       position: relative;
@@ -102,7 +75,7 @@
     }
     #site-title {
       font-size: clamp(16px, 4vw, 20px);
-      margin: 50px 0 15px 0;
+      margin: 50px 0 15px 0; /* Increased top margin to avoid overlap with home button */
       color: #FFFFFF;
       text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
       text-align: center;
@@ -138,35 +111,36 @@
       flex-direction: column;
       align-items: center;
     }
-    .leaderboard-table {
+    table {
       width: 100%;
       border-collapse: collapse;
       font-size: clamp(7px, 1.8vw, 9px);
       color: #000080;
-      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      background: #E0E0E0;
     }
-    .leaderboard-table th,
-    .leaderboard-table td {
+    th, td {
       border: 1px inset #808080;
       padding: 8px;
       text-align: left;
     }
-    .leaderboard-table th {
-      background: #C0C0C0;
-      border-bottom: 1px solid #000080;
+    th {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      cursor: pointer;
+      user-select: none;
     }
-    .leaderboard-table td {
-      background: #E0E0E0;
+    th:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
     }
-    .error, .success, .last-updated {
+    th:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+    }
+    .error {
       font-size: clamp(8px, 2vw, 10px);
+      color: #FF0055;
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       text-align: center;
       margin: 10px 0;
     }
-    .error { color: #FF0055; }
-    .success { color: #008000; }
-    .last-updated { color: #000080; }
     .loading-overlay {
       position: fixed;
       inset: 0;
@@ -190,11 +164,6 @@
       text-align: center;
       width: clamp(200px, 70vw, 400px);
     }
-    .loading-window img {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 8px;
-    }
     .loading-window p {
       font-size: clamp(8px, 2vw, 10px);
       color: #000080;
@@ -206,26 +175,17 @@
       #site-title { font-size: clamp(18px, 4vw, 22px); }
     }
     @media (max-width: 767px) {
-      .leaderboard-table { font-size: clamp(6px, 1.6vw, 8px); }
+      .window { width: clamp(180px, 75vw, 360px); }
+      table, th, td { font-size: clamp(6px, 1.6vw, 8px); }
       .home-btn { width: 28px; height: 28px; }
       .home-btn svg { width: 16px; height: 16px; }
-      #site-title { margin-top: 45px; }
     }
   </style>
 </head>
 <body>
-  <!-- Background Container -->
-  <div id="background-container">
-    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
-    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
-    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
-    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
-  </div>
-
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-window">
-      <img src="/static/loading.gif" alt="Loading">
       <p>Loading...</p>
     </div>
   </div>
@@ -237,113 +197,108 @@
         <path d="M12 3l10 9h-3v9h-7v-6h-2v6H3v-9H0l12-9z"/>
       </svg>
     </a>
-    <h1 id="site-title">My<span>M</span>ilio Leaderboards</h1>
+    <h1 id="site-title">My<span>M</span>ilio Points Leaderboard</h1>
     <div class="window">
-      <div class="title-bar">Leaderboards</div>
+      <div class="title-bar">Points Leaderboard</div>
       <div class="window-body">
-        <p id="error" class="error" style="display: none;"></p>
-        <p id="success" class="success" style="display: none;"></p>
-        <p id="last-updated" class="last-updated" style="display: none;"></p>
-        <table id="leaderboard-table" class="leaderboard-table" style="display: none;">
-          <thead id="tableHeader"></thead>
+        <table id="pointsTable" style="display: none;">
+          <thead>
+            <tr>
+              <th data-sort="address">Address</th>
+              <th data-sort="points">Points</th>
+            </tr>
+          </thead>
           <tbody id="tableBody"></tbody>
         </table>
+        <p id="loading" class="error">Loading...</p>
+        <p id="error" class="error" style="display: none;"></p>
       </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script>
-    const PRIMARY_BIN = "https://api.jsonbin.io/v3/b/6866db818960c979a5b69ec5";
-    const BACKUP_BIN = "https://api.jsonbin.io/v3/b/6866db758a456b7966badaf8";
-    const JSONBIN_API_KEY = "$2a$10$tDq1ox.T7Bd3gJYbejwpy.gcXY/Zp8pWsipansW8lbLdHXRyIFcn2";
+    async function initSupabase() {
+      if (typeof supabase === 'undefined') {
+        document.getElementById('loading-overlay').style.display = 'none';
+        document.getElementById('error').textContent = 'Error: Supabase library not loaded';
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('loading').style.display = 'none';
+        return;
+      }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // Randomize floating image positions
-      const floats = document.querySelectorAll('.bg-float');
-      floats.forEach((float, index) => {
-        const maxX = window.innerWidth - 170;
-        const maxY = window.innerHeight - 170;
-        const startX = Math.random() * maxX;
-        const startY = Math.random() * maxY;
-        float.style.left = `${startX}px`;
-        float.style.top = `${startY}px`;
-        float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
-      });
+      const supabaseUrl = 'https://vkxchgckwyqnxlmirqqu.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZreGNoZ2Nrd3lxbnhsbWlycXF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTExNTMwMDgsImV4cCI6MjA2NjcyOTAwOH0.QPkNrTzccpy7v2Wuhsut-Ra50gy4-mbzxZxtzyJrz80';
+      const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-      const errorEl = document.getElementById("error");
-      const successEl = document.getElementById("success");
-      const lastUpdatedEl = document.getElementById("last-updated");
-      const tableHeader = document.getElementById("tableHeader");
-      const tableBody = document.getElementById("tableBody");
-      const leaderboardTable = document.getElementById("leaderboard-table");
-      const loadingOverlay = document.getElementById("loading-overlay");
-
-      // Function to fetch leaderboard data from JSON bin
-      async function fetchLeaderboard() {
-        errorEl.style.display = "none";
-        successEl.style.display = "none";
-        lastUpdatedEl.style.display = "none";
-        tableBody.innerHTML = "";
-        loadingOverlay.style.display = "flex";
-
+      async function fetchPointsTable() {
         try {
-          const headers = {
-            "X-Master-Key": JSONBIN_API_KEY
-          };
+          const { data, error } = await supabaseClient
+            .from('points')
+            .select('address, points')
+            .order('points', { ascending: false });
 
-          // Try primary bin
-          let response = await fetch(PRIMARY_BIN, { headers });
-          let data = await response.json();
-
-          // If primary bin fails, try backup bin
-          if (!response.ok || !data.record || !data.record.points) {
-            response = await fetch(BACKUP_BIN, { headers });
-            data = await response.json();
+          if (error) {
+            throw error;
           }
 
-          if (!response.ok) {
-            throw new Error(`HTTP error ${response.status}`);
-          }
+          document.getElementById('loading-overlay').style.display = 'none';
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('pointsTable').style.display = 'table';
 
-          if (data.record && data.record.points && data.record.points.length > 0) {
-            const points = data.record.points.sort((a, b) => b.points - a.points); // Sort by points descending
-            const lastUpdated = data.record.last_updated;
+          const tableBody = document.getElementById('tableBody');
+          tableBody.innerHTML = '';
 
-            loadingOverlay.style.display = "none";
-
-            // Show table
-            leaderboardTable.style.display = "table";
-
-            // Set table headers
-            tableHeader.innerHTML = `
-              <th>Address</th>
-              <th>Points</th>
+          data.forEach(row => {
+            const tr = document.createElement('tr');
+            // Mask address: show first 6 and last 4 characters
+            const address = row.address && row.address.length > 10
+              ? `${row.address.slice(0, 6)}...${row.address.slice(-4)}`
+              : row.address || 'N/A';
+            tr.innerHTML = `
+              <td data-address="${row.address}">${address}</td>
+              <td>${row.points || 0}</td>
             `;
+            tableBody.appendChild(tr);
+          });
 
-            // Populate table body with truncated address
-            tableBody.innerHTML = points.map(row => {
-              const truncatedAddress = `${row.address.slice(0, 6)}...${row.address.slice(-4)}`;
-              return `<tr><td>${truncatedAddress}</td><td>${row.points ?? ''}</td></tr>`;
-            }).join('');
-
-            // Display last updated and success message
-            successEl.textContent = "MyMilio Rewards Leaderboard";
-            successEl.style.display = "block";
-            lastUpdatedEl.textContent = `Last updated: ${new Date(lastUpdated).toLocaleString()}`;
-            lastUpdatedEl.style.display = "block";
-          } else {
-            throw new Error("No leaderboard data available.");
-          }
+          // Add sorting functionality
+          let sortDirection = { address: 1, points: -1 };
+          const headers = document.querySelectorAll('th[data-sort]');
+          headers.forEach(header => {
+            header.addEventListener('click', () => {
+              const sortKey = header.getAttribute('data-sort');
+              sortDirection[sortKey] *= -1;
+              const rows = Array.from(tableBody.querySelectorAll('tr'));
+              rows.sort((a, b) => {
+                let aValue = sortKey === 'address'
+                  ? a.querySelector(`td[data-address]`).getAttribute('data-address').toLowerCase()
+                  : parseInt(a.querySelectorAll('td')[1].textContent);
+                let bValue = sortKey === 'address'
+                  ? b.querySelector(`td[data-address]`).getAttribute('data-address').toLowerCase()
+                  : parseInt(b.querySelectorAll('td')[1].textContent);
+                if (sortKey === 'address') {
+                  return sortDirection[sortKey] * aValue.localeCompare(bValue);
+                }
+                return sortDirection[sortKey] * (aValue - bValue);
+              });
+              tableBody.innerHTML = '';
+              rows.forEach(row => tableBody.appendChild(row));
+            });
+          });
         } catch (error) {
-          console.error("Error fetching leaderboard:", error);
-          loadingOverlay.style.display = "none";
-          errorEl.textContent = `🚨 Error: ${error.message}`;
-          errorEl.style.display = "block";
+          document.getElementById('loading-overlay').style.display = 'none';
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('error').textContent = `Error fetching data: ${error.message} (Check table name, schema, or RLS policies)`;
+          document.getElementById('error').style.display = 'block';
         }
       }
 
-      // Fetch leaderboard on page load
-      fetchLeaderboard();
+      await fetchPointsTable();
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(initSupabase, 100);
     });
   </script>
 </body>
