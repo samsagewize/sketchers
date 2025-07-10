@@ -256,13 +256,13 @@
       cursor: pointer;
     }
     .token-card img {
-      width: 100%;
-      height: auto;
-      max-height: 120px;
+      display: block;           /* make centering easy */
+      margin: 0 auto;           /* center it in the card */
+      width: auto;              /* natural width */
+      max-width: 120px;         /* or whatever max you like */
+      max-height: 120px;        /* keep your existing height cap */
       object-fit: contain;
-      border: 1px inset #808080;
       background: linear-gradient(180deg, #FFFFFF, #FFE6E6);
-      border-radius: 4px;
     }
     .token-card h3 {
       font-size: clamp(8px, 2vw, 10px);
