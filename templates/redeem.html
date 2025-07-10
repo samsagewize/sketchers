@@ -60,7 +60,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 1200px; /* Wider for desktop */
+      max-width: 1200px;
       padding: 10px;
       padding-bottom: 50px;
       box-sizing: border-box;
@@ -118,7 +118,7 @@
       border-left: 2px solid #FFFFFF;
       border-bottom: 2px solid #808080;
       border-right: 2px solid #808080;
-      width: clamp(200px, 90vw, 1100px); /* Wider window */
+      width: clamp(200px, 90vw, 1100px);
       box-shadow: 2px 2px 0 #000;
       margin: 10px 0;
       border-radius: 4px;
@@ -231,7 +231,7 @@
     }
     .token-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Dynamic columns */
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
       gap: 10px;
       width: 100%;
       justify-content: center;
@@ -242,8 +242,7 @@
       padding: 8px;
       width: 100%;
       text-align: center;
-      box-shadow: 2px 2px 0 #000
-
+      box-shadow: 2px 2px 0 #000;
       border-radius: 4px;
       position: relative;
     }
@@ -256,12 +255,11 @@
       cursor: pointer;
     }
     .token-card img {
-      width: 100%;
+      max-width: 90%; /* Reduced to prevent overflow */
       height: auto;
-      max-height: 120px;
+      max-height: 100px; /* Smaller height */
       object-fit: contain;
-      border: 1px inset #808080;
-      background: linear-gradient(180deg, #FFFFFF, #FFE6E6);
+      margin: 0 auto; /* Center image */
       border-radius: 4px;
     }
     .token-card h3 {
@@ -351,12 +349,18 @@
     @media (min-width: 768px) {
       .window { transform: scale(1.1); transform-origin: top center; }
       #site-title { font-size: clamp(18px, 4vw, 22px); }
-      .token-card img { max-height: 140px; }
-      .token-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } /* Slightly larger cards on desktop */
+      .token-card img { max-height: 100px; } /* Smaller height for desktop */
+      .token-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
     }
     @media (max-width: 767px) {
-      .token-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } /* 1-2 columns on mobile */
-      .token-card img { max-height: 100px; }
+      .token-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+      .token-card img { max-height: 80px; } /* Smaller height for mobile */
+      .token-card input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+        top: 8px;
+        left: 8px;
+      }
       .search-form input[type="text"],
       .search-form button,
       .claim-form button,
@@ -371,7 +375,7 @@
       .coming-soon-window button { font-size: clamp(7px, 1.8vw, 9px); }
       .home-btn { width: 28px; height: 28px; }
       .home-btn svg { width: 16px; height: 16px; }
-      .info-icon:hover::after { max-width: 150px; } /* Smaller tooltip on mobile */
+      .info-icon:hover::after { max-width: 150px; }
     }
   </style>
 </head>
@@ -516,7 +520,7 @@
 
       comingSoonOverlay.addEventListener('click', (e) => {
         if (e.target === comingSoonOverlay) {
-          comingSoonOverlay.style.display = 'none';
+          comingSoonsOverlay.style.display = 'none';
         }
       });
 
