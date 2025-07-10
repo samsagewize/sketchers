@@ -60,7 +60,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 600px;
+      max-width: 1200px; /* Wider for desktop */
       padding: 10px;
       padding-bottom: 50px;
       box-sizing: border-box;
@@ -118,7 +118,7 @@
       border-left: 2px solid #FFFFFF;
       border-bottom: 2px solid #808080;
       border-right: 2px solid #808080;
-      width: clamp(200px, 80vw, 400px);
+      width: clamp(200px, 90vw, 1100px); /* Wider window */
       box-shadow: 2px 2px 0 #000;
       margin: 10px 0;
       border-radius: 4px;
@@ -146,6 +146,12 @@
       align-items: center;
       gap: 8px;
     }
+    .claim-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      position: relative;
+    }
     .search-form label, .claim-form label {
       font-size: clamp(8px, 2vw, 10px);
       color: #000080;
@@ -160,7 +166,7 @@
       background: #FFFFFF;
       color: #000080;
     }
-    .search-form button, .claim-form button {
+    .search-form button, .claim-form button, .select-all-btn, .auto-claim-btn {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
@@ -176,31 +182,78 @@
       box-shadow: 1px 1px 0 #000;
       transition: background 0.2s, transform 0.1s;
     }
-    .search-form button:hover, .claim-form button:hover {
+    .search-form button:hover, .claim-form button:hover, .select-all-btn:hover, .auto-claim-btn:not(.disabled):hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
       transform: translate(-1px, -1px);
     }
-    .search-form button:active, .claim-form button:active {
+    .search-form button:active, .claim-form button:active, .select-all-btn:active, .auto-claim-btn:not(.disabled):active {
       background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
       transform: translate(1px, 1px);
       box-shadow: none;
       border: 1px inset #808080;
     }
-    .token-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+    .auto-claim-btn.disabled {
+      background: linear-gradient(180deg, #808080 0%, #606060 100%);
+      color: #404040;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
+      background: #000080;
+      color: #FFFFFF;
+      border-radius: 50%;
+      font-size: clamp(6px, 1.5vw, 8px);
+      cursor: pointer;
+      position: relative;
+    }
+    .info-icon:hover::after {
+      content: 'Select 5 or more to automatically claim your daily rewards';
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000080;
+      color: #FFFFFF;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: clamp(7px, 1.8vw, 9px);
+      width: max-content;
+      max-width: 200px;
+      z-index: 5;
+      text-align: center;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Dynamic columns */
+      gap: 10px;
       width: 100%;
+      justify-content: center;
     }
     .token-card {
       background: #E0E0E0;
       border: 1px inset #808080;
       padding: 8px;
-      width: clamp(120px, 40vw, 160px);
+      width: 100%;
       text-align: center;
-      box-shadow: 2px 2px 0 #000;
+      box-shadow: 2px 2px 0 #000
+
       border-radius: 4px;
+      position: relative;
+    }
+    .token-card input[type="checkbox"] {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
     }
     .token-card img {
       width: 100%;
@@ -230,7 +283,7 @@
     }
     .error { color: #FF0055; }
     .success { color: #008000; }
-    .loading-overlay, .captcha-overlay {
+    .loading-overlay, .captcha-overlay, .coming-soon-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.5);
@@ -240,7 +293,7 @@
       z-index: 4;
       display: none;
     }
-    .loading-window, .captcha-window {
+    .loading-window, .captcha-window, .coming-soon-window {
       background: #C0C0C0;
       border: 2px solid #000080;
       border-top: 2px solid #FFFFFF;
@@ -258,13 +311,13 @@
       height: 148px;
       margin-bottom: 8px;
     }
-    .loading-window p, .captcha-window p {
+    .loading-window p, .captcha-window p, .coming-soon-window p {
       font-size: clamp(8px, 2vw, 10px);
       color: #000080;
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       margin: 8px 0;
     }
-    .captcha-window button {
+    .captcha-window button, .coming-soon-window button {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
@@ -280,11 +333,11 @@
       box-shadow: 1px 1px 0 #000;
       transition: background 0.2s, transform 0.1s;
     }
-    .captcha-window button:hover {
+    .captcha-window button:hover, .coming-soon-window button:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
       transform: translate(-1px, -1px);
     }
-    .captcha-window button:active {
+    .captcha-window button:active, .coming-soon-window button:active {
       background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
       transform: translate(1px, 1px);
       box-shadow: none;
@@ -299,20 +352,26 @@
       .window { transform: scale(1.1); transform-origin: top center; }
       #site-title { font-size: clamp(18px, 4vw, 22px); }
       .token-card img { max-height: 140px; }
+      .token-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } /* Slightly larger cards on desktop */
     }
     @media (max-width: 767px) {
-      .token-card { width: clamp(100px, 35vw, 140px); }
+      .token-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } /* 1-2 columns on mobile */
       .token-card img { max-height: 100px; }
       .search-form input[type="text"],
       .search-form button,
       .claim-form button,
+      .select-all-btn,
+      .auto-claim-btn,
       .token-card h3,
       .error,
       .success,
       .captcha-window p,
-      .captcha-window button { font-size: clamp(7px, 1.8vw, 9px); }
+      .captcha-window button,
+      .coming-soon-window p,
+      .coming-soon-window button { font-size: clamp(7px, 1.8vw, 9px); }
       .home-btn { width: 28px; height: 28px; }
       .home-btn svg { width: 16px; height: 16px; }
+      .info-icon:hover::after { max-width: 150px; } /* Smaller tooltip on mobile */
     }
   </style>
 </head>
@@ -342,6 +401,14 @@
     </div>
   </div>
 
+  <!-- Coming Soon Overlay -->
+  <div class="coming-soon-overlay" id="coming-soon-overlay">
+    <div class="coming-soon-window">
+      <p>Auto-Claim Feature Coming Soon!</p>
+      <button id="close-coming-soon-btn">OK</button>
+    </div>
+  </div>
+
   <!-- Main Content -->
   <div class="main-container">
     <a href="/" class="home-btn" title="Back to Home">
@@ -360,7 +427,14 @@
         </form>
         <form id="claim-form" class="claim-form" style="display: none;">
           <input type="hidden" id="claim-owner" name="owner">
-          <button type="submit">Claim Points</button>
+          <div class="claim-buttons">
+            <button type="submit">Claim Points</button>
+            <div style="position: relative;">
+              <button type="button" class="auto-claim-btn disabled" id="auto-claim-btn">Auto-Claim</button>
+              <span class="info-icon" id="info-icon">i</span>
+            </div>
+            <button type="button" class="select-all-btn" id="select-all-btn">Select All</button>
+          </div>
         </form>
         <p id="error" class="error" style="display: none;"></p>
         <p id="success" class="success" style="display: none;"></p>
@@ -398,8 +472,53 @@
       const loadingOverlay = document.getElementById('loading-overlay');
       const captchaOverlay = document.getElementById('captcha-overlay');
       const cancelCaptchaBtn = document.getElementById('cancel-captcha-btn');
+      const autoClaimBtn = document.getElementById('auto-claim-btn');
+      const selectAllBtn = document.getElementById('select-all-btn');
+      const comingSoonOverlay = document.getElementById('coming-soon-overlay');
+      const closeComingSoonBtn = document.getElementById('close-coming-soon-btn');
       let currentOwner = null;
       let captchaWidgetId = null;
+
+      // Function to update Auto-Claim button state
+      const updateAutoClaimButton = () => {
+        const selectedTokens = document.querySelectorAll('.token-checkbox:checked').length;
+        if (selectedTokens >= 5) {
+          autoClaimBtn.classList.remove('disabled');
+          autoClaimBtn.disabled = false;
+        } else {
+          autoClaimBtn.classList.add('disabled');
+          autoClaimBtn.disabled = true;
+        }
+      };
+
+      // Select All button functionality
+      selectAllBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.token-checkbox');
+        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = !allChecked;
+        });
+        selectAllBtn.textContent = allChecked ? 'Select All' : 'Deselect All';
+        updateAutoClaimButton();
+      });
+
+      // Auto-Claim button click (shows Coming Soon popup)
+      autoClaimBtn.addEventListener('click', () => {
+        if (!autoClaimBtn.classList.contains('disabled')) {
+          comingSoonOverlay.style.display = 'flex';
+        }
+      });
+
+      // Close Coming Soon popup
+      closeComingSoonBtn.addEventListener('click', () => {
+        comingSoonOverlay.style.display = 'none';
+      });
+
+      comingSoonOverlay.addEventListener('click', (e) => {
+        if (e.target === comingSoonOverlay) {
+          comingSoonOverlay.style.display = 'none';
+        }
+      });
 
       // Cancel hCaptcha
       cancelCaptchaBtn.addEventListener('click', () => {
@@ -424,7 +543,7 @@
       const showCaptcha = (callback, owner) => {
         captchaOverlay.style.display = 'flex';
         if (typeof hcaptcha === 'undefined') {
-          errorEl.textContent = ' hCaptcha failed to load. Please refresh the page.';
+          errorEl.textContent = 'hCaptcha failed to load. Please refresh the page.';
           errorEl.style.display = 'block';
           captchaOverlay.style.display = 'none';
           return;
@@ -439,7 +558,7 @@
             captchaWidgetId = null;
           },
           'error-callback': () => {
-            errorEl.textContent = ' hCaptcha verification failed. Please try again.';
+            errorEl.textContent = 'hCaptcha verification failed. Please try again.';
             errorEl.style.display = 'block';
             captchaOverlay.style.display = 'none';
             hcaptcha.remove(captchaWidgetId);
@@ -465,6 +584,7 @@
         tokenGrid.innerHTML = '';
         tokenCountEl.style.display = 'none';
         claimForm.style.display = 'none';
+        selectAllBtn.textContent = 'Select All';
 
         showCaptcha(async (hCaptchaResponse, owner) => {
           loadingOverlay.style.display = 'flex';
@@ -509,6 +629,7 @@
                   const card = document.createElement('div');
                   card.className = 'token-card';
                   card.innerHTML = `
+                    <input type="checkbox" class="token-checkbox" data-token-id="${tokenId}">
                     <img src="${imageUrl}" alt="Token #${tokenId}" onerror="this.src='/static/placeholder.png'; this.onerror=null;">
                     <h3>Token #${tokenId}</h3>
                     <p>${metadata.name || 'No name'}</p>
@@ -519,6 +640,7 @@
                   const card = document.createElement('div');
                   card.className = 'token-card';
                   card.innerHTML = `
+                    <input type="checkbox" class="token-checkbox" data-token-id="${tokenId}">
                     <img src="/static/placeholder.png" alt="Token #${tokenId}">
                     <h3>Token #${tokenId}</h3>
                     <p>Metadata unavailable</p>
@@ -526,12 +648,17 @@
                   tokenGrid.appendChild(card);
                 }
               }
+
+              // Add event listeners to checkboxes
+              document.querySelectorAll('.token-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateAutoClaimButton);
+              });
             } else {
               tokenCountEl.textContent = 'No tokens found.';
               tokenCountEl.style.display = 'block';
             }
           } catch (err) {
-            errorEl.textContent = ` Failed to fetch tokens: ${err.message}`;
+            errorEl.textContent = `Failed to fetch tokens: ${err.message}`;
             errorEl.style.display = 'block';
           } finally {
             loadingOverlay.style.display = 'none';
@@ -543,7 +670,7 @@
       claimForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!currentOwner) {
-          errorEl.textContent = ' Please fetch tokens first.';
+          errorEl.textContent = 'Please fetch tokens first.';
           errorEl.style.display = 'block';
           return;
         }
@@ -564,7 +691,7 @@
             });
             if (!response.ok) {
               if (response.status === 429) {
-                errorEl.textContent = ' All tokens are on 24-hour cooldown. Try again later.';
+                errorEl.textContent = 'All tokens are on 24-hour cooldown. Try again later.';
                 errorEl.style.display = 'block';
                 return;
               }
@@ -573,14 +700,14 @@
             const data = await response.json();
 
             if (data.success) {
-              successEl.textContent = ` Claimed ${data.points} points! Total: ${data.total_points}`;
+              successEl.textContent = `Claimed ${data.points} points! Total: ${data.total_points}`;
               successEl.style.display = 'block';
             } else {
               errorEl.textContent = ` ${data.error}`;
               errorEl.style.display = 'block';
             }
           } catch (err) {
-            errorEl.textContent = ` Failed to claim points: ${err.message}`;
+            errorEl.textContent = `Failed to claim points: ${err.message}`;
             errorEl.style.display = 'block';
           } finally {
             loadingOverlay.style.display = 'none';
@@ -591,4 +718,3 @@
   </script>
 </body>
 </html>
-
