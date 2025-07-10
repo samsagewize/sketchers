@@ -254,8 +254,8 @@
       width: clamp(200px, 70vw, 400px);
     }
     .loading-window img {
-      width: 72px;
-      height: 72px;
+      width: 48px;
+      height: 48px;
       margin-bottom: 8px;
     }
     .loading-window p, .captcha-window p {
@@ -329,7 +329,7 @@
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-window">
       <img src="/static/loading.gif" alt="Loading">
-      <p>Please wait, server is booting up and querying the blockchain. This may take a few minutes...</p>
+      <p>Loading...</p>
     </div>
   </div>
 
@@ -424,7 +424,7 @@
       const showCaptcha = (callback, owner) => {
         captchaOverlay.style.display = 'flex';
         if (typeof hcaptcha === 'undefined') {
-          errorEl.textContent = '🚨 hCaptcha failed to load. Please refresh the page.';
+          errorEl.textContent = ' hCaptcha failed to load. Please refresh the page.';
           errorEl.style.display = 'block';
           captchaOverlay.style.display = 'none';
           return;
@@ -433,13 +433,13 @@
         captchaWidgetId = hcaptcha.render('captcha-container', {
           sitekey: '010e3fdc-5224-4254-8278-f65453b417a0',
           callback: (response) => {
-            captchaOverlay.style.display = 'none/layouts/mymilio_rewards.html';
+            captchaOverlay.style.display = 'none';
             callback(response, owner);
             hcaptcha.remove(captchaWidgetId);
             captchaWidgetId = null;
           },
           'error-callback': () => {
-            errorEl.textContent = '🚨 hCaptcha verification failed. Please try again.';
+            errorEl.textContent = ' hCaptcha verification failed. Please try again.';
             errorEl.style.display = 'block';
             captchaOverlay.style.display = 'none';
             hcaptcha.remove(captchaWidgetId);
@@ -483,7 +483,7 @@
             const data = await response.json();
 
             if (data.error) {
-              errorEl.textContent = `🚨 ${data.error}`;
+              errorEl.textContent = ` ${data.error}`;
               errorEl.style.display = 'block';
               return;
             }
@@ -531,7 +531,7 @@
               tokenCountEl.style.display = 'block';
             }
           } catch (err) {
-            errorEl.textContent = `🚨 Failed to fetch tokens: ${err.message}`;
+            errorEl.textContent = ` Failed to fetch tokens: ${err.message}`;
             errorEl.style.display = 'block';
           } finally {
             loadingOverlay.style.display = 'none';
@@ -543,7 +543,7 @@
       claimForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!currentOwner) {
-          errorEl.textContent = '🚨 Please fetch tokens first.';
+          errorEl.textContent = ' Please fetch tokens first.';
           errorEl.style.display = 'block';
           return;
         }
@@ -564,7 +564,7 @@
             });
             if (!response.ok) {
               if (response.status === 429) {
-                errorEl.textContent = '😶‍🌫️ All tokens are on 24-hour cooldown. Try again later.';
+                errorEl.textContent = ' All tokens are on 24-hour cooldown. Try again later.';
                 errorEl.style.display = 'block';
                 return;
               }
@@ -573,14 +573,14 @@
             const data = await response.json();
 
             if (data.success) {
-              successEl.textContent = `✅ Claimed ${data.points} points! Total: ${data.total_points}`;
+              successEl.textContent = ` Claimed ${data.points} points! Total: ${data.total_points}`;
               successEl.style.display = 'block';
             } else {
-              errorEl.textContent = `🚨 ${data.error}`;
+              errorEl.textContent = ` ${data.error}`;
               errorEl.style.display = 'block';
             }
           } catch (err) {
-            errorEl.textContent = `🚨 Failed to claim points: ${err.message}`;
+            errorEl.textContent = ` Failed to claim points: ${err.message}`;
             errorEl.style.display = 'block';
           } finally {
             loadingOverlay.style.display = 'none';
@@ -591,3 +591,4 @@
   </script>
 </body>
 </html>
+
