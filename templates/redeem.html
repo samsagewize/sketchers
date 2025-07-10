@@ -254,8 +254,8 @@
       width: clamp(200px, 70vw, 400px);
     }
     .loading-window img {
-      width: 48px;
-      height: 48px;
+      width: 72px;
+      height: 72px;
       margin-bottom: 8px;
     }
     .loading-window p, .captcha-window p {
@@ -329,7 +329,7 @@
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-window">
       <img src="/static/loading.gif" alt="Loading">
-      <p>Loading...</p>
+      <p>Please wait, server is booting up and querying the blockchain. This may take a few minutes...</p>
     </div>
   </div>
 
@@ -413,9 +413,7 @@
       captchaOverlay.addEventListener('click', (e) => {
         if (e.target === captchaOverlay) {
           captchaOverlay.style.display = 'none';
-          if (captchaWidgetId !== null && typeof hcaptcha !== 'undefined') {
-            hcaptcha.remove(captchaWidgetId);
-            captchaWidgetId = null;
+          if (captchaWidgetId !== null && typeof hcaptcha !== 'undefinedwater: none;
           }
         }
       });
