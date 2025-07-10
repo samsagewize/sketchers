@@ -6,6 +6,7 @@
   <title>MyMilio Rewards</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    /* Same styles as your provided index.html */
     html {
       margin: 0;
       padding: 0;
@@ -318,16 +319,16 @@
 <body>
   <!-- Background Container -->
   <div id="background-container">
-    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
-    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
-    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
-    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
+    <img src="https://sketchy-n6u8.onrender.com/static/float1.png" class="bg-float" alt="Floating Image 1">
+    <img src="https://sketchy-n6u8.onrender.com/static/float2.png" class="bg-float" alt="Floating Image 2">
+    <img src="https://sketchy-n6u8.onrender.com/static/float3.png" class="bg-float" alt="Floating Image 3">
+    <img src="https://sketchy-n6u8.onrender.com/static/float4.png" class="bg-float" alt="Floating Image 4">
   </div>
 
   <!-- Loading Overlay -->
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-window">
-      <img src="/static/loading.gif" alt="Loading">
+      <img src="https://sketchy-n6u8.onrender.com/static/loading.gif" alt="Loading">
       <p>Loading...</p>
     </div>
   </div>
@@ -370,6 +371,12 @@
   </div>
 
   <script>
+    // Prevent Ethereum provider injection
+    if (window.ethereum) {
+      console.warn('Ethereum provider detected, but not used by this app');
+      window.ethereum = undefined;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       // Randomize floating image positions
       const floats = document.querySelectorAll('.bg-float');
@@ -421,12 +428,15 @@
         loadingOverlay.style.display = "flex";
 
         try {
-          const response = await fetch("https://sketchy-n6u8.onrender.com/api/tokens", {
+          const response = await fetch("https://sketchy-n6u8.onrender.com/api/tokenss", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `owner=${encodeURIComponent(currentOwner)}`
           });
           if (!response.ok) {
+            if (response.status === 429) {
+              throw new Error("Too many requests, please try again later");
+            }
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
           const data = await response.json();
@@ -457,7 +467,7 @@
                 const card = document.createElement("div");
                 card.className = "token-card";
                 card.innerHTML = `
-                  <img src="${imageUrl}" alt="Token #${tokenId}" onerror="this.src='/static/placeholder.png'; this.onerror=null;">
+                  <img src="${imageUrl}" alt="Token #${tokenId}" onerror="this.src='https://sketchy-n6u8.onrender.com/static/placeholder.png'; this.onerror=null;">
                   <h3>Token #${tokenId}</h3>
                   <p>${metadata.name || 'No name'}</p>
                 `;
@@ -467,7 +477,7 @@
                 const card = document.createElement("div");
                 card.className = "token-card";
                 card.innerHTML = `
-                  <img src="/static/placeholder.png" alt="Token #${tokenId}">
+                  <img src="https://sketchy-n6u8.onrender.com/static/placeholder.png" alt="Token #${tokenId}">
                   <h3>Token #${tokenId}</h3>
                   <p>Metadata unavailable</p>
                 `;
@@ -498,14 +508,14 @@
         loadingOverlay.style.display = "flex";
 
         try {
-          const response = await fetch("https://sketchy-n6u8.onrender.com/api/claim_points", {
+          const response = await fetch("https://sketchy-n6u8.onrender.com/api/claim_pointss", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: `owner=${encodeURIComponent(currentOwner)}`
           });
           if (!response.ok) {
             if (response.status === 429) {
-              errorEl.textContent = "😶‍🌫️ All tokens are on 24-hour cooldown. Try again later.";
+              errorEl.textContent = "😶‍🌫️ Too many requests, please try again later.";
               errorEl.style.display = "block";
               return;
             }
