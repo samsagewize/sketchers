@@ -160,7 +160,7 @@
       background: #FFFFFF;
       color: #000080;
     }
-    .search-form button, .claim-form button, #more-info-btn {
+    .search-form button, .claim-form button {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
@@ -176,20 +176,15 @@
       box-shadow: 1px 1px 0 #000;
       transition: background 0.2s, transform 0.1s;
     }
-    .search-form button:hover, .claim-form button:hover, #more-info-btn:hover {
+    .search-form button:hover, .claim-form button:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
       transform: translate(-1px, -1px);
     }
-    .search-form button:active, .claim-form button:active, #more-info-btn:active {
+    .search-form button:active, .claim-form button:active {
       background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
       transform: translate(1px, 1px);
       box-shadow: none;
       border: 1px inset #808080;
-    }
-    .button-group {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
     }
     .token-grid {
       display: flex;
@@ -235,7 +230,7 @@
     }
     .error { color: #FF0055; }
     .success { color: #008000; }
-    .loading-overlay, .info-overlay, .captcha-overlay {
+    .loading-overlay, .captcha-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.5);
@@ -245,7 +240,7 @@
       z-index: 4;
       display: none;
     }
-    .loading-window, .info-window, .captcha-window {
+    .loading-window, .captcha-window {
       background: #C0C0C0;
       border: 2px solid #000080;
       border-top: 2px solid #FFFFFF;
@@ -263,13 +258,13 @@
       height: 48px;
       margin-bottom: 8px;
     }
-    .loading-window p, .info-window p, .captcha-window p {
+    .loading-window p, .captcha-window p {
       font-size: clamp(8px, 2vw, 10px);
       color: #000080;
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       margin: 8px 0;
     }
-    .info-window button, .captcha-window button {
+    .captcha-window button {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
@@ -285,11 +280,11 @@
       box-shadow: 1px 1px 0 #000;
       transition: background 0.2s, transform 0.1s;
     }
-    .info-window button:hover, .captcha-window button:hover {
+    .captcha-window button:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
       transform: translate(-1px, -1px);
     }
-    .info-window button:active, .captcha-window button:active {
+    .captcha-window button:active {
       background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
       transform: translate(1px, 1px);
       box-shadow: none;
@@ -311,12 +306,9 @@
       .search-form input[type="text"],
       .search-form button,
       .claim-form button,
-      #more-info-btn,
       .token-card h3,
       .error,
       .success,
-      .info-window p,
-      .info-window button,
       .captcha-window p,
       .captcha-window button { font-size: clamp(7px, 1.8vw, 9px); }
       .home-btn { width: 28px; height: 28px; }
@@ -338,15 +330,6 @@
     <div class="loading-window">
       <img src="/static/loading.gif" alt="Loading">
       <p>Loading...</p>
-    </div>
-  </div>
-
-  <!-- Info Overlay -->
-  <div class="info-overlay" id="info-overlay">
-    <div class="info-window">
-      <p>MyMilio Rewards points are currently in beta and have no monetary value. They are subject to change, modification, or termination at the discretion of the MyMilio team. As a beta feature, points are highly mutable and may be adjusted or reset based on future updates or team decisions.</p>
-      <p>Stack your points to redeem exciting rewards, such as rare MyMilios, potential future token allocations, exclusive merchandise, access to special community events, or unique digital collectibles!</p>
-      <button id="close-info-btn">Close</button>
     </div>
   </div>
 
@@ -379,9 +362,6 @@
           <input type="hidden" id="claim-owner" name="owner">
           <button type="submit">Claim Points</button>
         </form>
-        <div class="button-group">
-          <button id="more-info-btn">More Info</button>
-        </div>
         <p id="error" class="error" style="display: none;"></p>
         <p id="success" class="success" style="display: none;"></p>
         <h2 id="token-count" style="display: none;">Your Tokens</h2>
@@ -416,28 +396,10 @@
       const tokenCountEl = document.getElementById('token-count');
       const tokenGrid = document.getElementById('token-grid');
       const loadingOverlay = document.getElementById('loading-overlay');
-      const moreInfoBtn = document.getElementById('more-info-btn');
-      const infoOverlay = document.getElementById('info-overlay');
-      const closeInfoBtn = document.getElementById('close-info-btn');
       const captchaOverlay = document.getElementById('captcha-overlay');
       const cancelCaptchaBtn = document.getElementById('cancel-captcha-btn');
       let currentOwner = null;
       let captchaWidgetId = null;
-
-      // More Info Popup
-      moreInfoBtn.addEventListener('click', () => {
-        infoOverlay.style.display = 'flex';
-      });
-
-      closeInfoBtn.addEventListener('click', () => {
-        infoOverlay.style.display = 'none';
-      });
-
-      infoOverlay.addEventListener('click', (e) => {
-        if (e.target === infoOverlay) {
-          infoOverlay.style.display = 'none';
-        }
-      });
 
       // Cancel hCaptcha
       cancelCaptchaBtn.addEventListener('click', () => {
