@@ -254,8 +254,8 @@
       width: clamp(200px, 70vw, 400px);
     }
     .loading-window img {
-      width: 48px;
-      height: 48px;
+      width: 72px;
+      height: 72px;
       margin-bottom: 8px;
     }
     .loading-window p, .captcha-window p {
@@ -329,7 +329,7 @@
   <div class="loading-overlay" id="loading-overlay">
     <div class="loading-window">
       <img src="/static/loading.gif" alt="Loading">
-      <p>Loading...</p>
+      <p>Please wait, server is booting up and querying the blockchain. This may take a few minutes...</p>
     </div>
   </div>
 
@@ -433,7 +433,7 @@
         captchaWidgetId = hcaptcha.render('captcha-container', {
           sitekey: '010e3fdc-5224-4254-8278-f65453b417a0',
           callback: (response) => {
-            captchaOverlay.style.display = 'none';
+            captchaOverlay.style.display = 'none/layouts/mymilio_rewards.html';
             callback(response, owner);
             hcaptcha.remove(captchaWidgetId);
             captchaWidgetId = null;
