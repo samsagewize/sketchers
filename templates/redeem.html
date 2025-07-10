@@ -412,7 +412,7 @@
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        currentOwner = document.getElementById("owner").value;
+        currentOwner = document.getElementById("owner").value.trim();
         errorEl.style.display = "none";
         successEl.style.display = "none";
         tokenGrid.innerHTML = "";
@@ -444,7 +444,7 @@
 
             for (const tokenId of data.tokens) {
               try {
-                const metadataResponse = await fetch(`/static/metadata/${tokenId}`);
+                const metadataResponse = await fetch(`https://sketchy-n6u8.onrender.com/static/metadata/${tokenId}`);
                 if (!metadataResponse.ok) {
                   throw new Error(`Metadata for token ${tokenId} not found`);
                 }
