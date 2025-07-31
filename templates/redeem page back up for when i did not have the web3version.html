@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MyMilio Rewards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <!-- Add hCaptcha script -->
+  <script src="https://js.hcaptcha.com/1/api.js?onload=hcaptchaOnLoad" async defer></script>
+  <style>
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
+      font-family: 'Press Start 2P', cursive;
+      color: #000;
+      display: flex;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    #background-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-float {
+      position: absolute;
+      opacity: 0.15;
+      pointer-events: none;
+      max-width: 170px;
+      animation: float-circle 20s linear infinite;
+      transform-origin: center;
+    }
+    .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
+    .bg-float:nth-child(2) { animation-duration: 25s; animation-delay: 3s; }
+    .bg-float:nth-child(3) { animation-duration: 28s; animation-delay: 6s; }
+    .bg-float:nth-child(4) { animation-duration: 23s; animation-delay: 9s; }
+    @keyframes float-circle {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20vw, 20vh) rotate(90deg); }
+      50% { transform: translate(40vw, 0) rotate(180deg); }
+      75% { transform: translate(20vw, -20vh) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+    .main-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px; /* Wider for desktop */
+      padding: 10px;
+      padding-bottom: 50px;
+      box-sizing: border-box;
+    }
+    .home-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .home-btn:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .home-btn:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
+    }
+    .home-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: #000080;
+    }
+    #site-title {
+      font-size: clamp(16px, 4vw, 20px);
+      margin: 15px 0;
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
+      text-align: center;
+    }
+    #site-title span {
+      color: #FF0055;
+    }
+    .window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      width: clamp(200px, 90vw, 1100px); /* Wider window */
+      box-shadow: 2px 2px 0 #000;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .title-bar {
+      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+      color: #FFFFFF;
+      padding: 4px;
+      font-size: clamp(8px, 2vw, 10px);
+      text-align: center;
+      border-bottom: 1px solid #000080;
+    }
+    .window-body {
+      background: #E0E0E0;
+      padding: 8px;
+      border: 1px inset #808080;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .search-form, .claim-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .claim-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      position: relative;
+    }
+    .search-form label, .claim-form label {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+    .search-form input[type="text"] {
+      padding: 4px;
+      width: clamp(150px, 60vw, 300px);
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(7px, 1.8vw, 9px);
+      border: 1px inset #808080;
+      background: #FFFFFF;
+      color: #000080;
+    }
+    .search-form button, .claim-form button, .select-all-btn, .auto-claim-btn {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px 8px;
+      font-size: clamp(8px, 2vw, 10px);
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      color: #000080;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .search-form button:hover, .claim-form button:hover, .select-all-btn:hover, .auto-claim-btn:not(.disabled):hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .search-form button:active, .claim-form button:active, .select-all-btn:active, .auto-claim-btn:not(.disabled):active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
+    }
+    .auto-claim-btn.disabled {
+      background: linear-gradient(180deg, #808080 0%, #606060 100%);
+      color: #404040;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
+      background: #000080;
+      color: #FFFFFF;
+      border-radius: 50%;
+      font-size: clamp(6px, 1.5vw, 8px);
+      cursor: pointer;
+      position: relative;
+    }
+    .info-icon:hover::after {
+      content: 'Select 5 or more to automatically claim your daily rewards';
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000080;
+      color: #FFFFFF;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: clamp(7px, 1.8vw, 9px);
+      width: max-content;
+      max-width: 200px;
+      z-index: 5;
+      text-align: center;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .token-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .token-card {
+      background: #E0E0E0;
+      border: 1px inset #808080;
+      padding: 8px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 2px 2px 0 #000
+
+      border-radius: 4px;
+      position: relative;
+    }
+    .token-card {
+      background: #E0E0E0;
+      border: 1px inset #808080;
+      padding: 8px;
+      display: inline-block;   /* allow it to shrink-wrap */
+      width: auto;             /* no longer fill the cell */
+      text-align: center;
+      box-shadow: 2px 2px 0 #000;
+      border-radius: 4px;
+      position: relative;
+    }
+    .token-card img {
+      display: block;           /* make centering easy */
+      margin: 0 auto;           /* center it in the card */
+      width: auto;              /* natural width */
+      max-width: 120px;         /* or whatever max you like */
+      max-height: 120px;        /* keep your existing height cap */
+      object-fit: contain;
+      background: linear-gradient(180deg, #FFFFFF, #FFE6E6);
+    }
+    .token-card h3 {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      margin: 4px 0;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+    .token-card p {
+      font-size: clamp(7px, 1.8vw, 9px);
+      color: #000080;
+      margin: 4px 0;
+    }
+    .error, .success {
+      font-size: clamp(8px, 2vw, 10px);
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      text-align: center;
+      margin: 10px 0;
+    }
+    .error { color: #FF0055; }
+    .success { color: #008000; }
+    .loading-overlay, .captcha-overlay, .coming-soon-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 4;
+      display: none;
+    }
+    .loading-window, .captcha-window, .coming-soon-window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 2px 2px 0 #000;
+      text-align: center;
+      width: clamp(200px, 70vw, 400px);
+    }
+    .loading-window img {
+      width: 148px;
+      height: 148px;
+      margin-bottom: 8px;
+    }
+    .loading-window p, .captcha-window p, .coming-soon-window p {
+      font-size: clamp(8px, 2vw, 10px);
+      color: #000080;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      margin: 8px 0;
+    }
+    .captcha-window button, .coming-soon-window button {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      padding: 4px 8px;
+      font-size: clamp(8px, 2vw, 10px);
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      color: #000080;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .captcha-window button:hover, .coming-soon-window button:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
+    }
+    .captcha-window button:active, .coming-soon-window button:active {
+      background: linear-gradient(180deg, #A0A0A0 0%, #808080 100%);
+      transform: translate(1px, 1px);
+      box-shadow: none;
+      border: 1px inset #808080;
+    }
+    .captcha-window #captcha-container {
+      margin: 10px 0;
+      display: flex;
+      justify-content: center;
+    }
+    @media (min-width: 768px) {
+      .window { transform: scale(1.1); transform-origin: top center; }
+      #site-title { font-size: clamp(18px, 4vw, 22px); }
+      .token-card img { max-height: 140px; }
+      .token-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } /* Slightly larger cards on desktop */
+    }
+    @media (max-width: 767px) {
+      .token-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); } /* 1-2 columns on mobile */
+      .token-card img { max-height: 100px; }
+      .search-form input[type="text"],
+      .search-form button,
+      .claim-form button,
+      .select-all-btn,
+      .auto-claim-btn,
+      .token-card h3,
+      .error,
+      .success,
+      .captcha-window p,
+      .captcha-window button,
+      .coming-soon-window p,
+      .coming-soon-window button { font-size: clamp(7px, 1.8vw, 9px); }
+      .home-btn { width: 28px; height: 28px; }
+      .home-btn svg { width: 16px; height: 16px; }
+      .info-icon:hover::after { max-width: 150px; } /* Smaller tooltip on mobile */
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Container -->
+  <div id="background-container">
+    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
+    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
+    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
+    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-window">
+      <img src="/static/loading.gif" alt="Loading">
+      <p>Booting Server And Querying Blockchain, This Can Take Some Minutes...</p>
+    </div>
+  </div>
+
+  <!-- hCaptcha Modal Overlay -->
+  <div class="captcha-overlay" id="captcha-overlay">
+    <div class="captcha-window">
+      <p>Please complete the verification to proceed.</p>
+      <div id="captcha-container"></div>
+      <button id="cancel-captcha-btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Coming Soon Overlay -->
+  <div class="coming-soon-overlay" id="coming-soon-overlay">
+    <div class="coming-soon-window">
+      <p>Auto-Claim Feature Coming Soon!</p>
+      <button id="close-coming-soon-btn">OK</button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <a href="/" class="home-btn" title="Back to Home">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3l10 9h-3v9h-7v-6h-2v6H3v-9H0l12-9z"/>
+      </svg>
+    </a>
+    <h1 id="site-title">My<span>M</span>ilio Rewards</h1>
+    <div class="window">
+      <div class="title-bar">Search Tokens</div>
+      <div class="window-body">
+        <form id="token-form" class="search-form">
+          <label for="owner">Wallet Address:</label>
+          <input type="text" id="owner" name="owner" placeholder="0x..." required>
+          <button type="submit">Fetch Tokens</button>
+        </form>
+        <form id="claim-form" class="claim-form" style="display: none;">
+          <input type="hidden" id="claim-owner" name="owner">
+          <div class="claim-buttons">
+            <button type="submit">Claim Points</button>
+            <div style="position: relative;">
+              <button type="button" class="auto-claim-btn disabled" id="auto-claim-btn">Auto-Claim</button>
+              <span class="info-icon" id="info-icon">i</span>
+            </div>
+            <button type="button" class="select-all-btn" id="select-all-btn">Select All</button>
+          </div>
+        </form>
+        <p id="error" class="error" style="display: none;"></p>
+        <p id="success" class="success" style="display: none;"></p>
+        <h2 id="token-count" style="display: none;">Your Tokens</h2>
+        <div id="token-grid" class="token-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // hCaptcha onload callback
+    window.hcaptchaOnLoad = () => {
+      console.log('hCaptcha script loaded');
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Randomize floating image positions
+      const floats = document.querySelectorAll('.bg-float');
+      floats.forEach((float, index) => {
+        const maxX = window.innerWidth - 170;
+        const maxY = window.innerHeight - 170;
+        const startX = Math.random() * maxX;
+        const startY = Math.random() * maxY;
+        float.style.left = `${startX}px`;
+        float.style.top = `${startY}px`;
+        float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+      });
+
+      const tokenForm = document.getElementById('token-form');
+      const claimForm = document.getElementById('claim-form');
+      const errorEl = document.getElementById('error');
+      const successEl = document.getElementById('success');
+      const tokenCountEl = document.getElementById('token-count');
+      const tokenGrid = document.getElementById('token-grid');
+      const loadingOverlay = document.getElementById('loading-overlay');
+      const captchaOverlay = document.getElementById('captcha-overlay');
+      const cancelCaptchaBtn = document.getElementById('cancel-captcha-btn');
+      const autoClaimBtn = document.getElementById('auto-claim-btn');
+      const selectAllBtn = document.getElementById('select-all-btn');
+      const comingSoonOverlay = document.getElementById('coming-soon-overlay');
+      const closeComingSoonBtn = document.getElementById('close-coming-soon-btn');
+      let currentOwner = null;
+      let captchaWidgetId = null;
+
+      // Function to update Auto-Claim button state
+      const updateAutoClaimButton = () => {
+        const selectedTokens = document.querySelectorAll('.token-checkbox:checked').length;
+        if (selectedTokens >= 5) {
+          autoClaimBtn.classList.remove('disabled');
+          autoClaimBtn.disabled = false;
+        } else {
+          autoClaimBtn.classList.add('disabled');
+          autoClaimBtn.disabled = true;
+        }
+      };
+
+      // Select All button functionality
+      selectAllBtn.addEventListener('click', () => {
+        const checkboxes = document.querySelectorAll('.token-checkbox');
+        const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = !allChecked;
+        });
+        selectAllBtn.textContent = allChecked ? 'Select All' : 'Deselect All';
+        updateAutoClaimButton();
+      });
+
+      // Auto-Claim button click (shows Coming Soon popup)
+      autoClaimBtn.addEventListener('click', () => {
+        if (!autoClaimBtn.classList.contains('disabled')) {
+          comingSoonOverlay.style.display = 'flex';
+        }
+      });
+
+      // Close Coming Soon popup
+      closeComingSoonBtn.addEventListener('click', () => {
+        comingSoonOverlay.style.display = 'none';
+      });
+
+      comingSoonOverlay.addEventListener('click', (e) => {
+        if (e.target === comingSoonOverlay) {
+          comingSoonOverlay.style.display = 'none';
+        }
+      });
+
+      // Cancel hCaptcha
+      cancelCaptchaBtn.addEventListener('click', () => {
+        captchaOverlay.style.display = 'none';
+        if (captchaWidgetId !== null && typeof hcaptcha !== 'undefined') {
+          hcaptcha.remove(captchaWidgetId);
+          captchaWidgetId = null;
+        }
+      });
+
+      captchaOverlay.addEventListener('click', (e) => {
+        if (e.target === captchaOverlay) {
+          captchaOverlay.style.display = 'none';
+          if (captchaWidgetId !== null && typeof hcaptcha !== 'undefined') {
+            hcaptcha.remove(captchaWidgetId);
+            captchaWidgetId = null;
+          }
+        }
+      });
+
+      // Function to show hCaptcha and handle response
+      const showCaptcha = (callback, owner) => {
+        captchaOverlay.style.display = 'flex';
+        if (typeof hcaptcha === 'undefined') {
+          errorEl.textContent = 'hCaptcha failed to load. Please refresh the page.';
+          errorEl.style.display = 'block';
+          captchaOverlay.style.display = 'none';
+          return;
+        }
+
+        captchaWidgetId = hcaptcha.render('captcha-container', {
+          sitekey: '010e3fdc-5224-4254-8278-f65453b417a0',
+          callback: (response) => {
+            captchaOverlay.style.display = 'none';
+            callback(response, owner);
+            hcaptcha.remove(captchaWidgetId);
+            captchaWidgetId = null;
+          },
+          'error-callback': () => {
+            errorEl.textContent = 'hCaptcha verification failed. Please try again.';
+            errorEl.style.display = 'block';
+            captchaOverlay.style.display = 'none';
+            hcaptcha.remove(captchaWidgetId);
+            captchaWidgetId = null;
+          },
+          'close-callback': () => {
+            captchaOverlay.style.display = 'none';
+            hcaptcha.remove(captchaWidgetId);
+            captchaWidgetId = null;
+          }
+        });
+
+        // Trigger hCaptcha challenge
+        hcaptcha.execute(captchaWidgetId);
+      };
+
+      // Fetch Tokens
+      tokenForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        currentOwner = document.getElementById('owner').value;
+        errorEl.style.display = 'none';
+        successEl.style.display = 'none';
+        tokenGrid.innerHTML = '';
+        tokenCountEl.style.display = 'none';
+        claimForm.style.display = 'none';
+        selectAllBtn.textContent = 'Select All';
+
+        showCaptcha(async (hCaptchaResponse, owner) => {
+          loadingOverlay.style.display = 'flex';
+          try {
+            const formData = new FormData();
+            formData.append('owner', owner);
+            formData.append('h-captcha-response', hCaptchaResponse);
+
+            const response = await fetch('https://sketchy-n6u8.onrender.com/api/tokenss', {
+              method: 'POST',
+              body: formData
+            });
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (data.error) {
+              errorEl.textContent = ` ${data.error}`;
+              errorEl.style.display = 'block';
+              return;
+            }
+
+            if (data.tokens && data.tokens.length > 0) {
+              tokenCountEl.textContent = `Your Tokens (${data.tokens.length})`;
+              tokenCountEl.style.display = 'block';
+              claimForm.style.display = 'block';
+              document.getElementById('claim-owner').value = currentOwner;
+
+              for (const tokenId of data.tokens) {
+                try {
+                  const metadataResponse = await fetch(`/static/metadata/${tokenId}`);
+                  if (!metadataResponse.ok) {
+                    throw new Error(`Metadata for token ${tokenId} not found`);
+                  }
+                  const metadata = await metadataResponse.json();
+                  const imageUrl = metadata.image.replace(
+                    'ipfs://',
+                    'https://gateway.lighthouse.storage/ipfs/'
+                  );
+
+                  const card = document.createElement('div');
+                  card.className = 'token-card';
+                  card.innerHTML = `
+                    <input type="checkbox" class="token-checkbox" data-token-id="${tokenId}">
+                    <img src="${imageUrl}" alt="Token #${tokenId}" onerror="this.src='/static/placeholder.png'; this.onerror=null;">
+                    <h3>Token #${tokenId}</h3>
+                    <p>${metadata.name || 'No name'}</p>
+                  `;
+                  tokenGrid.appendChild(card);
+                } catch (err) {
+                  console.warn(`Failed to load metadata for token ${tokenId}:`, err.message);
+                  const card = document.createElement('div');
+                  card.className = 'token-card';
+                  card.innerHTML = `
+                    <input type="checkbox" class="token-checkbox" data-token-id="${tokenId}">
+                    <img src="/static/placeholder.png" alt="Token #${tokenId}">
+                    <h3>Token #${tokenId}</h3>
+                    <p>Metadata unavailable</p>
+                  `;
+                  tokenGrid.appendChild(card);
+                }
+              }
+
+              // Add event listeners to checkboxes
+              document.querySelectorAll('.token-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateAutoClaimButton);
+              });
+            } else {
+              tokenCountEl.textContent = 'No tokens found.';
+              tokenCountEl.style.display = 'block';
+            }
+          } catch (err) {
+            errorEl.textContent = `Failed to fetch tokens: ${err.message}`;
+            errorEl.style.display = 'block';
+          } finally {
+            loadingOverlay.style.display = 'none';
+          }
+        }, currentOwner);
+      });
+
+      // Claim Points
+      claimForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentOwner) {
+          errorEl.textContent = 'Please fetch tokens first.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        showCaptcha(async (hCaptchaResponse, owner) => {
+          loadingOverlay.style.display = 'flex';
+          errorEl.style.display = 'none';
+          successEl.style.display = 'none';
+
+          try {
+            const formData = new FormData();
+            formData.append('owner', owner);
+            formData.append('h-captcha-response', hCaptchaResponse);
+
+            const response = await fetch('https://sketchy-n6u8.onrender.com/api/claim_pointss', {
+              method: 'POST',
+              body: formData
+            });
+            if (!response.ok) {
+              if (response.status === 429) {
+                errorEl.textContent = 'All tokens are on 24-hour cooldown. Try again later.';
+                errorEl.style.display = 'block';
+                return;
+              }
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (data.success) {
+              successEl.textContent = `Claimed ${data.points} points! Total: ${data.total_points}`;
+              successEl.style.display = 'block';
+            } else {
+              errorEl.textContent = ` ${data.error}`;
+              errorEl.style.display = 'block';
+            }
+          } catch (err) {
+            errorEl.textContent = `Failed to claim points: ${err.message}`;
+            errorEl.style.display = 'block';
+          } finally {
+            loadingOverlay.style.display = 'none';
+          }
+        }, currentOwner);
+      });
+    });
+  </script>
+</body>
+</html>
