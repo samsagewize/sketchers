@@ -26,7 +26,6 @@
       justify-content: center;
       box-sizing: border-box;
     }
-
     /* Background Floating Elements */
     #background-container {
       position: fixed;
@@ -59,7 +58,6 @@
       animation-duration: 23s;
       animation-delay: 9s;
     }
-
     @keyframes float-circle {
       0% {
         transform: translate(0, 0) rotate(0deg);
@@ -77,7 +75,6 @@
         transform: translate(0, 0) rotate(360deg);
       }
     }
-
     /* Main Container */
     .main-container {
       position: relative;
@@ -91,7 +88,6 @@
       padding-bottom: 50px;
       box-sizing: border-box;
     }
-
     /* Menu Container */
     .menu-container {
       position: absolute;
@@ -120,6 +116,7 @@
       box-shadow: 1px 1px 0 #000;
       text-align: center;
       width: 100px;
+      position: relative;
     }
     .menu-item:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
@@ -130,7 +127,44 @@
       transform: translate(1px, 1px);
       box-shadow: none;
     }
-
+    /* Dropdown Styling */
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: #C0C0C0;
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      box-shadow: 2px 2px 0 #000;
+      z-index: 4;
+      flex-direction: column;
+      border-radius: 3px;
+      width: 100px;
+    }
+    .dropdown-item {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      padding: 4px 8px;
+      font-size: clamp(8px, 2vw, 10px);
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+      color: #000080;
+      text-decoration: none;
+      text-align: center;
+      border: none;
+    }
+    .dropdown-item:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+    }
+    .dropdown-item:active {
+      border: 1px inset #808080;
+    }
+    .menu-item:hover .dropdown {
+      display: flex;
+    }
     /* Site Title */
     #site-title {
       font-size: clamp(16px, 4vw, 20px);
@@ -142,7 +176,6 @@
     #site-title span {
       color: #FF0055;
     }
-
     /* Unified Button Styling */
     .btn {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
@@ -170,7 +203,6 @@
       transform: translate(1px, 1px);
       box-shadow: none;
     }
-
     /* SOLD OUT Text */
     .sold-out {
       font-size: clamp(12px, 3vw, 14px);
@@ -180,7 +212,6 @@
       text-align: center;
       font-family: 'Press Start 2P', cursive;
     }
-
     /* Window Styling */
     .window {
       background: #C0C0C0;
@@ -210,7 +241,6 @@
       flex-direction: column;
       align-items: center;
     }
-
     /* Combo Container (Image Display) */
     #combo-container {
       position: relative;
@@ -232,7 +262,6 @@
       object-fit: contain;
       user-select: none;
     }
-
     /* Buttons and NFT Text */
     .buttons {
       display: flex;
@@ -249,7 +278,6 @@
       text-shadow: 0.5px 0.5px 0 #FFFFFF;
       margin-bottom: 6px;
     }
-
     /* Custom Audio Player */
     #audio-player {
       background: #C0C0C0;
@@ -302,7 +330,6 @@
       padding: 4px;
       font-size: clamp(8px, 2vw, 10px);
     }
-
     /* Playlist */
     #playlist-container {
       font-size: clamp(8px, 2vw, 10px);
@@ -334,7 +361,6 @@
     #playlist li:hover {
       color: #FF0055;
     }
-
     /* License Text */
     #license {
       position: fixed;
@@ -354,7 +380,6 @@
     #license a:hover {
       color: #FF0055;
     }
-
     /* Responsive Adjustments */
     @media (min-width: 768px) {
       .window {
@@ -385,6 +410,9 @@
         width: 120px;
         font-size: clamp(9px, 2.2vw, 11px);
       }
+      .dropdown {
+        width: 120px;
+      }
     }
     @media (max-width: 767px) {
       #playlist-container {
@@ -414,6 +442,9 @@
         width: 90px;
         font-size: clamp(7px, 1.8vw, 9px);
       }
+      .dropdown {
+        width: 90px;
+      }
     }
   </style>
 </head>
@@ -425,12 +456,16 @@
     <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
     <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
   </div>
-
   <!-- Main Content -->
   <div class="main-container">
     <div class="menu-container">
       <a href="/traits" class="menu-item">Traits</a>
-      <a href="https://dapps.mymilio.xyz/" class="menu-item">dApps</a>
+      <div class="menu-item" id="dapps-menu">dApps
+        <div class="dropdown">
+          <a href="https://dapps.mymilio.xyz/" class="dropdown-item">MetaMask</a>
+          <a href="https://abstracy.mymilio.xyz/" class="dropdown-item">Abstract Wallet</a>
+        </div>
+      </div>
       <a href="/leaderboard" class="menu-item">Leaderboards</a>
     </div>
     <h1 id="site-title">My<span>M</span>ilio</h1>
@@ -452,7 +487,6 @@
         </div>
       </div>
     </div>
-
     <!-- Playlist -->
     <div id="playlist-container">
       <div id="playlist-title">SketchyMilio EP1</div>
@@ -462,7 +496,6 @@
         <li data-src="/static/song3.mp3">Song3</li>
       </ul>
     </div>
-
     <!-- Custom Audio Player -->
     <div id="audio-player">
       <div class="title-bar">Audio Player</div>
@@ -477,20 +510,16 @@
         </div>
       </div>
     </div>
-
     <!-- License Text -->
     <div id="license">
       <a href="https://viralpubliclicense.org/" target="_blank">© Viral Public License - All Rights Reserved - MyMilio inc</a>
     </div>
   </div>
-
   <!-- Vercel Analytics -->
   <script src="/_vercel/insights/script.js" defer></script>
-
   <script>
     const layerFiles = {{ layer_files | tojson }};
     const layers = {{ layers | tojson }};
-
     // Function to log custom events to Vercel Analytics
     function logVercelEvent(eventName, eventData = {}) {
       if (window?.vercel?.analytics?.track) {
@@ -499,17 +528,14 @@
         console.warn('Vercel Analytics not loaded');
       }
     }
-
     // Randomize Combo Function
     function randomizeCombo() {
       const validLayers = layers.filter(l => (layerFiles[l] || []).length);
       let loadedCount = 0;
-
       validLayers.forEach(layer => {
         const opts = layerFiles[layer];
         const pick = opts[Math.floor(Math.random() * opts.length)];
         const imgEl = document.getElementById(`layer-${layer}`);
-
         const temp = new Image();
         temp.crossOrigin = 'anonymous';
         temp.onload = () => {
@@ -536,7 +562,6 @@
         temp.src = `/static/${layer}/${pick}`;
       });
     }
-
     // Format time in MM:SS
     function formatTime(seconds) {
       if (isNaN(seconds)) return '0:00';
@@ -544,7 +569,6 @@
       const sec = Math.floor(seconds % 60);
       return `${min}:${sec.toString().padStart(2, '0')}`;
     }
-
     // Initialize page
     document.addEventListener('DOMContentLoaded', () => {
       // Randomize floating image positions and directions
@@ -558,10 +582,8 @@
         float.style.top = `${startY}px`;
         float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
       });
-
       const audio = new Audio();
       audio.volume = 0.5;
-
       const player = document.getElementById('audio-player');
       const playPauseBtn = document.getElementById('play-pause-btn');
       const stopBtn = document.getElementById('stop-btn');
@@ -569,7 +591,6 @@
       const nextBtn = document.getElementById('next-btn');
       const songTitle = document.querySelector('#audio-player .song-title');
       const timer = document.querySelector('#audio-player .timer');
-
       // Playlist data
       const playlist = [
         { src: '/static/song1.mp3', title: 'Song1' },
@@ -577,7 +598,6 @@
         { src: '/static/song3.mp3', title: 'Song3' }
       ];
       let currentSongIndex = 0;
-
       // Update song info
       function updateSongInfo() {
         audio.src = playlist[currentSongIndex].src;
@@ -585,33 +605,28 @@
         timer.textContent = '0:00 / 0:00';
         playPauseBtn.textContent = audio.paused ? '▶️' : '⏸️';
       }
-
       // Update timer
       audio.addEventListener('timeupdate', () => {
         if (!isNaN(audio.duration)) {
           timer.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
         }
       });
-
       // Handle load errors
       audio.addEventListener('error', () => {
         console.error(`Failed to load audio: ${audio.src}`);
         songTitle.textContent = 'Error Loading Song';
         timer.textContent = '0:00 / 0:00';
       });
-
       // Reset on song end
       audio.addEventListener('ended', () => {
         currentSongIndex = (currentSongIndex + 1) % playlist.length;
         updateSongInfo();
         audio.play().catch(err => console.error('Playback failed:', err));
       });
-
       // Show audio player and randomize combo on load
       player.style.display = 'flex';
       randomizeCombo();
       updateSongInfo();
-
       // Audio controls
       playPauseBtn.onclick = () => {
         if (audio.paused) {
@@ -640,7 +655,6 @@
         updateSongInfo();
         audio.play().catch(err => console.error('Playback failed:', err));
       };
-
       // Playlist clicking (for desktop)
       document.querySelectorAll('#playlist li').forEach((li, index) => {
         li.onclick = () => {
@@ -649,7 +663,6 @@
           audio.play().catch(err => console.error('Playback failed:', err));
         };
       });
-
       // Randomize button with analytics tracking
       const randomizeBtn = document.getElementById('randomize-btn');
       randomizeBtn.onclick = () => {
