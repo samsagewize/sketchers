@@ -116,7 +116,6 @@
       box-shadow: 1px 1px 0 #000;
       text-align: center;
       width: 100px;
-      position: relative;
     }
     .menu-item:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
@@ -127,43 +126,86 @@
       transform: translate(1px, 1px);
       box-shadow: none;
     }
-    /* Dropdown Styling */
-    .dropdown {
+    /* Popup Modal Styling */
+    .modal {
       display: none;
-      position: absolute;
-      top: 100%;
-      right: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .modal.show {
+      display: flex;
+      opacity: 1;
+    }
+    .modal-content {
       background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      box-shadow: 2px 2px 0 #000;
+      padding: 8px;
+      border-radius: 4px;
+      width: clamp(200px, 60vw, 300px);
+      transform: scale(0.7);
+      transition: transform 0.3s ease-in-out;
+    }
+    .modal.show .modal-content {
+      transform: scale(1);
+    }
+    .modal-title {
+      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+      color: #FFFFFF;
+      padding: 4px;
+      font-size: clamp(8px, 2vw, 10px);
+      text-align: center;
+      border-bottom: 1px solid #000080;
+    }
+    .modal-body {
+      background: #E0E0E0;
+      padding: 8px;
+      border: 1px inset #808080;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+    .modal-btn {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
       border-left: 1px solid #FFFFFF;
       border-bottom: 1px solid #808080;
       border-right: 1px solid #808080;
-      box-shadow: 2px 2px 0 #000;
-      z-index: 4;
-      flex-direction: column;
-      border-radius: 3px;
-      width: 100px;
-    }
-    .dropdown-item {
-      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       padding: 4px 8px;
       font-size: clamp(8px, 2vw, 10px);
       cursor: pointer;
       font-family: 'Press Start 2P', cursive;
       color: #000080;
       text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
       text-align: center;
-      border: none;
+      width: 80%;
     }
-    .dropdown-item:hover {
+    .modal-btn:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      transform: translate(-1px, -1px);
     }
-    .dropdown-item:active {
+    .modal-btn:active {
       border: 1px inset #808080;
-    }
-    .menu-item:hover .dropdown {
-      display: flex;
+      transform: translate(1px, 1px);
+      box-shadow: none;
     }
     /* Site Title */
     #site-title {
@@ -410,9 +452,6 @@
         width: 120px;
         font-size: clamp(9px, 2.2vw, 11px);
       }
-      .dropdown {
-        width: 120px;
-      }
     }
     @media (max-width: 767px) {
       #playlist-container {
@@ -442,9 +481,6 @@
         width: 90px;
         font-size: clamp(7px, 1.8vw, 9px);
       }
-      .dropdown {
-        width: 90px;
-      }
     }
   </style>
 </head>
@@ -460,12 +496,7 @@
   <div class="main-container">
     <div class="menu-container">
       <a href="/traits" class="menu-item">Traits</a>
-      <div class="menu-item" id="dapps-menu">dApps
-        <div class="dropdown">
-          <a href="https://dapps.mymilio.xyz/" class="dropdown-item">MetaMask</a>
-          <a href="https://abstracy.mymilio.xyz/" class="dropdown-item">Abstract Wallet</a>
-        </div>
-      </div>
+      <button class="menu-item" id="dapps-btn">dApps</button>
       <a href="/leaderboard" class="menu-item">Leaderboards</a>
     </div>
     <h1 id="site-title">My<span>M</span>ilio</h1>
@@ -507,6 +538,17 @@
           <button class="btn" id="play-pause-btn">▶️</button>
           <button class="btn" id="stop-btn">⏹️</button>
           <button class="btn" id="next-btn">⏭️</button>
+        </div>
+      </div>
+    </div>
+    <!-- dApps Modal -->
+    <div id="dapps-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-title">Select Wallet</div>
+        <div class="modal-body">
+          <a href="https://dapps.mymilio.xyz/" class="modal-btn">MetaMask</a>
+          <a href="https://abstracy.mymilio.xyz/" class="modal-btn">Abstract Wallet</a>
+          <button class="modal-btn" id="close-modal">Close</button>
         </div>
       </div>
     </div>
@@ -668,6 +710,23 @@
       randomizeBtn.onclick = () => {
         randomizeCombo();
         logVercelEvent('RandomizeButtonClick', { page: window.location.pathname });
+      };
+      // Modal controls
+      const dappsBtn = document.getElementById('dapps-btn');
+      const dappsModal = document.getElementById('dapps-modal');
+      const closeModalBtn = document.getElementById('close-modal');
+      dappsBtn.onclick = () => {
+        dappsModal.classList.add('show');
+        logVercelEvent('DappsButtonClick', { page: window.location.pathname });
+      };
+      closeModalBtn.onclick = () => {
+        dappsModal.classList.remove('show');
+      };
+      // Close modal when clicking outside
+      dappsModal.onclick = (e) => {
+        if (e.target === dappsModal) {
+          dappsModal.classList.remove('show');
+        }
       };
     });
   </script>
