@@ -179,6 +179,15 @@
       gap: 8px;
       align-items: center;
     }
+    .modal-note {
+      color: #000080;
+      font-size: clamp(7px, 1.7vw, 9px);
+      line-height: 1.6;
+      text-align: center;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+      margin: 0;
+      max-width: 90%;
+    }
     .modal-btn {
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
@@ -555,9 +564,10 @@
       <div class="modal-content">
         <div class="modal-title">Abstract dApps</div>
         <div class="modal-body">
+          <p class="modal-note">External dApps may ask for wallet transactions. Check the URL and wallet prompt before approving.</p>
           <button class="modal-btn" disabled>Bridge Under Construction</button>
-          <a href="https://sketchy-flip-site.vercel.app/" target="_blank" rel="noopener noreferrer" class="modal-btn">Flip a Sketch</a>
-          <a href="https://abstract.mymilio.xyz/" target="_blank" rel="noopener noreferrer" class="modal-btn">Abstract dApps</a>
+          <a href="https://sketchy-flip-site.vercel.app/" target="_blank" rel="noopener noreferrer nofollow" class="modal-btn">Flip a Sketch</a>
+          <a href="https://abstract.mymilio.xyz/" target="_blank" rel="noopener noreferrer nofollow" class="modal-btn">Abstract dApps</a>
           <button class="modal-btn" id="close-modal">Close</button>
         </div>
       </div>
