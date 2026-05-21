@@ -1,1 +1,6 @@
-'Mymillios.rar' 
+Mymillios.rar
+__pycache__/
+*.pyc
+.vercel/
+
+.vercel
