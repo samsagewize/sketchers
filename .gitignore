@@ -2,5 +2,9 @@ Mymillios.rar
 __pycache__/
 *.pyc
 .vercel/
+node_modules/
+artifacts/
+cache/
+.env
 
 .vercel
