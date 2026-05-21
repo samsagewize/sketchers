@@ -207,6 +207,12 @@
       transform: translate(1px, 1px);
       box-shadow: none;
     }
+    .modal-btn:disabled {
+      color: #707070;
+      cursor: not-allowed;
+      opacity: 0.8;
+      box-shadow: none;
+    }
     /* Site Title */
     #site-title {
       font-size: clamp(16px, 4vw, 20px);
@@ -546,7 +552,7 @@
       <div class="modal-content">
         <div class="modal-title">Abstract dApps</div>
         <div class="modal-body">
-          <a href="/bridge" class="modal-btn">Bridge</a>
+          <button class="modal-btn" disabled>Bridge Under Construction</button>
           <a href="https://abstract.mymilio.xyz/" class="modal-btn">Abstract dApps</a>
           <button class="modal-btn" id="close-modal">Close</button>
         </div>

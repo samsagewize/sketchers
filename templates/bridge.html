@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MyMilio Bridge</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <script
-    src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"
-    integrity="sha384-OwtfwhPoP4aGLIw192UbPWjNbSkb7AllEbIhEJ01Yp8MxhNLLNUMA+DSjh6Zct05"
-    crossorigin="anonymous"></script>
   <style>
     html {
       margin: 0;
@@ -37,7 +33,7 @@
     }
     .bg-float {
       position: absolute;
-      opacity: 0.13;
+      opacity: 0.15;
       pointer-events: none;
       max-width: 170px;
       animation: float-circle 24s linear infinite;
@@ -57,50 +53,37 @@
     .main-container {
       position: relative;
       z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
-      max-width: 920px;
+      max-width: 720px;
       padding: 10px;
-      padding-bottom: 46px;
       box-sizing: border-box;
     }
     .home-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
+      align-self: flex-start;
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
       border-left: 1px solid #FFFFFF;
       border-bottom: 1px solid #808080;
       border-right: 1px solid #808080;
-      padding: 4px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
+      color: #000080;
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(8px, 1.8vw, 10px);
+      padding: 8px 10px;
+      text-decoration: none;
       border-radius: 3px;
       box-shadow: 1px 1px 0 #000;
-      transition: background 0.2s, transform 0.1s;
+      margin: 10px 0 18px;
     }
     .home-btn:hover {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
-      transform: translate(-1px, -1px);
-    }
-    .home-btn:active {
-      border: 1px inset #808080;
-      transform: translate(1px, 1px);
-      box-shadow: none;
-    }
-    .home-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: #000080;
     }
     #site-title {
       font-size: clamp(16px, 4vw, 22px);
-      margin: 50px 0 15px 0;
+      margin: 15px 0;
       color: #FFFFFF;
       text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
       text-align: center;
@@ -115,11 +98,9 @@
       border-left: 2px solid #FFFFFF;
       border-bottom: 2px solid #808080;
       border-right: 2px solid #808080;
-      width: min(100%, 860px);
+      width: min(100%, 520px);
       box-shadow: 2px 2px 0 #000;
-      margin: 10px auto;
       border-radius: 4px;
-      box-sizing: border-box;
     }
     .title-bar {
       background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
@@ -131,223 +112,16 @@
     }
     .window-body {
       background: #E0E0E0;
-      padding: 10px;
+      padding: 14px;
       border: 1px inset #808080;
-    }
-    .bridge-route {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .chain-box {
-      background: #FFFFFF;
-      border: 1px inset #808080;
-      padding: 10px;
-      min-height: 54px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-    }
-    .chain-name {
-      font-size: clamp(9px, 2vw, 12px);
-      color: #000080;
-    }
-    .chain-sub {
-      font-size: clamp(7px, 1.7vw, 9px);
-      color: #303030;
-      line-height: 1.5;
-    }
-    .route-arrow {
-      color: #FF0055;
-      font-size: 16px;
-      text-shadow: 1px 1px 0 #FFFFFF;
       text-align: center;
     }
-    .notice {
-      background: #FFF8C5;
-      border: 1px solid #808080;
-      box-shadow: inset 1px 1px 0 #FFFFFF;
+    .message {
       color: #000080;
-      font-size: clamp(7px, 1.7vw, 9px);
-      line-height: 1.7;
-      padding: 8px;
-      margin: 0 0 10px;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
-      gap: 10px;
-      align-items: start;
-    }
-    .panel {
-      background: #D8D8D8;
-      border: 1px inset #808080;
-      padding: 10px;
-      box-sizing: border-box;
-    }
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-    .check-row {
-      display: grid;
-      grid-template-columns: 18px minmax(0, 1fr);
-      gap: 8px;
-      align-items: start;
-      margin: 8px 0;
-    }
-    .check-row input {
-      width: 16px;
-      height: 16px;
-      margin: 2px 0 0;
-    }
-    label,
-    .section-label {
-      font-size: clamp(8px, 1.8vw, 10px);
-      color: #000080;
-      text-shadow: 0.5px 0.5px 0 #FFFFFF;
-      line-height: 1.5;
-    }
-    input,
-    textarea {
-      width: 100%;
-      box-sizing: border-box;
-      background: #FFFFFF;
-      border: 1px inset #808080;
-      color: #000080;
-      font-family: 'Press Start 2P', cursive;
-      font-size: clamp(8px, 1.7vw, 10px);
-      line-height: 1.7;
-      padding: 8px;
-      border-radius: 0;
-    }
-    textarea {
-      min-height: 110px;
-      resize: vertical;
-    }
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .btn {
-      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
-      border: 1px solid #000;
-      border-top: 1px solid #FFFFFF;
-      border-left: 1px solid #FFFFFF;
-      border-bottom: 1px solid #808080;
-      border-right: 1px solid #808080;
-      padding: 8px 10px;
-      font-size: clamp(8px, 1.8vw, 10px);
-      cursor: pointer;
-      font-family: 'Press Start 2P', cursive;
-      color: #000080;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.1s;
-      border-radius: 3px;
-      box-shadow: 1px 1px 0 #000;
-      text-align: center;
-      min-height: 34px;
-    }
-    .btn:hover:not(:disabled) {
-      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
-      transform: translate(-1px, -1px);
-    }
-    .btn:active:not(:disabled) {
-      border: 1px inset #808080;
-      transform: translate(1px, 1px);
-      box-shadow: none;
-    }
-    .btn:disabled {
-      color: #707070;
-      cursor: not-allowed;
-      box-shadow: none;
-      opacity: 0.8;
-    }
-    .primary {
-      color: #FFFFFF;
-      background: linear-gradient(180deg, #1084D0 0%, #000080 100%);
-    }
-    .primary:hover:not(:disabled) {
-      background: linear-gradient(180deg, #2495E0 0%, #0000A0 100%);
-    }
-    .status-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+      font-size: clamp(9px, 2vw, 11px);
+      line-height: 1.8;
       margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .status-item {
-      background: #FFFFFF;
-      border: 1px inset #808080;
-      color: #000080;
-      font-size: clamp(7px, 1.6vw, 9px);
-      line-height: 1.6;
-      padding: 8px;
-      overflow-wrap: anywhere;
-    }
-    .status-ok {
-      color: #007000;
-    }
-    .status-warn {
-      color: #B00040;
-    }
-    #log {
-      margin-top: 10px;
-      min-height: 40px;
-      background: #000;
-      color: #00FF66;
-      border: 1px inset #808080;
-      padding: 8px;
-      font-size: clamp(7px, 1.6vw, 9px);
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-    #license {
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
-      left: 0;
-      text-align: center;
-      z-index: 2;
-      font-size: clamp(7px, 1.8vw, 9px);
-      color: #FFFFFF;
-      text-shadow: 1px 1px 0 #000080;
-    }
-    #license a {
-      color: #FFFFFF;
-      text-decoration: none;
-    }
-    #license a:hover {
-      color: #FF0055;
-    }
-    @media (max-width: 760px) {
-      .bridge-route,
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-      .route-arrow {
-        transform: rotate(90deg);
-      }
-      .btn {
-        width: 100%;
-      }
-      .home-btn {
-        width: 28px;
-        height: 28px;
-      }
-      .home-btn svg {
-        width: 16px;
-        height: 16px;
-      }
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
     }
   </style>
 </head>
@@ -360,324 +134,17 @@
   </div>
 
   <main class="main-container">
-    <a href="/" class="home-btn" title="Back to Home">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 3l10 9h-3v9h-7v-6h-2v6H3v-9H0l12-9z"/>
-      </svg>
-    </a>
-
+    <a href="/" class="home-btn">Back Home</a>
     <h1 id="site-title">Sketchy<span>M</span>ilio Bridge</h1>
-
     <section class="window">
-      <div class="title-bar">Bridge SketchyMilios to Ethereum Mainnet</div>
+      <div class="title-bar">Bridge Status</div>
       <div class="window-body">
-        <div class="bridge-route" aria-label="Bridge route">
-          <div class="chain-box">
-            <div class="chain-name">Abstract</div>
-            <div class="chain-sub">Chain ID 2741<br>SketchyMilio source</div>
-          </div>
-          <div class="route-arrow">-&gt;</div>
-          <div class="chain-box">
-            <div class="chain-name">Ethereum Mainnet</div>
-            <div class="chain-sub">Chain ID 1<br>Destination network</div>
-          </div>
-        </div>
-
-        <p class="notice">
-          Connecting only asks your wallet to share an address. Approval and bridge actions are separate wallet transactions. Only approve the verified bridge contract shown on this page.
-        </p>
-
-        <div class="form-grid">
-          <div class="panel">
-            <div class="field">
-              <label for="destination-address">Ethereum destination address</label>
-              <input id="destination-address" placeholder="0x..." autocomplete="off">
-            </div>
-            <div class="field">
-              <label for="token-ids">Token IDs</label>
-              <textarea id="token-ids" placeholder="Example: 12, 44, 109"></textarea>
-            </div>
-            <label class="check-row" for="safety-confirm">
-              <input type="checkbox" id="safety-confirm">
-              <span>I understand approval lets the verified bridge contract move my SketchyMilios, and I have checked the contract address before bridging.</span>
-            </label>
-            <div class="btn-row">
-              <button class="btn" id="connect-wallet">Connect Wallet</button>
-              <button class="btn" id="switch-abstract">Switch to Abstract</button>
-              <button class="btn" id="check-ownership">Check Ownership</button>
-            </div>
-            <div class="btn-row">
-              <button class="btn" id="approve-bridge" disabled>Approve Bridge</button>
-              <button class="btn primary" id="bridge-tokens" disabled>Bridge to Ethereum</button>
-            </div>
-            <div id="log" role="status">Ready.</div>
-          </div>
-
-          <aside class="panel">
-            <div class="section-label">Wallet Status</div>
-            <ul class="status-list">
-              <li class="status-item" id="wallet-status">Wallet: not connected</li>
-              <li class="status-item" id="network-status">Network: unknown</li>
-              <li class="status-item" id="ownership-status">Ownership: not checked</li>
-              <li class="status-item" id="contract-status">Bridge contract: not configured</li>
-              <li class="status-item" id="safety-status">Safety check: required</li>
-            </ul>
-          </aside>
-        </div>
+        <p class="message">Bridge Under Construction<br>No wallet connection is available right now.</p>
       </div>
     </section>
-
-    <div id="license">
-      <a href="https://viralpubliclicense.org/" target="_blank">Viral Public License - All Rights Reserved - MyMilio inc</a>
-    </div>
   </main>
 
   <script>
-    const ABSTRACT_CHAIN = {
-      chainId: '0xab5',
-      chainName: 'Abstract',
-      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrls: ['https://api.mainnet.abs.xyz'],
-      blockExplorerUrls: ['https://abscan.org/']
-    };
-    const ETHEREUM_CHAIN_ID = '0x1';
-    const SKETCHYMILIO_CONTRACT = '0x08533a2b16e3db03eebd5b23210122f97dfcb97d';
-    const BRIDGE_CONTRACT = '';
-    const BRIDGE_ABI = [
-      'function bridgeToEthereum(uint256[] tokenIds, address recipient) payable'
-    ];
-    const ERC721_ABI = [
-      'function ownerOf(uint256 tokenId) view returns (address)',
-      'function isApprovedForAll(address owner, address operator) view returns (bool)',
-      'function setApprovalForAll(address operator, bool approved)'
-    ];
-
-    let browserProvider;
-    let signer;
-    let walletAddress = '';
-    let ownedTokenIds = [];
-    let bridgeContractReady = false;
-
-    const els = {
-      connect: document.getElementById('connect-wallet'),
-      switchAbstract: document.getElementById('switch-abstract'),
-      checkOwnership: document.getElementById('check-ownership'),
-      approveBridge: document.getElementById('approve-bridge'),
-      bridgeTokens: document.getElementById('bridge-tokens'),
-      destination: document.getElementById('destination-address'),
-      tokenIds: document.getElementById('token-ids'),
-      safetyConfirm: document.getElementById('safety-confirm'),
-      log: document.getElementById('log'),
-      walletStatus: document.getElementById('wallet-status'),
-      networkStatus: document.getElementById('network-status'),
-      ownershipStatus: document.getElementById('ownership-status'),
-      contractStatus: document.getElementById('contract-status'),
-      safetyStatus: document.getElementById('safety-status')
-    };
-
-    function setLog(message) {
-      els.log.textContent = message;
-    }
-
-    function shorten(address) {
-      if (!address) return '';
-      return `${address.slice(0, 6)}...${address.slice(-4)}`;
-    }
-
-    function parseTokenIds() {
-      const ids = els.tokenIds.value
-        .split(/[\s,]+/)
-        .map((id) => id.trim())
-        .filter(Boolean);
-      const invalid = ids.find((id) => !/^\d+$/.test(id));
-      if (invalid) {
-        throw new Error(`Invalid token ID: ${invalid}`);
-      }
-      return [...new Set(ids)];
-    }
-
-    function setStatus(el, text, tone) {
-      el.textContent = text;
-      el.classList.remove('status-ok', 'status-warn');
-      if (tone) el.classList.add(tone);
-    }
-
-    async function updateNetworkStatus() {
-      if (!window.ethereum) return;
-      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-      const label = chainId === ABSTRACT_CHAIN.chainId
-        ? 'Network: Abstract'
-        : chainId === ETHEREUM_CHAIN_ID
-          ? 'Network: Ethereum Mainnet'
-          : `Network: ${chainId}`;
-      setStatus(
-        els.networkStatus,
-        label,
-        chainId === ABSTRACT_CHAIN.chainId ? 'status-ok' : 'status-warn'
-      );
-    }
-
-    async function verifyBridgeContract() {
-      if (!ethers.isAddress(BRIDGE_CONTRACT)) {
-        bridgeContractReady = false;
-        updateActionButtons();
-        return;
-      }
-
-      try {
-        const readProvider = new ethers.JsonRpcProvider(ABSTRACT_CHAIN.rpcUrls[0]);
-        const code = await readProvider.getCode(BRIDGE_CONTRACT);
-        bridgeContractReady = code && code !== '0x';
-      } catch (error) {
-        bridgeContractReady = false;
-      }
-
-      updateActionButtons();
-    }
-
-    async function connectWallet() {
-      if (!window.ethereum) {
-        setLog('No injected wallet found. Install MetaMask, Rabby, or another EVM wallet.');
-        return;
-      }
-      browserProvider = new ethers.BrowserProvider(window.ethereum);
-      const accounts = await browserProvider.send('eth_requestAccounts', []);
-      walletAddress = accounts[0];
-      signer = await browserProvider.getSigner();
-      els.destination.value = walletAddress;
-      setStatus(els.walletStatus, `Wallet: ${shorten(walletAddress)}`, 'status-ok');
-      await updateNetworkStatus();
-      setLog('Wallet connected.');
-    }
-
-    async function switchToAbstract() {
-      if (!window.ethereum) {
-        setLog('Connect an EVM wallet first.');
-        return;
-      }
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: ABSTRACT_CHAIN.chainId }]
-        });
-      } catch (error) {
-        if (error.code === 4902) {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [ABSTRACT_CHAIN]
-          });
-        } else {
-          throw error;
-        }
-      }
-      browserProvider = new ethers.BrowserProvider(window.ethereum);
-      signer = await browserProvider.getSigner();
-      await updateNetworkStatus();
-      setLog('Switched to Abstract.');
-    }
-
-    async function checkOwnership() {
-      if (!walletAddress) await connectWallet();
-      const ids = parseTokenIds();
-      if (!ids.length) {
-        setLog('Enter at least one token ID.');
-        return;
-      }
-      setLog('Checking ownership on Abstract...');
-      const readProvider = new ethers.JsonRpcProvider(ABSTRACT_CHAIN.rpcUrls[0]);
-      const nft = new ethers.Contract(SKETCHYMILIO_CONTRACT, ERC721_ABI, readProvider);
-      const missing = [];
-      const owned = [];
-      for (const id of ids) {
-        try {
-          const owner = await nft.ownerOf(id);
-          if (owner.toLowerCase() === walletAddress.toLowerCase()) {
-            owned.push(id);
-          } else {
-            missing.push(id);
-          }
-        } catch (error) {
-          missing.push(id);
-        }
-      }
-      ownedTokenIds = owned;
-      if (missing.length) {
-        setStatus(els.ownershipStatus, `Ownership: missing ${missing.join(', ')}`, 'status-warn');
-        setLog(`These token IDs are not owned by ${shorten(walletAddress)} on Abstract: ${missing.join(', ')}`);
-      } else {
-        setStatus(els.ownershipStatus, `Ownership: verified ${owned.join(', ')}`, 'status-ok');
-        setLog('Ownership verified.');
-      }
-      updateActionButtons();
-    }
-
-    function updateActionButtons() {
-      const configured = ethers.isAddress(BRIDGE_CONTRACT);
-      const safetyConfirmed = els.safetyConfirm.checked;
-      els.contractStatus.textContent = configured
-        ? bridgeContractReady
-          ? `Bridge contract: ${shorten(BRIDGE_CONTRACT)} verified`
-          : `Bridge contract: ${shorten(BRIDGE_CONTRACT)} not verified`
-        : 'Bridge contract: not configured';
-      els.contractStatus.classList.toggle('status-ok', configured && bridgeContractReady);
-      els.contractStatus.classList.toggle('status-warn', !configured || !bridgeContractReady);
-      setStatus(
-        els.safetyStatus,
-        safetyConfirmed ? 'Safety check: confirmed' : 'Safety check: required',
-        safetyConfirmed ? 'status-ok' : 'status-warn'
-      );
-      els.approveBridge.disabled = !configured || !bridgeContractReady || !ownedTokenIds.length || !safetyConfirmed;
-      els.bridgeTokens.disabled = !configured || !bridgeContractReady || !ownedTokenIds.length || !safetyConfirmed;
-    }
-
-    async function approveBridge() {
-      if (!ethers.isAddress(BRIDGE_CONTRACT)) {
-        setLog('Bridge contract is not configured yet.');
-        return;
-      }
-      if (!bridgeContractReady || !els.safetyConfirm.checked) {
-        setLog('Complete the safety check before approving.');
-        return;
-      }
-      await switchToAbstract();
-      const nft = new ethers.Contract(SKETCHYMILIO_CONTRACT, ERC721_ABI, signer);
-      const isApproved = await nft.isApprovedForAll(walletAddress, BRIDGE_CONTRACT);
-      if (isApproved) {
-        setLog('Bridge contract is already approved.');
-        return;
-      }
-      setLog('Waiting for approval transaction...');
-      const tx = await nft.setApprovalForAll(BRIDGE_CONTRACT, true);
-      await tx.wait();
-      setLog(`Approved bridge contract. Tx: ${tx.hash}`);
-    }
-
-    async function bridgeTokens() {
-      if (!ethers.isAddress(BRIDGE_CONTRACT)) {
-        setLog('Send me the deployed bridge contract address and ABI, then I can activate this button.');
-        return;
-      }
-      if (!bridgeContractReady || !els.safetyConfirm.checked) {
-        setLog('Complete the safety check before bridging.');
-        return;
-      }
-      const recipient = els.destination.value.trim();
-      if (!ethers.isAddress(recipient)) {
-        setLog('Enter a valid Ethereum destination address.');
-        return;
-      }
-      if (!ownedTokenIds.length) {
-        setLog('Check ownership before bridging.');
-        return;
-      }
-      await switchToAbstract();
-      const bridge = new ethers.Contract(BRIDGE_CONTRACT, BRIDGE_ABI, signer);
-      setLog('Waiting for bridge transaction...');
-      const tx = await bridge.bridgeToEthereum(ownedTokenIds, recipient);
-      await tx.wait();
-      setLog(`Bridge started. Tx: ${tx.hash}`);
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.bg-float').forEach((float) => {
         const maxX = Math.max(window.innerWidth - 170, 0);
@@ -686,18 +153,6 @@
         float.style.top = `${Math.random() * maxY}px`;
         float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
       });
-      updateActionButtons();
-      verifyBridgeContract();
-      if (window.ethereum) {
-        window.ethereum.on('accountsChanged', () => window.location.reload());
-        window.ethereum.on('chainChanged', updateNetworkStatus);
-      }
-      els.connect.onclick = () => connectWallet().catch((error) => setLog(error.message));
-      els.switchAbstract.onclick = () => switchToAbstract().catch((error) => setLog(error.message));
-      els.checkOwnership.onclick = () => checkOwnership().catch((error) => setLog(error.message));
-      els.approveBridge.onclick = () => approveBridge().catch((error) => setLog(error.message));
-      els.bridgeTokens.onclick = () => bridgeTokens().catch((error) => setLog(error.message));
-      els.safetyConfirm.onchange = updateActionButtons;
     });
   </script>
 </body>
