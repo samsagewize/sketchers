@@ -92,4 +92,47 @@ describe("MyMilio bridge v1", function () {
       ethereumMinter.connect(relayer).finalizeBridge(event.args.depositId, recipient.address, [7])
     ).to.be.revertedWith("deposit processed");
   });
+
+  it("rejects unrelated NFTs sent directly to the Abstract lockbox", async function () {
+    const { holder, abstractBridge } = await deployFixture();
+    const MockSketchyMilio = await ethers.getContractFactory("MockSketchyMilio");
+    const unrelated = await MockSketchyMilio.deploy();
+    await unrelated.waitForDeployment();
+
+    await unrelated.mint(holder.address, 99);
+
+    await expect(
+      unrelated
+        .connect(holder)
+        ["safeTransferFrom(address,address,uint256)"](
+          holder.address,
+          await abstractBridge.getAddress(),
+          99
+        )
+    ).to.be.revertedWith("unsupported nft");
+  });
+
+  it("lets the admin pause Ethereum finalization", async function () {
+    const { admin, holder, relayer, recipient, sketchy, abstractBridge, ethereumMinter } =
+      await deployFixture();
+
+    await sketchy.connect(holder).setApprovalForAll(await abstractBridge.getAddress(), true);
+    const tx = await abstractBridge.connect(holder).bridgeToEthereum([7], recipient.address);
+    const receipt = await tx.wait();
+    const event = receipt.logs
+      .map((log) => {
+        try {
+          return abstractBridge.interface.parseLog(log);
+        } catch {
+          return null;
+        }
+      })
+      .find((parsed) => parsed?.name === "BridgeToEthereumInitiated");
+
+    await ethereumMinter.connect(admin).pause();
+
+    await expect(
+      ethereumMinter.connect(relayer).finalizeBridge(event.args.depositId, recipient.address, [7])
+    ).to.be.revertedWithCustomError(ethereumMinter, "EnforcedPause");
+  });
 });

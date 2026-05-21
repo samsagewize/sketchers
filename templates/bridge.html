@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MyMilio Bridge</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/ethers@6.15.0/dist/ethers.umd.min.js"
+    integrity="sha384-OwtfwhPoP4aGLIw192UbPWjNbSkb7AllEbIhEJ01Yp8MxhNLLNUMA+DSjh6Zct05"
+    crossorigin="anonymous"></script>
   <style>
     html {
       margin: 0;
@@ -191,6 +194,18 @@
       gap: 6px;
       margin-bottom: 10px;
     }
+    .check-row {
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      margin: 8px 0;
+    }
+    .check-row input {
+      width: 16px;
+      height: 16px;
+      margin: 2px 0 0;
+    }
     label,
     .section-label {
       font-size: clamp(8px, 1.8vw, 10px);
@@ -369,7 +384,7 @@
         </div>
 
         <p class="notice">
-          Connect the wallet that owns your SketchyMilio on Abstract, enter the token IDs you want to bridge, then check ownership. Contract execution is locked until the live bridge contract is configured.
+          Connecting only asks your wallet to share an address. Approval and bridge actions are separate wallet transactions. Only approve the verified bridge contract shown on this page.
         </p>
 
         <div class="form-grid">
@@ -382,6 +397,10 @@
               <label for="token-ids">Token IDs</label>
               <textarea id="token-ids" placeholder="Example: 12, 44, 109"></textarea>
             </div>
+            <label class="check-row" for="safety-confirm">
+              <input type="checkbox" id="safety-confirm">
+              <span>I understand approval lets the verified bridge contract move my SketchyMilios, and I have checked the contract address before bridging.</span>
+            </label>
             <div class="btn-row">
               <button class="btn" id="connect-wallet">Connect Wallet</button>
               <button class="btn" id="switch-abstract">Switch to Abstract</button>
@@ -401,6 +420,7 @@
               <li class="status-item" id="network-status">Network: unknown</li>
               <li class="status-item" id="ownership-status">Ownership: not checked</li>
               <li class="status-item" id="contract-status">Bridge contract: not configured</li>
+              <li class="status-item" id="safety-status">Safety check: required</li>
             </ul>
           </aside>
         </div>
@@ -436,6 +456,7 @@
     let signer;
     let walletAddress = '';
     let ownedTokenIds = [];
+    let bridgeContractReady = false;
 
     const els = {
       connect: document.getElementById('connect-wallet'),
@@ -445,11 +466,13 @@
       bridgeTokens: document.getElementById('bridge-tokens'),
       destination: document.getElementById('destination-address'),
       tokenIds: document.getElementById('token-ids'),
+      safetyConfirm: document.getElementById('safety-confirm'),
       log: document.getElementById('log'),
       walletStatus: document.getElementById('wallet-status'),
       networkStatus: document.getElementById('network-status'),
       ownershipStatus: document.getElementById('ownership-status'),
-      contractStatus: document.getElementById('contract-status')
+      contractStatus: document.getElementById('contract-status'),
+      safetyStatus: document.getElementById('safety-status')
     };
 
     function setLog(message) {
@@ -492,6 +515,24 @@
         label,
         chainId === ABSTRACT_CHAIN.chainId ? 'status-ok' : 'status-warn'
       );
+    }
+
+    async function verifyBridgeContract() {
+      if (!ethers.isAddress(BRIDGE_CONTRACT)) {
+        bridgeContractReady = false;
+        updateActionButtons();
+        return;
+      }
+
+      try {
+        const readProvider = new ethers.JsonRpcProvider(ABSTRACT_CHAIN.rpcUrls[0]);
+        const code = await readProvider.getCode(BRIDGE_CONTRACT);
+        bridgeContractReady = code && code !== '0x';
+      } catch (error) {
+        bridgeContractReady = false;
+      }
+
+      updateActionButtons();
     }
 
     async function connectWallet() {
@@ -572,18 +613,30 @@
 
     function updateActionButtons() {
       const configured = ethers.isAddress(BRIDGE_CONTRACT);
+      const safetyConfirmed = els.safetyConfirm.checked;
       els.contractStatus.textContent = configured
-        ? `Bridge contract: ${shorten(BRIDGE_CONTRACT)}`
+        ? bridgeContractReady
+          ? `Bridge contract: ${shorten(BRIDGE_CONTRACT)} verified`
+          : `Bridge contract: ${shorten(BRIDGE_CONTRACT)} not verified`
         : 'Bridge contract: not configured';
-      els.contractStatus.classList.toggle('status-ok', configured);
-      els.contractStatus.classList.toggle('status-warn', !configured);
-      els.approveBridge.disabled = !configured || !ownedTokenIds.length;
-      els.bridgeTokens.disabled = !configured || !ownedTokenIds.length;
+      els.contractStatus.classList.toggle('status-ok', configured && bridgeContractReady);
+      els.contractStatus.classList.toggle('status-warn', !configured || !bridgeContractReady);
+      setStatus(
+        els.safetyStatus,
+        safetyConfirmed ? 'Safety check: confirmed' : 'Safety check: required',
+        safetyConfirmed ? 'status-ok' : 'status-warn'
+      );
+      els.approveBridge.disabled = !configured || !bridgeContractReady || !ownedTokenIds.length || !safetyConfirmed;
+      els.bridgeTokens.disabled = !configured || !bridgeContractReady || !ownedTokenIds.length || !safetyConfirmed;
     }
 
     async function approveBridge() {
       if (!ethers.isAddress(BRIDGE_CONTRACT)) {
         setLog('Bridge contract is not configured yet.');
+        return;
+      }
+      if (!bridgeContractReady || !els.safetyConfirm.checked) {
+        setLog('Complete the safety check before approving.');
         return;
       }
       await switchToAbstract();
@@ -602,6 +655,10 @@
     async function bridgeTokens() {
       if (!ethers.isAddress(BRIDGE_CONTRACT)) {
         setLog('Send me the deployed bridge contract address and ABI, then I can activate this button.');
+        return;
+      }
+      if (!bridgeContractReady || !els.safetyConfirm.checked) {
+        setLog('Complete the safety check before bridging.');
         return;
       }
       const recipient = els.destination.value.trim();
@@ -630,6 +687,7 @@
         float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
       });
       updateActionButtons();
+      verifyBridgeContract();
       if (window.ethereum) {
         window.ethereum.on('accountsChanged', () => window.location.reload());
         window.ethereum.on('chainChanged', updateNetworkStatus);
@@ -639,6 +697,7 @@
       els.checkOwnership.onclick = () => checkOwnership().catch((error) => setLog(error.message));
       els.approveBridge.onclick = () => approveBridge().catch((error) => setLog(error.message));
       els.bridgeTokens.onclick = () => bridgeTokens().catch((error) => setLog(error.message));
+      els.safetyConfirm.onchange = updateActionButtons;
     });
   </script>
 </body>

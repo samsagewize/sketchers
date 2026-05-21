@@ -6,6 +6,7 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract MyMilio is ERC721, AccessControl {
     bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
+    uint256 public constant MAX_BATCH_SIZE = 50;
 
     string private collectionBaseURI;
     mapping(uint256 tokenId => bytes32 sourceDepositId) public bridgedFromDeposit;
@@ -46,6 +47,7 @@ contract MyMilio is ERC721, AccessControl {
         require(to != address(0), "recipient required");
         require(sourceDepositId != bytes32(0), "deposit id required");
         require(tokenIds.length > 0, "token ids required");
+        require(tokenIds.length <= MAX_BATCH_SIZE, "too many tokens");
 
         for (uint256 i = 0; i < tokenIds.length; i++) {
             uint256 tokenId = tokenIds[i];

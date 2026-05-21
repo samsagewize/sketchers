@@ -32,6 +32,16 @@ pnpm --ignore-workspace deploy:abstract
 4. Put the Abstract bridge address into `templates/bridge.html` as `BRIDGE_CONTRACT`.
 5. If you use a separate relayer wallet, grant it `RELAYER_ROLE` on both bridge contracts.
 6. Verify the contracts on Etherscan/Abscan.
+7. Test with one low-value token before announcing the bridge.
+
+## Safety Checklist
+
+- Keep `DEFAULT_ADMIN_ROLE` and `RELAYER_ROLE` in a hardware wallet or multisig.
+- Verify both bridge contracts in explorers before enabling the website bridge button.
+- Confirm the website displays the exact Abstract bridge address before users approve.
+- Leave the bridge paused if relayer monitoring is offline or suspicious.
+- Do not grant `BRIDGE_ROLE` on `MyMilio` to any wallet except the Ethereum bridge minter.
+- Treat this trusted-relayer v1 as production-sensitive infrastructure, not as an audited trustless bridge.
 
 ## Bridge Flow
 

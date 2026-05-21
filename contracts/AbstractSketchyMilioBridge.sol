@@ -9,6 +9,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 
 contract AbstractSketchyMilioBridge is AccessControl, IERC721Receiver, Pausable, ReentrancyGuard {
     bytes32 public constant RELAYER_ROLE = keccak256("RELAYER_ROLE");
+    uint256 public constant MAX_BATCH_SIZE = 50;
 
     IERC721 public immutable sketchyMilio;
     uint256 public depositNonce;
@@ -50,6 +51,7 @@ contract AbstractSketchyMilioBridge is AccessControl, IERC721Receiver, Pausable,
         address ethereumRecipient
     ) external nonReentrant whenNotPaused returns (bytes32 depositId) {
         require(tokenIds.length > 0, "token ids required");
+        require(tokenIds.length <= MAX_BATCH_SIZE, "too many tokens");
         require(ethereumRecipient != address(0), "recipient required");
 
         depositNonce++;
@@ -133,7 +135,8 @@ contract AbstractSketchyMilioBridge is AccessControl, IERC721Receiver, Pausable,
         address,
         uint256,
         bytes calldata
-    ) external pure returns (bytes4) {
+    ) external view returns (bytes4) {
+        require(msg.sender == address(sketchyMilio), "unsupported nft");
         return IERC721Receiver.onERC721Received.selector;
     }
 }
