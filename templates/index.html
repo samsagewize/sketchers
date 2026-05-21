@@ -213,6 +213,10 @@
       opacity: 0.8;
       box-shadow: none;
     }
+    .modal-btn:disabled:hover {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      transform: none;
+    }
     /* Site Title */
     #site-title {
       font-size: clamp(16px, 4vw, 20px);
@@ -552,7 +556,8 @@
         <div class="modal-title">Abstract dApps</div>
         <div class="modal-body">
           <button class="modal-btn" disabled>Bridge Under Construction</button>
-          <a href="https://abstract.mymilio.xyz/" class="modal-btn">Abstract dApps</a>
+          <a href="https://sketchy-flip-site.vercel.app/" target="_blank" rel="noopener noreferrer" class="modal-btn">Flip a Sketch</a>
+          <a href="https://abstract.mymilio.xyz/" target="_blank" rel="noopener noreferrer" class="modal-btn">Abstract dApps</a>
           <button class="modal-btn" id="close-modal">Close</button>
         </div>
       </div>
