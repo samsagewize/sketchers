@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Flip a Sketch inside MyMilio. Read the rules, check wallet prompts, and play safely.">
   <title>Flip a Sketch</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
@@ -13,15 +14,22 @@
       min-height: 100%;
       overflow-x: hidden;
     }
+
     body {
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
+      background:
+        linear-gradient(180deg, rgba(0, 128, 128, 0.96) 0%, rgba(0, 63, 63, 0.98) 100%);
       font-family: 'Press Start 2P', cursive;
       color: #000;
       box-sizing: border-box;
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
     #background-container {
       position: fixed;
       inset: 0;
@@ -29,18 +37,21 @@
       pointer-events: none;
       overflow: hidden;
     }
+
     .bg-float {
       position: absolute;
-      opacity: 0.12;
+      opacity: 0.1;
       pointer-events: none;
-      max-width: 170px;
+      max-width: 160px;
       animation: float-circle 24s linear infinite;
       transform-origin: center;
     }
+
     .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
     .bg-float:nth-child(2) { animation-duration: 26s; animation-delay: 3s; }
     .bg-float:nth-child(3) { animation-duration: 29s; animation-delay: 6s; }
     .bg-float:nth-child(4) { animation-duration: 25s; animation-delay: 9s; }
+
     @keyframes float-circle {
       0% { transform: translate(0, 0) rotate(0deg); }
       25% { transform: translate(18vw, 18vh) rotate(90deg); }
@@ -48,29 +59,45 @@
       75% { transform: translate(18vw, -18vh) rotate(270deg); }
       100% { transform: translate(0, 0) rotate(360deg); }
     }
+
     .main-container {
       position: relative;
       z-index: 2;
-      width: 100%;
-      max-width: 1180px;
+      width: min(100%, 1240px);
       min-height: 100vh;
       margin: 0 auto;
-      padding: 10px;
-      padding-bottom: 24px;
-      box-sizing: border-box;
+      padding: 12px;
+      padding-bottom: 28px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
+
     .top-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(120px, 190px) 1fr minmax(120px, 190px);
       align-items: center;
-      justify-content: space-between;
       gap: 10px;
-      flex-wrap: wrap;
     }
-    .home-btn,
-    .open-btn {
+
+    #site-title {
+      font-size: clamp(16px, 4vw, 24px);
+      margin: 0;
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    #site-title span {
+      color: #FF0055;
+    }
+
+    .retro-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
       background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
       border: 1px solid #000;
       border-top: 1px solid #FFFFFF;
@@ -79,38 +106,37 @@
       border-right: 1px solid #808080;
       color: #000080;
       font-family: 'Press Start 2P', cursive;
-      font-size: clamp(8px, 1.8vw, 10px);
+      font-size: clamp(8px, 1.6vw, 10px);
+      line-height: 1.35;
       padding: 8px 10px;
       text-decoration: none;
       border-radius: 3px;
       box-shadow: 1px 1px 0 #000;
       text-align: center;
+      cursor: pointer;
     }
-    .home-btn:hover,
-    .open-btn:hover {
+
+    .retro-btn:hover,
+    .retro-btn:focus-visible {
       background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+      outline: 2px solid #FF0055;
+      outline-offset: 2px;
     }
-    #site-title {
-      font-size: clamp(16px, 4vw, 22px);
-      margin: 4px 0;
-      color: #FFFFFF;
-      text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
-      text-align: center;
-      flex: 1;
+
+    .retro-btn:active {
+      transform: translate(1px, 1px);
+      box-shadow: none;
     }
-    #site-title span {
-      color: #FF0055;
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+      gap: 12px;
+      align-items: stretch;
     }
-    .notice {
-      background: #FFF8C5;
-      border: 1px solid #808080;
-      box-shadow: inset 1px 1px 0 #FFFFFF;
-      color: #000080;
-      font-size: clamp(7px, 1.6vw, 9px);
-      line-height: 1.6;
-      padding: 8px;
-      text-align: center;
-    }
+
+    .hero-panel,
+    .rules-panel,
     .frame-window {
       background: #C0C0C0;
       border: 2px solid #000080;
@@ -120,48 +146,218 @@
       border-right: 2px solid #808080;
       box-shadow: 2px 2px 0 #000;
       border-radius: 4px;
-      min-height: 680px;
-      display: flex;
-      flex-direction: column;
     }
+
+    .panel-title,
     .title-bar {
       background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
       color: #FFFFFF;
-      padding: 5px;
-      font-size: clamp(8px, 1.8vw, 10px);
+      padding: 6px;
+      font-size: clamp(8px, 1.7vw, 10px);
+      line-height: 1.35;
       text-align: center;
       border-bottom: 1px solid #000080;
     }
+
+    .panel-body {
+      background: #E0E0E0;
+      border: 1px inset #808080;
+      padding: 12px;
+    }
+
+    .hero-panel .panel-body {
+      min-height: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .eyebrow,
+    .tiny-label {
+      margin: 0 0 8px;
+      color: #FF0055;
+      font-size: clamp(7px, 1.5vw, 9px);
+      line-height: 1.6;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+
+    .summary {
+      margin: 0;
+      color: #000080;
+      font-size: clamp(8px, 1.6vw, 10px);
+      line-height: 1.8;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+
+    .quick-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 180px;
+    }
+
+    .rules-panel .panel-body {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .rule-list,
+    .safety-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .rule-list li,
+    .safety-list li {
+      position: relative;
+      padding-left: 26px;
+      color: #000080;
+      font-size: clamp(7px, 1.45vw, 9px);
+      line-height: 1.7;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+
+    .rule-list li::before,
+    .safety-list li::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 18px;
+      color: #FF0055;
+      text-align: center;
+    }
+
+    .rule-list li:nth-child(1)::before { content: "1"; }
+    .rule-list li:nth-child(2)::before { content: "2"; }
+    .rule-list li:nth-child(3)::before { content: "3"; }
+    .rule-list li:nth-child(4)::before { content: "4"; }
+    .safety-list li::before { content: "!"; }
+
+    .notice {
+      background: #FFF8C5;
+      border: 1px solid #808080;
+      box-shadow: inset 1px 1px 0 #FFFFFF;
+      color: #000080;
+      font-size: clamp(7px, 1.45vw, 9px);
+      line-height: 1.7;
+      padding: 9px 10px;
+      text-align: center;
+    }
+
+    .frame-window {
+      min-height: 680px;
+      display: flex;
+      flex-direction: column;
+      scroll-margin-top: 10px;
+    }
+
+    .frame-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #E0E0E0;
+      border-bottom: 1px solid #808080;
+      padding: 8px;
+    }
+
+    .status-pill {
+      color: #005000;
+      font-size: clamp(7px, 1.45vw, 9px);
+      line-height: 1.5;
+      text-shadow: 0.5px 0.5px 0 #FFFFFF;
+    }
+
     .frame-body {
+      position: relative;
       background: #101010;
       border: 1px inset #808080;
       min-height: 640px;
       flex: 1;
     }
+
+    .loading-cover {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: #101010;
+      color: #FFFFFF;
+      font-size: clamp(8px, 1.7vw, 10px);
+      line-height: 1.8;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .loading-cover.is-hidden {
+      display: none;
+    }
+
     .flip-frame {
       display: block;
       width: 100%;
       min-height: 640px;
-      height: calc(100vh - 150px);
+      height: min(820px, calc(100vh - 170px));
       border: 0;
       background: #101010;
     }
-    @media (max-width: 760px) {
+
+    @media (max-width: 900px) {
       .top-row {
-        align-items: stretch;
+        grid-template-columns: 1fr 1fr;
       }
+
       #site-title {
         order: -1;
-        flex-basis: 100%;
+        grid-column: 1 / -1;
       }
-      .home-btn,
-      .open-btn {
-        flex: 1;
+
+      .intro-grid {
+        grid-template-columns: 1fr;
       }
+
+      .hero-panel .panel-body {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-actions {
+        min-width: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .main-container {
+        padding: 8px;
+        gap: 10px;
+      }
+
+      .top-row,
+      .quick-actions,
+      .frame-toolbar {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .panel-body {
+        padding: 10px;
+      }
+
       .frame-window,
       .frame-body,
       .flip-frame {
         min-height: 620px;
+      }
+
+      .flip-frame {
+        height: 680px;
       }
     }
   </style>
@@ -176,21 +372,65 @@
 
   <main class="main-container">
     <div class="top-row">
-      <a href="/" class="home-btn">Back Home</a>
+      <a href="/" class="retro-btn">Back Home</a>
       <h1 id="site-title">Flip a <span>Sketch</span></h1>
-      <a href="https://sketchy-flip-site.vercel.app/" target="_blank" rel="noopener noreferrer nofollow" class="open-btn">Open Fullscreen</a>
+      <a href="https://sketchy-flip-site.vercel.app/" target="_blank" rel="noopener noreferrer nofollow" class="retro-btn">Open Fullscreen</a>
     </div>
+
+    <section class="intro-grid" aria-label="Flip a Sketch guide">
+      <div class="hero-panel">
+        <div class="panel-title">Sketchy Flip Station</div>
+        <div class="panel-body">
+          <div>
+            <p class="eyebrow">Quick play</p>
+            <p class="summary">
+              Flip a Sketch is a simple heads-or-tails style dApp. Pick your side, choose the amount in the game window, confirm only the transaction you understand, then wait for the result.
+            </p>
+          </div>
+          <div class="quick-actions">
+            <a href="#play" class="retro-btn">Play Below</a>
+            <a href="https://sketchy-flip-site.vercel.app/" target="_blank" rel="noopener noreferrer nofollow" class="retro-btn">Wallet Mode</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="rules-panel" aria-label="Rules and wallet safety">
+        <div class="panel-title">Rules</div>
+        <div class="panel-body">
+          <ol class="rule-list">
+            <li>Connect only the wallet you want to play with.</li>
+            <li>Pick the flip side and amount inside the game.</li>
+            <li>Review gas, chain, contract, and spend amount before approving.</li>
+            <li>The result is final after the transaction confirms.</li>
+          </ol>
+          <p class="tiny-label">Wallet safety</p>
+          <ul class="safety-list">
+            <li>Never share your seed phrase or private key.</li>
+            <li>Do not approve a transaction that looks different from your play.</li>
+            <li>Use fullscreen wallet mode if your wallet blocks embedded dApps.</li>
+          </ul>
+        </div>
+      </aside>
+    </section>
 
     <div class="notice">
-      This dApp is embedded inside MyMilio. It may ask for wallet transactions; check the wallet prompt, contract, and URL before approving.
+      This dApp is embedded inside MyMilio with iframe restrictions. Wallets may open popups; confirm the URL and every wallet prompt before signing.
     </div>
 
-    <section class="frame-window">
+    <section class="frame-window" id="play">
       <div class="title-bar">Bet-A-Sketchy</div>
+      <div class="frame-toolbar">
+        <span class="status-pill" id="frame-status">Loading game...</span>
+        <a href="https://sketchy-flip-site.vercel.app/" target="_blank" rel="noopener noreferrer nofollow" class="retro-btn">Open Game Tab</a>
+      </div>
       <div class="frame-body">
+        <div class="loading-cover" id="loading-cover">
+          Loading Flip a Sketch. If your wallet does not appear, open the game tab.
+        </div>
         <iframe
           class="flip-frame"
-          title="Flip a Sketch"
+          id="flip-frame"
+          title="Flip a Sketch game"
           src="https://sketchy-flip-site.vercel.app/"
           sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
           referrerpolicy="no-referrer">
@@ -202,11 +442,20 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.bg-float').forEach((float) => {
-        const maxX = Math.max(window.innerWidth - 170, 0);
-        const maxY = Math.max(window.innerHeight - 170, 0);
+        const maxX = Math.max(window.innerWidth - 160, 0);
+        const maxY = Math.max(window.innerHeight - 160, 0);
         float.style.left = `${Math.random() * maxX}px`;
         float.style.top = `${Math.random() * maxY}px`;
         float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+      });
+
+      const frame = document.getElementById('flip-frame');
+      const loadingCover = document.getElementById('loading-cover');
+      const frameStatus = document.getElementById('frame-status');
+
+      frame.addEventListener('load', () => {
+        loadingCover.classList.add('is-hidden');
+        frameStatus.textContent = 'Game loaded';
       });
     });
   </script>
