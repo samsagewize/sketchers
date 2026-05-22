@@ -66,6 +66,10 @@ def redeem():
 @app.route('/bridge')
 def bridge():
     return render_template('bridge.html')
+
+@app.route('/flip-a-sketch')
+def flip_a_sketch():
+    return render_template('flip.html')
     
 @app.route('/pups')
 def pups():

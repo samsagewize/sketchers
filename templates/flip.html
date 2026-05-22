@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flip a Sketch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #008080 0%, #003F3F 100%);
+      font-family: 'Press Start 2P', cursive;
+      color: #000;
+      box-sizing: border-box;
+    }
+    #background-container {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-float {
+      position: absolute;
+      opacity: 0.12;
+      pointer-events: none;
+      max-width: 170px;
+      animation: float-circle 24s linear infinite;
+      transform-origin: center;
+    }
+    .bg-float:nth-child(1) { animation-duration: 22s; animation-delay: 0s; }
+    .bg-float:nth-child(2) { animation-duration: 26s; animation-delay: 3s; }
+    .bg-float:nth-child(3) { animation-duration: 29s; animation-delay: 6s; }
+    .bg-float:nth-child(4) { animation-duration: 25s; animation-delay: 9s; }
+    @keyframes float-circle {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(18vw, 18vh) rotate(90deg); }
+      50% { transform: translate(36vw, 0) rotate(180deg); }
+      75% { transform: translate(18vw, -18vh) rotate(270deg); }
+      100% { transform: translate(0, 0) rotate(360deg); }
+    }
+    .main-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1180px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 10px;
+      padding-bottom: 24px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .home-btn,
+    .open-btn {
+      background: linear-gradient(180deg, #C0C0C0 0%, #A0A0A0 100%);
+      border: 1px solid #000;
+      border-top: 1px solid #FFFFFF;
+      border-left: 1px solid #FFFFFF;
+      border-bottom: 1px solid #808080;
+      border-right: 1px solid #808080;
+      color: #000080;
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(8px, 1.8vw, 10px);
+      padding: 8px 10px;
+      text-decoration: none;
+      border-radius: 3px;
+      box-shadow: 1px 1px 0 #000;
+      text-align: center;
+    }
+    .home-btn:hover,
+    .open-btn:hover {
+      background: linear-gradient(180deg, #D0D0D0 0%, #B0B0B0 100%);
+    }
+    #site-title {
+      font-size: clamp(16px, 4vw, 22px);
+      margin: 4px 0;
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 #000080, 2px 2px 0 #000;
+      text-align: center;
+      flex: 1;
+    }
+    #site-title span {
+      color: #FF0055;
+    }
+    .notice {
+      background: #FFF8C5;
+      border: 1px solid #808080;
+      box-shadow: inset 1px 1px 0 #FFFFFF;
+      color: #000080;
+      font-size: clamp(7px, 1.6vw, 9px);
+      line-height: 1.6;
+      padding: 8px;
+      text-align: center;
+    }
+    .frame-window {
+      background: #C0C0C0;
+      border: 2px solid #000080;
+      border-top: 2px solid #FFFFFF;
+      border-left: 2px solid #FFFFFF;
+      border-bottom: 2px solid #808080;
+      border-right: 2px solid #808080;
+      box-shadow: 2px 2px 0 #000;
+      border-radius: 4px;
+      min-height: 680px;
+      display: flex;
+      flex-direction: column;
+    }
+    .title-bar {
+      background: linear-gradient(90deg, #000080 0%, #1084D0 100%);
+      color: #FFFFFF;
+      padding: 5px;
+      font-size: clamp(8px, 1.8vw, 10px);
+      text-align: center;
+      border-bottom: 1px solid #000080;
+    }
+    .frame-body {
+      background: #101010;
+      border: 1px inset #808080;
+      min-height: 640px;
+      flex: 1;
+    }
+    .flip-frame {
+      display: block;
+      width: 100%;
+      min-height: 640px;
+      height: calc(100vh - 150px);
+      border: 0;
+      background: #101010;
+    }
+    @media (max-width: 760px) {
+      .top-row {
+        align-items: stretch;
+      }
+      #site-title {
+        order: -1;
+        flex-basis: 100%;
+      }
+      .home-btn,
+      .open-btn {
+        flex: 1;
+      }
+      .frame-window,
+      .frame-body,
+      .flip-frame {
+        min-height: 620px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="background-container">
+    <img src="/static/float1.png" class="bg-float" alt="Floating Image 1">
+    <img src="/static/float2.png" class="bg-float" alt="Floating Image 2">
+    <img src="/static/float3.png" class="bg-float" alt="Floating Image 3">
+    <img src="/static/float4.png" class="bg-float" alt="Floating Image 4">
+  </div>
+
+  <main class="main-container">
+    <div class="top-row">
+      <a href="/" class="home-btn">Back Home</a>
+      <h1 id="site-title">Flip a <span>Sketch</span></h1>
+      <a href="https://sketchy-flip-site.vercel.app/" target="_blank" rel="noopener noreferrer nofollow" class="open-btn">Open Fullscreen</a>
+    </div>
+
+    <div class="notice">
+      This dApp is embedded inside MyMilio. It may ask for wallet transactions; check the wallet prompt, contract, and URL before approving.
+    </div>
+
+    <section class="frame-window">
+      <div class="title-bar">Bet-A-Sketchy</div>
+      <div class="frame-body">
+        <iframe
+          class="flip-frame"
+          title="Flip a Sketch"
+          src="https://sketchy-flip-site.vercel.app/"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+          referrerpolicy="no-referrer">
+        </iframe>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.bg-float').forEach((float) => {
+        const maxX = Math.max(window.innerWidth - 170, 0);
+        const maxY = Math.max(window.innerHeight - 170, 0);
+        float.style.left = `${Math.random() * maxX}px`;
+        float.style.top = `${Math.random() * maxY}px`;
+        float.style.animationDirection = Math.random() > 0.5 ? 'normal' : 'reverse';
+      });
+    });
+  </script>
+</body>
+</html>
